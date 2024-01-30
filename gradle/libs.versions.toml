@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.21"
+kotlin = "1.9.10"
 gradle = "8.1.0"
 desugaring = "2.0.3"
 # androidx
@@ -11,20 +11,23 @@ androidx-appcompat = "1.6.1"
 # compose
 compose-bom = "2023.08.00"
 compose-activity = "1.7.2"
-compose-compiler = "1.4.7"
+compose-compiler = "1.5.3"
 compose-material = "1.1.1"
 compose-navigation = "2.7.0"
 compose-coil = "2.4.0"
 compose-paging = "3.2.0"
 # google
 google-playservices = "18.2.0"
-google-ksp = "1.8.21-1.0.11"
-google-hilt = "2.44.2"
+google-ksp = "1.9.10-1.0.13"
+google-hilt = "2.48.1"
 
 # optimizor
 ktlint = "11.4.0"
 ktlint-version = "0.49.1"
 detekt = "1.23.0"
+
+# room {https://stackoverflow.com/questions/77342860/how-to-resolve-the-gradle-build-error-java-lang-nosuchmethoderror}
+room = "2.6.0"
 
 [libraries]
 # androidx
@@ -52,6 +55,11 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
+# hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-hilt" }
+hilt-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "google-hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "google-hilt" }
+
 [bundles]
 androidx-compose = [
     "compose.activity",
@@ -67,6 +75,7 @@ androidx-compose = [
     "compose.foundation.layout",
     "compose.runtime",
 ]
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle" }
