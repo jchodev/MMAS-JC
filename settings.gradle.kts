@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "mmas-jc"
 include(":app")
 include(":core:designsystem")
+include(":core:database")
