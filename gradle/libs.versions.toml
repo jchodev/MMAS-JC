@@ -33,7 +33,15 @@ androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 material = "1.11.0"
 
+agp = "8.1.4"
+squareup-javapoet = "1.13.0"
+
 [libraries]
+# must have libraries
+agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "squareup-javapoet" }
+
 # androidx
 androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
