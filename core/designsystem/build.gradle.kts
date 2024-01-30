@@ -1,30 +1,21 @@
-
-
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.android.kotlin)
 
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
 }
 
-
 android {
-    namespace = "com.jerryalberto.mmas"
+    namespace = "com.jerryalberto.mmas.core.designsystem"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.jerryalberto.mmas"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -49,16 +40,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion =  libs.versions.compose.compiler.get()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-
-    implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
