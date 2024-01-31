@@ -71,6 +71,10 @@ android {
 dependencies {
 
     implementation(project(":core:designsystem"))
+    implementation(project(":feature:input"))
+    implementation(project(":feature:analysis"))
+    implementation(project(":feature:calendar"))
+    implementation(project(":feature:setting"))
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
@@ -82,4 +86,13 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
+
+    //junit5
+    testImplementation (libs.junit.jupiter.api)
+    testImplementation (libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.vintage.engine)
+
+    //timber
+    implementation(libs.timber)
 }

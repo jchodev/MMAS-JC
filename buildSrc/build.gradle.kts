@@ -28,5 +28,10 @@ gradlePlugin {
             id = "module-plugin"
             implementationClass = "CommonModulePlugin"
         }
+
+        register("module-without-jetpack-plugin") {
+            id = "module-without-jetpack-plugin"
+            implementationClass = "CommonModuleWithoutJetpackPlugin"
+        }
     }
 }

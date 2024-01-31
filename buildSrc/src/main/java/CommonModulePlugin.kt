@@ -13,58 +13,68 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 class CommonModulePlugin: Plugin<Project> {
 
     override fun apply(project: Project) {
+        basicApply(project = project)
+    }
+}
 
-        project.plugins.apply("kotlin-android")
-        project.plugins.apply("kotlin-kapt")
+class CommonModuleWithoutJetpackPlugin: Plugin<Project> {
 
-        // Access the version catalog
-        val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
+    override fun apply(project: Project) {
+        basicApply(project = project, withJetpack = false)
+    }
+}
 
-        val androidExtension = project.extensions.getByName("android")
 
-        if (androidExtension is BaseExtension) {
-            androidExtension.apply {
-                compileSdkVersion(34)
-                defaultConfig {
-                    targetSdk = 34
-                    minSdk = 24
-                    versionCode = 1
-                    versionName = "1.0"
-                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+private fun basicApply(project: Project, withJetpack: Boolean = true){
+    project.plugins.apply("kotlin-android")
+    project.plugins.apply("kotlin-kapt")
+
+    // Access the version catalog
+    val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+    val androidExtension = project.extensions.getByName("android")
+
+    if (androidExtension is BaseExtension) {
+        androidExtension.apply {
+            compileSdkVersion(34)
+            defaultConfig {
+                targetSdk = 34
+                minSdk = 24
+                versionCode = 1
+                versionName = "1.0"
+                testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+            }
+            val proguardFile = "proguard-rules.pro"
+            when (this) {
+                is LibraryExtension -> defaultConfig {
+                    // apply the pro guard rules for library
+                    consumerProguardFiles("consumer-rules.pro")
                 }
-                val proguardFile = "proguard-rules.pro"
-                when (this) {
-                    is LibraryExtension -> defaultConfig {
-                        // apply the pro guard rules for library
-                        consumerProguardFiles("consumer-rules.pro")
+                is AppExtension -> buildTypes {
+
+                    getByName("release") {
+                        isMinifyEnabled = true
+                        isShrinkResources = true
+                        debuggable(false)
+                        proguardFile(proguardFile)
                     }
-                    is AppExtension -> buildTypes {
-
-                        getByName("release") {
-                            isMinifyEnabled = true
-                            isShrinkResources = true
-                            debuggable(false)
-                            proguardFile(proguardFile)
-                        }
-                        getByName("debug") {
-                            isMinifyEnabled = false
-                            isShrinkResources = false
-                            debuggable(true)
-                            proguardFile(proguardFile)
-                        }
+                    getByName("debug") {
+                        isMinifyEnabled = false
+                        isShrinkResources = false
+                        debuggable(true)
+                        proguardFile(proguardFile)
                     }
                 }
-                composeOptions.kotlinCompilerExtensionVersion =  libs.findVersion("compose-compiler").get().requiredVersion
-                compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_17
-                    targetCompatibility = JavaVersion.VERSION_17
-                }
+            }
+            composeOptions.kotlinCompilerExtensionVersion =  libs.findVersion("compose-compiler").get().requiredVersion
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
 
+            if (withJetpack) {
                 buildFeatures.compose = true
-
             }
         }
-
     }
-
 }

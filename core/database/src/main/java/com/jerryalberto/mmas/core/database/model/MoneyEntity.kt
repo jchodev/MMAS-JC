@@ -5,11 +5,11 @@ import androidx.room.PrimaryKey
 
 //ref: https://github.com/android/nowinandroid/blob/main/core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/TopicEntity.kt
 @Entity(
-    tableName = "inputs",
+    tableName = "money_tbl",
 )
-data class InputEntity (
-    @PrimaryKey
-    val id: Int =0,
+data class MoneyEntity (
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,//last so that we don't have to pass an ID value or named arguments
     val type : String,
     val amount: Double,
     val category : String,

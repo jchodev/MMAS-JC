@@ -29,6 +29,12 @@ detekt = "1.23.0"
 # room {https://stackoverflow.com/questions/77342860/how-to-resolve-the-gradle-build-error-java-lang-nosuchmethoderror}
 room = "2.6.0"
 
+#timber
+timber = "5.0.1"
+
+#junit5
+junit5 = "5.9.1"
+
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
@@ -77,6 +83,16 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 room-runtime =  { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler =  { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx =  { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+#timber
+timber =  { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
+#junit5
+junit-jupiter-api =  { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
+junit-jupiter-params =  { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
+junit-jupiter-engine =  { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
+junit-vintage-engine =  { group = "org.junit.vintage", name = "junit-vintage-engine" }
+
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }

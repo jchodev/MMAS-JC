@@ -3,7 +3,7 @@ plugins {
     id ("com.android.library")
     id ("org.jetbrains.kotlin.android")
 
-    id("module-plugin")
+    id("module-without-jetpack-plugin")
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
 }
@@ -22,4 +22,7 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    //timber
+    implementation(libs.timber)
 }
