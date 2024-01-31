@@ -18,11 +18,15 @@ android {
 
 dependencies {
 
+    implementation(project(":core:designsystem"))
+
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
 
+    //jetpack compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.androidx.compose)
+    debugImplementation(libs.compose.ui.tooling.debug)
 
     //hilt
     implementation(libs.hilt.android)
