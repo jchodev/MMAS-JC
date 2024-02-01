@@ -26,7 +26,7 @@ fun AnalysisScreen() {
             Modifier.fillMaxSize()
         ) {
             Spacer(modifier = Modifier.height(48.dp))
-            Text(text = "this is analysis screen ", textAlign = TextAlign.Center)
+            Text(text = "this is analysis screen", textAlign = TextAlign.Center)
         }
     }
 }
