@@ -38,17 +38,10 @@ fun CategoryItem(
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Surface(
-            modifier = Modifier.size(48.dp), // Adjust size as needed
-            shape = CircleShape,
-            color = Color.Gray
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                modifier = Modifier.fillMaxSize().padding(4.dp)
-            )
-        }
+        CategoryIcon(
+            icon = icon,
+            text = text
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 

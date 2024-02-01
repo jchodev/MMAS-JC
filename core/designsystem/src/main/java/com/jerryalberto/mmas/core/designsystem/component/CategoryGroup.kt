@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 
 @Composable
 fun CategoryGroup(
@@ -46,14 +47,16 @@ fun CategoryGroup(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.Green)
+            .background(color = Color.Green) // for testing
             .padding(8.dp)
     ) {
+
+        //row1
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color.Yellow,
+                    color = MaterialTheme.colorScheme.secondary,
                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 )
         ) {
@@ -64,25 +67,20 @@ fun CategoryGroup(
                     .clickable { upperClick.invoke() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Surface(
-                    modifier = Modifier.size(56.dp), // Adjust size as needed
-                    shape = CircleShape,
-                    color = Color.Gray
-                ) {
-                    Icon(
-                        imageVector = upperIcon,
-                        contentDescription = upperText,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(4.dp)
-                    )
-                }
+
+                CategoryIcon(
+                    size = 56.dp,
+                    icon = upperIcon,
+                    text = upperText
+                )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
                     text = upperText,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        color = MaterialTheme.colorScheme.onSecondary
+                    ),
                     textAlign = TextAlign.Center
                 )
             }
@@ -115,40 +113,41 @@ fun CategoryGroup(
     }
 }
 
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 private fun CategoryGroupPreview(){
-
-    CategoryGroup(
-        upperText = "this is text",
-        upperIcon = Icons.Filled.Settings,
-        items = listOf(
-            Triple(
-                "this is item1",
-                Icons.Filled.Settings,
-                {}
-            ),
-            Triple(
-                "this is item2",
-                Icons.Filled.Face,
-                {}
-            ),
-            Triple(
-                "this is item4",
-                Icons.Filled.AccountBox,
-                {}
-            ),
-            Triple(
-                "this is item5",
-                Icons.Filled.Build,
-                {}
-            ),
-            Triple(
-                "this is item6",
-                Icons.Filled.CheckCircle,
-                {}
+    MmasTheme {
+        CategoryGroup(
+            upperText = "this is text",
+            upperIcon = Icons.Filled.Settings,
+            items = listOf(
+                Triple(
+                    "this is item1",
+                    Icons.Filled.Settings,
+                    {}
+                ),
+                Triple(
+                    "this is item2",
+                    Icons.Filled.Face,
+                    {}
+                ),
+                Triple(
+                    "this is item4",
+                    Icons.Filled.AccountBox,
+                    {}
+                ),
+                Triple(
+                    "this is item5",
+                    Icons.Filled.Build,
+                    {}
+                ),
+                Triple(
+                    "this is item6",
+                    Icons.Filled.CheckCircle,
+                    {}
+                )
             )
         )
-    )
+    }
 }
 
