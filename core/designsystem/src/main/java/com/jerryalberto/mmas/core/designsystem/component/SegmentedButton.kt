@@ -1,19 +1,7 @@
 package com.jerryalberto.mmas.core.designsystem.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -31,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun SegmentedButtonBar(
     tabTitles: List<String>,
     defaultTab: Int = 0,
-    onSelected : (Int) -> Unit = {}
+    onSelected: (Int) -> Unit = {}
 ) {
     val selectedTabIndex = remember { mutableStateOf(defaultTab) }
 
@@ -59,14 +47,14 @@ fun SegmentedButtonBar(
 
 @Preview(showBackground = false)
 @Composable
-private fun SegmentedButtonBarPreview(){
+private fun SegmentedButtonBarPreview() {
     val tabTitles = listOf("Tab 1", "Tab 2")
     SegmentedButtonBar(tabTitles = tabTitles)
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0000F )
+@Preview(showBackground = true, backgroundColor = 0xFF0000F)
 @Composable
-private fun SegmentedButtonBarWithBackgroundColorPreview(){
+private fun SegmentedButtonBarWithBackgroundColorPreview() {
     val tabTitles = listOf("Tab 1", "Tab 2")
     SegmentedButtonBar(tabTitles = tabTitles)
 }
