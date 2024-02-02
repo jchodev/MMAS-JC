@@ -45,33 +45,31 @@ fun AnalysisScreen() {
                 },
                 items = listOf(
                     Triple(
-                        "this is item1",
-                        Icons.Filled.Settings,
-                        {
-                            Toast.makeText(context ,"this is test toast", Toast.LENGTH_SHORT).show()
+                        first = "this is item1",
+                        second = Icons.Filled.Settings,
+                        third = {
+                            Toast.makeText(context ,"this is item1 toast", Toast.LENGTH_SHORT).show()
                         }
                     ),
                     Triple(
-                        "this is item2",
-                        Icons.Filled.Face,
-                        {
-                            Toast.makeText(context ,"this is test toast2", Toast.LENGTH_SHORT).show()
-                        }
+                        first = "this is item2",
+                        second = Icons.Filled.Face,
+                        third = {}
                     ),
                     Triple(
-                        "this is item4",
-                        Icons.Filled.AccountBox,
-                        {}
+                        first = "this is item4",
+                        second = Icons.Filled.AccountBox,
+                        third = {}
                     ),
                     Triple(
-                        "this is item5",
-                        Icons.Filled.Build,
-                        {}
+                        first = "this is item5",
+                        second =Icons.Filled.Build,
+                        third = {}
                     ),
                     Triple(
-                        "this is item6",
-                        Icons.Filled.CheckCircle,
-                        {}
+                        first ="this is item6",
+                        second = Icons.Filled.CheckCircle,
+                        third = {}
                     )
                 )
             )

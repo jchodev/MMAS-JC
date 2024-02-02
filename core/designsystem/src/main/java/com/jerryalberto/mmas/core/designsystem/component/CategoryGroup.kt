@@ -6,15 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -22,9 +17,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -122,29 +115,29 @@ private fun CategoryGroupPreview(){
             upperIcon = Icons.Filled.Settings,
             items = listOf(
                 Triple(
-                    "this is item1",
-                    Icons.Filled.Settings,
-                    {}
+                    first = "this is item1",
+                    second = Icons.Filled.Settings,
+                    third = {}
                 ),
                 Triple(
-                    "this is item2",
-                    Icons.Filled.Face,
-                    {}
+                    first = "this is item2",
+                    second = Icons.Filled.Face,
+                    third = {}
                 ),
                 Triple(
-                    "this is item4",
-                    Icons.Filled.AccountBox,
-                    {}
+                    first = "this is item4",
+                    second = Icons.Filled.AccountBox,
+                    third = {}
                 ),
                 Triple(
-                    "this is item5",
-                    Icons.Filled.Build,
-                    {}
+                    first = "this is item5",
+                    second =Icons.Filled.Build,
+                    third = {}
                 ),
                 Triple(
-                    "this is item6",
-                    Icons.Filled.CheckCircle,
-                    {}
+                    first ="this is item6",
+                    second = Icons.Filled.CheckCircle,
+                    third = {}
                 )
             )
         )
