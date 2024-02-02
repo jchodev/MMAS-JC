@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.core.designsystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,25 +28,24 @@ fun RoundBoxWithTwoColumn(
     title2: String = "",
     value2: String = "",
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.Green) // for testing
-    ) {
 
-        //row1
-        Box(
+
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(32.dp)) // Top and side borders only
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    //color = MaterialTheme.colorScheme.surface,
+                    color  = Color.Green, // for testing
+                    shape = RoundedCornerShape(32.dp)
                 )
+                //.background(color = Color.Green) // for testing
         ) {
             // Content for the first row
             Row (
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
             ) {
 
                 Text(
@@ -56,7 +56,7 @@ fun RoundBoxWithTwoColumn(
                     textAlign = TextAlign.Center
                 )
 
-               Spacer(modifier = Modifier.weight(weight = 1f))
+                Spacer(modifier = Modifier.weight(weight = 1f))
 
                 Text(
                     text = value1,
@@ -66,21 +66,10 @@ fun RoundBoxWithTwoColumn(
                     textAlign = TextAlign.Center
                 )
             }
-        }
 
-        //second
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
-                )
-        ) {
-            
             Row (
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
             ) {
 
                 Text(
@@ -102,7 +91,9 @@ fun RoundBoxWithTwoColumn(
                 )
             }
         }
-    }
+
+
+
 }
 
 
