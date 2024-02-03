@@ -89,9 +89,6 @@ fun RoundBoxWithTwoColumn(
                 )
             }
         }
-
-
-
 }
 
 
