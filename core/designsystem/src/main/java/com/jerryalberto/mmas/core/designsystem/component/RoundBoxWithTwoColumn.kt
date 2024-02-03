@@ -29,15 +29,13 @@ fun RoundBoxWithTwoColumn(
     value2: String = "",
 ) {
 
-
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(32.dp)) // Top and side borders only
                 .background(
-                    //color = MaterialTheme.colorScheme.surface,
-                    color  = Color.Green, // for testing
+                    color = MaterialTheme.colorScheme.surface,
+                    //color  = Color.Green, // for testing
                     shape = RoundedCornerShape(32.dp)
                 )
                 //.background(color = Color.Green) // for testing
