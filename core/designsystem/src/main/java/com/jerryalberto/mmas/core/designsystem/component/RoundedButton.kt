@@ -2,7 +2,7 @@ package com.jerryalberto.mmas.core.designsystem.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -21,11 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.theme.Orange40
-import com.jerryalberto.mmas.core.designsystem.theme.roundedShapeScheme
 
 @Composable
 fun RoundedButton(
-    shape: RoundedCornerShape,
+    shape: CornerBasedShape,
     border: BorderStroke,
     buttonColors: ButtonColors,
     iconLeft: ImageVector,
@@ -56,7 +55,7 @@ fun RoundedButton(
 @Composable
 private fun RoundedButtonPreview() {
     RoundedButton(
-        shape = MaterialTheme.roundedShapeScheme.medium,
+        shape = MaterialTheme.shapes.medium,
         border = BorderStroke(2.dp, Orange40),
         buttonColors = ButtonDefaults.buttonColors(
             contentColor = Color.White, containerColor = Orange40
@@ -65,7 +64,6 @@ private fun RoundedButtonPreview() {
         title = "Save",
         textStyle = MaterialTheme.typography.titleMedium,
         padding = 5.dp,
-        contentDescription = "Icon left",
-        onClick = {}
-    )
+        contentDescription = "Icon left"
+    ) {}
 }
