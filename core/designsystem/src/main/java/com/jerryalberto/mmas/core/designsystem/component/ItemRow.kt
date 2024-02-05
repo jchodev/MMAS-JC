@@ -10,20 +10,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun ItemRow(
@@ -31,9 +29,7 @@ fun ItemRow(
     iconLeft: ImageVector,
     iconRight: ImageVector,
     textAlign: TextAlign,
-    fontWeight: FontWeight,
-    fontStyle: FontStyle,
-    fontSize: TextUnit,
+    textStyle: TextStyle,
     padding: Dp,
     onClick: () -> Unit = {}
 ) {
@@ -58,9 +54,7 @@ fun ItemRow(
                 .padding(padding),
             text = title,
             textAlign = textAlign,
-            fontWeight = fontWeight,
-            fontStyle = fontStyle,
-            fontSize = fontSize
+            style = textStyle
         )
         Icon(
             modifier = Modifier
@@ -81,9 +75,7 @@ private fun ItemRowPreview() {
         iconLeft = Icons.Default.DateRange,
         iconRight = Icons.Default.KeyboardArrowRight,
         textAlign = TextAlign.Left,
-        fontWeight = FontWeight.Bold,
-        fontStyle = FontStyle.Italic,
-        fontSize = 20.sp,
+        textStyle = MaterialTheme.typography.titleMedium,
         padding = 10.dp
     )
 }
