@@ -32,11 +32,11 @@ fun RoundBoxWithTwoColumn(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(32.dp)) // Top and side borders only
+                .border(width = 1.dp, color = Color.Gray, shape = MaterialTheme.shapes.extraLarge) // Top and side borders only
                 .background(
                     color = MaterialTheme.colorScheme.surface,
                     //color  = Color.Green, // for testing
-                    shape = RoundedCornerShape(32.dp)
+                    shape = MaterialTheme.shapes.extraLarge
                 )
                 //.background(color = Color.Green) // for testing
         ) {
@@ -48,9 +48,8 @@ fun RoundBoxWithTwoColumn(
 
                 Text(
                     text = title1,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -58,9 +57,8 @@ fun RoundBoxWithTwoColumn(
 
                 Text(
                     text = value1,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
             }
@@ -72,9 +70,8 @@ fun RoundBoxWithTwoColumn(
 
                 Text(
                     text = title2,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -82,9 +79,8 @@ fun RoundBoxWithTwoColumn(
 
                 Text(
                     text = value2,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
             }
