@@ -6,8 +6,9 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.kotlin.dsl.getByType
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 
 class CommonModulePlugin: Plugin<Project> {
@@ -28,6 +29,11 @@ class CommonModuleWithoutJetpackPlugin: Plugin<Project> {
 private fun basicApply(project: Project, withJetpack: Boolean = true){
     project.plugins.apply("kotlin-android")
     project.plugins.apply("kotlin-kapt")
+
+    ////************* Make Junit test WORK!!**************
+    project.tasks.withType(Test::class.java).configureEach {
+        useJUnitPlatform()
+    }
 
     // Access the version catalog
     val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -72,9 +78,17 @@ private fun basicApply(project: Project, withJetpack: Boolean = true){
                 targetCompatibility = JavaVersion.VERSION_17
             }
 
+            //make app/build.gradle.kts work!!
+            packagingOptions {
+                resources {
+                    excludes += "/META-INF/{AL2.0,LGPL2.1}"
+                }
+            }
+
             if (withJetpack) {
                 buildFeatures.compose = true
             }
+
         }
     }
 }
