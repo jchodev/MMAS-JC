@@ -13,7 +13,10 @@ import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 fun MainNavigation(
     navController: NavHostController,
 ) {
-    NavHost(navController = navController, startDestination = MainActivityScreen.InputScreen.route) {
+    NavHost(
+        navController = navController,
+        startDestination = MainActivityScreen.InputScreen.route
+    ) {
         composable(MainActivityScreen.InputScreen.route) {
             InputScreen()
         }
@@ -37,6 +40,6 @@ sealed class MainActivityScreen(val route: String) {
 
     data object InputScreen : MainActivityScreen("input_screen")
     data object AnalysisScreen : MainActivityScreen("analysis_screen")
-    data object CalendarScreen: MainActivityScreen("calendar_screen")
-    data object SettingScreen: MainActivityScreen("setting_screen")
+    data object CalendarScreen : MainActivityScreen("calendar_screen")
+    data object SettingScreen : MainActivityScreen("setting_screen")
 }

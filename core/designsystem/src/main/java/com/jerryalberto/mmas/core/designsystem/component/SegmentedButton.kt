@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun SegmentedButtonBar(
     tabTitles: List<String>,
     defaultTab: Int = 0,
-    onSelected : (Int) -> Unit = {}
+    onSelected: (Int) -> Unit = {}
 ) {
     val selectedTabIndex = remember { mutableStateOf(defaultTab) }
 
@@ -47,14 +47,14 @@ fun SegmentedButtonBar(
 
 @Preview(showBackground = false)
 @Composable
-private fun SegmentedButtonBarPreview(){
+private fun SegmentedButtonBarPreview() {
     val tabTitles = listOf("Tab 1", "Tab 2")
     SegmentedButtonBar(tabTitles = tabTitles)
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0000F )
+@Preview(showBackground = true, backgroundColor = 0xFF0000F)
 @Composable
-private fun SegmentedButtonBarWithBackgroundColorPreview(){
+private fun SegmentedButtonBarWithBackgroundColorPreview() {
     val tabTitles = listOf("Tab 1", "Tab 2")
     SegmentedButtonBar(tabTitles = tabTitles)
 }
