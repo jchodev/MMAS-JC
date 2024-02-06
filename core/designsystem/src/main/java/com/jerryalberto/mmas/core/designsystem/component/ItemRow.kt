@@ -37,7 +37,7 @@ fun ItemRow(
         Modifier
             .fillMaxWidth()
             .padding(padding)
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colorScheme.surface)
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
