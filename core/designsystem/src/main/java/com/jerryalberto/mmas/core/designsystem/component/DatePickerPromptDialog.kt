@@ -8,7 +8,9 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.jerryalberto.mmas.core.designsystem.R
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -36,14 +38,14 @@ fun DatePickerPromptDialog(
             }
 
             ) {
-                Text(text = "OK")
+                Text(text = stringResource(R.string.ok))
             }
         },
         dismissButton = {
             Button(onClick = {
                 onDismiss()
             }) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.cancel))
             }
         }
     ) {
