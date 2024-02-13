@@ -30,8 +30,4 @@ dependencies {
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
 
-    //Calendar picker dialog material
-    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-
 }
