@@ -3,8 +3,8 @@ plugins {
     //alias(libs.plugins.android.library)
     //alias(libs.plugins.android.kotlin)
 
-    id ("com.android.library")
-    id ("org.jetbrains.kotlin.android")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
 
     id("module-plugin")
     alias(libs.plugins.google.ksp)
@@ -29,4 +29,5 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
+
 }
