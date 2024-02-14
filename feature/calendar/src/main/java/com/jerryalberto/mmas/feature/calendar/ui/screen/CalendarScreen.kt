@@ -14,10 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.component.DatePickerPromptDialog
+import com.jerryalberto.mmas.feature.calendar.R
 
 @Composable
 fun CalendarScreen() {
@@ -47,13 +49,14 @@ private fun MmasDatePickerDialog() {
     }
 
     Button(onClick = { showDatePicker = true }) {
-        Text(text = "Open date picker dialog", textAlign = TextAlign.Center)
+        Text(text = stringResource(R.string.open_date_picker_dialog), textAlign = TextAlign.Center)
     }
     Spacer(modifier = Modifier.height(48.dp))
     Text(text = date, textAlign = TextAlign.Center)
 
     if (showDatePicker) {
         DatePickerPromptDialog(
+            dateFormat = stringResource(R.string.dd_mm_yyyy),
             onDateSelected = { date = it },
             onDismiss = { showDatePicker = false }
         )

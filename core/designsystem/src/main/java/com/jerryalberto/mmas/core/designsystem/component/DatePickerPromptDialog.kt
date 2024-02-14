@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.R
-import java.text.SimpleDateFormat
-import java.util.Date
+import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerPromptDialog(
+    dateFormat: String,
     onDateSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -26,7 +26,7 @@ fun DatePickerPromptDialog(
     })
 
     val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
+        it.convertMillisToDate(dateFormat = dateFormat)
     } ?: ""
 
     DatePickerDialog(
@@ -55,15 +55,11 @@ fun DatePickerPromptDialog(
     }
 }
 
-private fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy")
-    return formatter.format(Date(millis))
-}
-
 @Preview(showBackground = true, backgroundColor = 0xFF0000F)
 @Composable
 private fun DatePickerPromptDialogPreview() {
     DatePickerPromptDialog(
+        "dd/MM/yyyy",
         onDateSelected = {},
         onDismiss = {}
     )
