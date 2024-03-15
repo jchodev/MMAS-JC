@@ -8,10 +8,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,11 +39,11 @@ class MainActivity : ComponentActivity() {
         BottomBar(
             items = listOf(
                 BottomBarItem(
-                    title = "Add",
-                    selectedIcon = Icons.Filled.Add,
-                    unselectedIcon = Icons.Outlined.Add,
+                    title = "Home",
+                    selectedIcon = Icons.Filled.Home,
+                    unselectedIcon = Icons.Outlined.Home,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.InputScreen.route)
+                        navController?.navigate(MainActivityScreen.HomeScreen.route)
                     }
                 ),
                 BottomBarItem(

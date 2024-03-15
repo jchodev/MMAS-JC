@@ -16,6 +16,7 @@ compose-material = "1.2.0-beta01"
 compose-navigation = "2.7.0"
 compose-coil = "2.4.0"
 compose-paging = "3.2.0"
+compose-constraintlayout = "1.0.1"
 # google
 google-playservices = "18.2.0"
 google-ksp = "1.9.10-1.0.13"
@@ -79,6 +80,7 @@ compose-foundation-layout = { group = "androidx.compose.foundation", name = "fou
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose-constraintlayout" }
 
 # hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-hilt" }
@@ -124,6 +126,7 @@ androidx-compose = [
     "compose.foundation",
     "compose.foundation.layout",
     "compose.runtime",
+    "compose.constraintlayout",
 ]
 
 junit5-test-implementation = [

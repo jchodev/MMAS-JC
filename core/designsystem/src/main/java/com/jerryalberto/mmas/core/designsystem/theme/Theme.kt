@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.core.designsystem.theme
 
+
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,9 +9,12 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+
 
 @VisibleForTesting
 val LightColorScheme = lightColorScheme(
@@ -69,6 +73,7 @@ val DarkColorScheme = darkColorScheme(
     outline = PurpleGray60
 )
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MmasTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -94,10 +99,27 @@ fun MmasTheme(
 //        }
 //    }
 
+
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         shapes = shapes,
         content = content
     )
+
 }
+
+@Composable
+fun getDimen(): Dimens{
+    val configuration = LocalConfiguration.current
+    return if (configuration.screenWidthDp < 600) {
+        compactDimens
+    } else {
+        largeDimens
+    }
+}
+
+val MaterialTheme.dimens
+    @Composable
+    get() = getDimen()

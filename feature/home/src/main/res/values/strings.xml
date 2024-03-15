@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_title">Account Balance</string>
+    <string name="feature_home_income">Income</string>
+    <string name="feature_home_expenses">Expenses</string>
+    <string name="feature_home_spend_frequency">Spend Frequency</string>
+
+    <string name="feature_home_today">Today</string>
+    <string name="feature_home_week">Week</string>
+    <string name="feature_home_month">Month</string>
+
+    <string name="feature_home_recent_transaction">Recent Transaction</string>
+    <string name="feature_home_sell_all">Sell All ></string>
+</resources>
