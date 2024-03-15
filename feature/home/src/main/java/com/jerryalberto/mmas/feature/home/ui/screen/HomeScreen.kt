@@ -93,7 +93,7 @@ private fun HomeScreenContent() {
         }
         //list of transaction
         item {
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing8))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing16))
             Row (
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -114,6 +114,7 @@ private fun HomeScreenContent() {
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing8))
             TransactionBox()
         }
     }
