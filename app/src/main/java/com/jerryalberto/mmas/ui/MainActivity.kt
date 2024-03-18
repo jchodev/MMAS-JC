@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 import com.jerryalberto.mmas.ui.navigation.MainActivityScreen
@@ -47,6 +50,17 @@ class MainActivity : ComponentActivity() {
                     }
                 ),
                 BottomBarItem(
+                    title = "Add",
+                    selectedIcon = Icons.Filled.Add,
+                    unselectedIcon = Icons.Outlined.Add,
+                    onClick = {
+                        //navController?.navigate(MainActivityScreen.InputScreen.route)
+
+                        val intent = Intent(this, InputActivity::class.java)
+                        startActivity(intent)
+                    }
+                ),
+                BottomBarItem(
                     title = "Analysis",
                     selectedIcon = Icons.Filled.Face,
                     unselectedIcon = Icons.Outlined.Face,
@@ -54,14 +68,7 @@ class MainActivity : ComponentActivity() {
                         navController?.navigate(MainActivityScreen.AnalysisScreen.route)
                     }
                 ),
-                BottomBarItem(
-                    title = "Calendar",
-                    selectedIcon = Icons.Filled.DateRange,
-                    unselectedIcon = Icons.Outlined.DateRange,
-                    onClick = {
-                        navController?.navigate(MainActivityScreen.CalendarScreen.route)
-                    }
-                ),
+
                 BottomBarItem(
                     title = "Setting",
                     selectedIcon = Icons.Filled.Settings,
@@ -74,11 +81,11 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MmasTheme {
-
                 navController = rememberNavController()
 
                 // A surface container using the 'background' color from the theme

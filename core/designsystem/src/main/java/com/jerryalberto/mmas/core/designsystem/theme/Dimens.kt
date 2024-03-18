@@ -4,20 +4,24 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class Dimens(
-    val spacing4:Dp = 4.dp,
-    val spacing8:Dp = 8.dp,
-    val spacing16:Dp = 16.dp,
-    val spacing32:Dp = 32.dp,
-    val iconSize:Dp = 48.dp
+    val dimen4:Dp = 4.dp,
+    val dimen8:Dp = 8.dp,
+    val dimen16:Dp = 16.dp,
+    val dimen24:Dp = 24.dp,
+    val dimen32:Dp = 32.dp,
+    val dimen48:Dp = 48.dp,
+    val dimen56:Dp = 56.dp,
+    val dimen160:Dp = 160.dp,
+    val iconSize:Dp = dimen32,
 )
 
 val compactDimens = Dimens(
 )
 
 val largeDimens = Dimens(
-    spacing4 = 8.dp,
-    spacing8 = 16.dp,
-    spacing16 = 32.dp,
+    dimen4 = 8.dp,
+    dimen8 = 16.dp,
+    dimen16 = 32.dp,
     iconSize = 64.dp
 )
 

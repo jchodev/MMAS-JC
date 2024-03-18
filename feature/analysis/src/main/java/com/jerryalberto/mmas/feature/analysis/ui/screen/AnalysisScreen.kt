@@ -36,43 +36,6 @@ fun AnalysisScreen() {
         ) {
             Spacer(modifier = Modifier.height(48.dp))
             Text(text = "this is analysis screen", textAlign = TextAlign.Center)
-            val context = LocalContext.current
-            CategoryGroup(
-                upperText = "this is text",
-                upperIcon = Icons.Filled.Settings,
-                upperClick = {
-                    Toast.makeText(context ,"this is upper toast", Toast.LENGTH_SHORT).show()
-                },
-                items = listOf(
-                    Triple(
-                        first = "this is item1",
-                        second = Icons.Filled.Settings,
-                        third = {
-                            Toast.makeText(context ,"this is item1 toast", Toast.LENGTH_SHORT).show()
-                        }
-                    ),
-                    Triple(
-                        first = "this is item2",
-                        second = Icons.Filled.Face,
-                        third = {}
-                    ),
-                    Triple(
-                        first = "this is item4",
-                        second = Icons.Filled.AccountBox,
-                        third = {}
-                    ),
-                    Triple(
-                        first = "this is item5",
-                        second =Icons.Filled.Build,
-                        third = {}
-                    ),
-                    Triple(
-                        first ="this is item6",
-                        second = Icons.Filled.CheckCircle,
-                        third = {}
-                    )
-                )
-            )
         }
     }
 }

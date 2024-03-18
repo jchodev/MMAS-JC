@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jerryalberto.mmas.core.designsystem.component.DatePickerPromptDialog
+import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.feature.calendar.R
 
 @Composable

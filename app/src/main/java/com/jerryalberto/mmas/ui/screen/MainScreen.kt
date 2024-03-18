@@ -13,7 +13,7 @@ import com.jerryalberto.mmas.ui.navigation.MainNavigation
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    bottomBar: @Composable () -> Unit = {},
+    bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold (
         //containerColor = Color.Transparent,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,13 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 @Composable
 fun CategoryIcon(
     bgColor: Color = Color.Gray,
-    size: Dp = 48.dp,
-    text: String = "",
+    size: Dp = MaterialTheme.dimens.dimen48,
+    contentDescription: String = "",
     icon: ImageVector,
 ) {
     Surface(
@@ -30,8 +31,8 @@ fun CategoryIcon(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = text,
-            modifier = Modifier.fillMaxSize().padding(4.dp)
+            contentDescription = contentDescription,
+            modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.dimen8)
         )
     }
 }
@@ -40,7 +41,7 @@ fun CategoryIcon(
 @Composable
 private fun CategoryIconPreview(){
     CategoryIcon(
-        text = "this is text",
+        contentDescription = "this is text",
         icon = Icons.Filled.Settings
     )
 }

@@ -24,24 +24,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.core.model.data.CategoryType
 
 @Composable
 fun CategoryGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    upperText: String,
-    upperIcon: ImageVector,
-    upperClick: () -> Unit = {},
-    items: List< Triple<String, ImageVector, (() -> Unit)>> = emptyList()
+    category: Category,
+    upperClick: (Category) -> Unit = {},
 ){
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(color = Color.Green) // for testing
-            .padding(8.dp)
+            //.background(color = Color.Green) // for testing
+            .padding(MaterialTheme.dimens.dimen16)
     ) {
 
         //row1
@@ -50,27 +52,30 @@ fun CategoryGroup(
                 .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    shape = RoundedCornerShape(
+                        topStart = MaterialTheme.dimens.dimen16,
+                        topEnd = MaterialTheme.dimens.dimen16
+                    )
                 )
         ) {
             // Content for the first row
             Row (
                 modifier = Modifier
-                    .padding(16.dp)
-                    .clickable { upperClick.invoke() },
+                    .padding(MaterialTheme.dimens.dimen16)
+                    .clickable { upperClick.invoke(category) },
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 CategoryIcon(
-                    size = 56.dp,
-                    icon = upperIcon,
-                    text = upperText
+                    size = MaterialTheme.dimens.dimen56,
+                    icon = ImageVector.vectorResource(category.imageResId),
+                    contentDescription = stringResource(id = category.stringResId)
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
 
                 Text(
-                    text = upperText,
+                    text = stringResource(id = category.stringResId),
                     style = MaterialTheme.typography.headlineSmall.copy(
                         color = MaterialTheme.colorScheme.onSecondary
                     ),
@@ -79,26 +84,34 @@ fun CategoryGroup(
             }
         }
 
+        //row 2
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    shape = RoundedCornerShape(
+                        bottomStart = MaterialTheme.dimens.dimen16,
+                        bottomEnd = MaterialTheme.dimens.dimen16
+                    )
                 )
-                .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
+                .padding(
+                    start = MaterialTheme.dimens.dimen16,
+                    top = MaterialTheme.dimens.dimen16,
+                    end = MaterialTheme.dimens.dimen16,
+                    bottom = MaterialTheme.dimens.dimen24
+                )
         ) {
             LazyRow {
-                items(items.size) { index ->
-                    val item = items[index]
+                items(category.items.size) { index ->
+                    val item = category.items[index]
                     CategoryItem(
-                        text = item.first,
-                        icon = item.second,
-                        onClick = item.third
+                        category = item,
+                        textColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
 
-                    if (index < items.size - 1) {
-                        Spacer(modifier = Modifier.width(8.dp))
+                    if (index < category.items.size - 1) {
+                        Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
                     }
                 }
             }
@@ -111,35 +124,29 @@ fun CategoryGroup(
 private fun CategoryGroupPreview(){
     MmasTheme {
         CategoryGroup(
-            upperText = "this is text",
-            upperIcon = Icons.Filled.Settings,
-            items = listOf(
-                Triple(
-                    first = "this is item1",
-                    second = Icons.Filled.Settings,
-                    third = {}
-                ),
-                Triple(
-                    first = "this is item2",
-                    second = Icons.Filled.Face,
-                    third = {}
-                ),
-                Triple(
-                    first = "this is item4",
-                    second = Icons.Filled.AccountBox,
-                    third = {}
-                ),
-                Triple(
-                    first = "this is item5",
-                    second =Icons.Filled.Build,
-                    third = {}
-                ),
-                Triple(
-                    first ="this is item6",
-                    second = Icons.Filled.CheckCircle,
-                    third = {}
+            category = Category(
+                type = CategoryType.FOOD_AND_BEVERAGES,
+                imageResId = android.R.mipmap.sym_def_app_icon,
+                stringResId = android.R.string.copy,
+                items = listOf(
+                    Category(
+                        type = CategoryType.FOOD,
+                        imageResId = android.R.mipmap.sym_def_app_icon,
+                        stringResId = android.R.string.copy
+                    ),
+                    Category(
+                        type = CategoryType.BEVERAGES,
+                        imageResId = android.R.mipmap.sym_def_app_icon,
+                        stringResId = android.R.string.copy
+                    ),
+                    Category(
+                        type = CategoryType.GROCERIES,
+                        imageResId = android.R.mipmap.sym_def_app_icon,
+                        stringResId = android.R.string.copy
+                    )
                 )
-            )
+            ),
+
         )
     }
 }
