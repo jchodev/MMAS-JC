@@ -2,8 +2,6 @@ package com.jerryalberto.mmas.core.model.data
 
 data class Category (
     val type: CategoryType,
-    val imageResId: Int = 0,
-    val stringResId: Int = 0,
     val items: List<Category> = listOf()
 )
 

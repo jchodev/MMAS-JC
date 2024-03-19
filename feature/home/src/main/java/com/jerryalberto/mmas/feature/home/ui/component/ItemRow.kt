@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.core.designsystem.component
+package com.jerryalberto.mmas.feature.home.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

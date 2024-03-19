@@ -31,4 +31,6 @@ dependencies {
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
 
+    //timber
+    implementation(libs.timber)
 }

@@ -10,16 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AvTimer
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,29 +30,34 @@ import androidx.compose.material3.Text
 
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
-import com.jerryalberto.mmas.core.designsystem.dialog.CategorySelectDialog
+
 import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
-import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
+import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
-
+import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -61,9 +65,26 @@ fun InputScreen(
     viewModel: InputScreenViewModel,
     onTopBarLeftClick: () -> Unit = {},
 ) {
+
     InputScreenContent(
+        state = viewModel.uiState.collectAsState().value,
         onTopBarLeftClick = onTopBarLeftClick,
-        categories = viewModel.getCategories()
+        categories = viewModel.getCategories(),
+        onDescriptionChange = {
+            viewModel.onDescriptionChange(it)
+        },
+        onDateSelected = {
+            viewModel.onDateSelected(it)
+        },
+        onTimeSelected = { hour, minute ->
+            viewModel.onTimeSelected(hour = hour, minute = minute)
+        },
+        onCategorySelected = {
+            viewModel.onCategorySelected(it)
+        },
+        onAmountChange = {
+            viewModel.onAmountChange(it)
+        }
     )
 }
 
@@ -71,8 +92,16 @@ fun InputScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputScreenContent(
+    state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    categories: List<Category> = listOf()
+    categories: List<CategoryDisplay> = listOf(),
+    onDescriptionChange: (String)-> Unit = {},
+    onDateSelected: (Long) -> Unit = {},
+    onTimeSelected: (Int, Int) -> Unit = {
+            hour, minute ->
+    },
+    onCategorySelected: (CategoryDisplay) -> Unit = {},
+    onAmountChange: (String) -> Unit = {},
 ){
     val bgColor = ColorConstant.ExpensesRed
 
@@ -80,9 +109,8 @@ private fun InputScreenContent(
     var datePickerDialogVisible by remember { mutableStateOf(false) }
     if (datePickerDialogVisible){
         DatePickerPromptDialog(
-            dateFormat = "dd/MM/yyyy",
             onDateSelected = {
-                //    date = it
+                it?.let(onDateSelected)
             },
             onDismiss = { datePickerDialogVisible = false }
         )
@@ -91,10 +119,8 @@ private fun InputScreenContent(
     var timePickerDialogVisible by remember { mutableStateOf(false) }
     if (timePickerDialogVisible){
         TimePickerPromptDialog(
-            onSelected = {
-                    hour, minute ->
-                // Simulate action on selection (optional)
-                //Log.d("TimePicker", "Selected time: $hour:$minute")
+            onSelected = { hour, minute ->
+                onTimeSelected.invoke(hour, minute)
             },
             onDismiss = { timePickerDialogVisible = false}
         )
@@ -106,11 +132,7 @@ private fun InputScreenContent(
         CategorySelectDialog(
             list = categories,
             onDismissRequest = { categorySelectDialogVisible = false },
-//            onSelected = {
-//                openUserCountrySelectDialog = false
-//                Timber.d("selected individualBusinessCountry is ${it.cCountryCode}")
-//                viewModel.onUserCountryChange(it)
-//            }
+            onCategorySelected = onCategorySelected
         )
     }
 
@@ -157,7 +179,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 Text(
-                    text = "$ 1000",
+                    text =  "$" + state.amountString,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -176,14 +198,30 @@ private fun InputScreenContent(
                     .padding(MaterialTheme.dimens.dimen32)
             ){
                 MmasTextEdit(
+                    value = if (state.category != null) {
+                        stringResource(id = state.category.stringResId)
+                    } else {
+                        ""
+                    },
                     placeHolder = "Category",
                     readOnly = true,
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Category,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        if (state.category != null){
+                            Icon(
+                                imageVector = ImageVector.vectorResource(state.category.imageResId),
+                                contentDescription = stringResource(id = state.category.stringResId),
+                                modifier = Modifier.size(
+                                    MaterialTheme.dimens.dimen24
+                                ),
+                            )
+                        }
+                        else {
+                            Icon(
+                                imageVector = Icons.Default.Category,
+                                contentDescription = "select catergory",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     },
                     trailingIcon = {
                         IconButton(onClick = {
@@ -206,16 +244,18 @@ private fun InputScreenContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
+                    value = state.description,
                     placeHolder = "Description",
+                    onValueChange = onDescriptionChange
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-
 
                 Row (Modifier.fillMaxWidth()){
                     MmasTextEdit(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
+                        value = state.dateString,
                         placeHolder = "Date",
                         readOnly = true,
                         leadingIcon = {
@@ -225,19 +265,12 @@ private fun InputScreenContent(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                datePickerDialogVisible = true
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = "Select Date",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                        textEditOnClick = {
+                            datePickerDialogVisible = true
                         }
                     )
                     MmasTextEdit(
+                        value = state.timeString,
                         modifier = Modifier.weight(1f),
                         placeHolder = "Time",
                         readOnly = true,
@@ -248,21 +281,14 @@ private fun InputScreenContent(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                timePickerDialogVisible = true
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = "Select Time",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                        textEditOnClick = {
+                            timePickerDialogVisible = true
                         }
                     )
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
+                    value = state.amountString,
                     placeHolder = "Amount",
                     leadingIcon = {
                         Icon(
@@ -271,6 +297,8 @@ private fun InputScreenContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
+                    onValueChange = onAmountChange,
+                    keyboardType = KeyboardType.Decimal
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 

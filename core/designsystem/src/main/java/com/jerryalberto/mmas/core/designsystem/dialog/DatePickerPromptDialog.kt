@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.R
-import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerPromptDialog(
-    dateFormat: String,
-    onDateSelected: (String) -> Unit,
+    onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
@@ -25,15 +24,13 @@ fun DatePickerPromptDialog(
             utcTimeMillis <= System.currentTimeMillis()
     })
 
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        it.convertMillisToDate(dateFormat = dateFormat)
-    } ?: ""
-
     DatePickerDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
             Button(onClick = {
-                onDateSelected(selectedDate)
+                datePickerState.selectedDateMillis?.let{
+                    onDateSelected.invoke(it)
+                }
                 onDismiss()
             }
 
@@ -59,7 +56,6 @@ fun DatePickerPromptDialog(
 @Composable
 private fun DatePickerPromptDialogPreview() {
     DatePickerPromptDialog(
-        "dd/MM/yyyy",
         onDateSelected = {},
         onDismiss = {}
     )

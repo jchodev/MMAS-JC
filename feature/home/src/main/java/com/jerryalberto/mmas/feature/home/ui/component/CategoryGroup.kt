@@ -1,5 +1,6 @@
-package com.jerryalberto.mmas.core.designsystem.component
+package com.jerryalberto.mmas.feature.home.ui.component
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,18 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -30,14 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
-import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 
 @Composable
 fun CategoryGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: Category,
-    upperClick: (Category) -> Unit = {},
+    category: CategoryDisplay,
+    onCategorySelected: (CategoryDisplay) -> Unit = {}
 ){
     Column(
         modifier = modifier
@@ -62,7 +56,9 @@ fun CategoryGroup(
             Row (
                 modifier = Modifier
                     .padding(MaterialTheme.dimens.dimen16)
-                    .clickable { upperClick.invoke(category) },
+                    .clickable {
+                        onCategorySelected.invoke(category)
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -96,9 +92,9 @@ fun CategoryGroup(
                     )
                 )
                 .padding(
-                    start = MaterialTheme.dimens.dimen16,
+                    start = MaterialTheme.dimens.dimen8,
                     top = MaterialTheme.dimens.dimen16,
-                    end = MaterialTheme.dimens.dimen16,
+                    end = MaterialTheme.dimens.dimen8,
                     bottom = MaterialTheme.dimens.dimen24
                 )
         ) {
@@ -107,7 +103,8 @@ fun CategoryGroup(
                     val item = category.items[index]
                     CategoryItem(
                         category = item,
-                        textColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        textColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        onCategorySelected = onCategorySelected
                     )
 
                     if (index < category.items.size - 1) {
@@ -124,25 +121,25 @@ fun CategoryGroup(
 private fun CategoryGroupPreview(){
     MmasTheme {
         CategoryGroup(
-            category = Category(
+            category = CategoryDisplay(
                 type = CategoryType.FOOD_AND_BEVERAGES,
-                imageResId = android.R.mipmap.sym_def_app_icon,
-                stringResId = android.R.string.copy,
+                imageResId = R.mipmap.sym_def_app_icon,
+                stringResId = R.string.copy,
                 items = listOf(
-                    Category(
+                    CategoryDisplay(
                         type = CategoryType.FOOD,
-                        imageResId = android.R.mipmap.sym_def_app_icon,
-                        stringResId = android.R.string.copy
+                        imageResId = R.mipmap.sym_def_app_icon,
+                        stringResId = R.string.copy
                     ),
-                    Category(
+                    CategoryDisplay(
                         type = CategoryType.BEVERAGES,
-                        imageResId = android.R.mipmap.sym_def_app_icon,
-                        stringResId = android.R.string.copy
+                        imageResId = R.mipmap.sym_def_app_icon,
+                        stringResId = R.string.copy
                     ),
-                    Category(
+                    CategoryDisplay(
                         type = CategoryType.GROCERIES,
-                        imageResId = android.R.mipmap.sym_def_app_icon,
-                        stringResId = android.R.string.copy
+                        imageResId = R.mipmap.sym_def_app_icon,
+                        stringResId = R.string.copy
                     )
                 )
             ),

@@ -1,20 +1,21 @@
 package com.jerryalberto.mmas.core.designsystem.edittext
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,11 +25,12 @@ import com.jerryalberto.mmas.core.designsystem.text.ErrorText
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 
 
-
 @Composable
 fun MmasTextEdit(
     modifier : Modifier = Modifier,
-    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        disabledBorderColor = MaterialTheme.colorScheme.onSurface
+    ),
     value: String = "",
     error: String? = null,
     onValueChange: (String) -> Unit = {},
@@ -40,11 +42,19 @@ fun MmasTextEdit(
     readOnly: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     maxChar: Int = Int.MAX_VALUE,
+    textEditOnClick: (() -> Unit)? = null
 ) {
-    Column (modifier = modifier.fillMaxWidth()) {
+    Column (
+        modifier = modifier.fillMaxWidth()
+    ) {
 
         OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().clickable {
+                    textEditOnClick?.let {
+                        textEditOnClick()
+                    }
+                },
+                enabled = (textEditOnClick == null),
                 readOnly = readOnly,
                 singleLine = true,
                 value = value,
@@ -57,7 +67,7 @@ fun MmasTextEdit(
                 placeholder = {
                     Text(
                         text = placeHolder,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.outline,
                         style = MaterialTheme.typography.titleMedium
                     )
                 },

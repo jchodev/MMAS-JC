@@ -55,11 +55,11 @@ private fun MmasDatePickerDialog() {
     Text(text = date, textAlign = TextAlign.Center)
 
     if (showDatePicker) {
-        DatePickerPromptDialog(
-            dateFormat = stringResource(R.string.dd_mm_yyyy),
-            onDateSelected = { date = it },
-            onDismiss = { showDatePicker = false }
-        )
+//        DatePickerPromptDialog(
+//            //dateFormat = stringResource(R.string.dd_mm_yyyy),
+//            onDateSelected = { date = it },
+//            onDismiss = { showDatePicker = false }
+//        )
     }
 }
 

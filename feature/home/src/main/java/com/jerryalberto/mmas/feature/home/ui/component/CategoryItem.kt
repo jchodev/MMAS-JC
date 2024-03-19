@@ -1,12 +1,12 @@
-package com.jerryalberto.mmas.core.designsystem.component
+package com.jerryalberto.mmas.feature.home.ui.component
 
+import android.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,21 +19,25 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jerryalberto.mmas.core.designsystem.R
+
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
-import com.jerryalberto.mmas.core.model.data.Category
+
 import com.jerryalberto.mmas.core.model.data.CategoryType
+
+import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 
 @Composable
 fun CategoryItem(
     textColor: Color = Color.Black,
-    category: Category,
-    onClick : (Category) -> Unit = {}
+    category: CategoryDisplay,
+    onCategorySelected: (CategoryDisplay) -> Unit = {}
 ) {
     Column(
         modifier =
-            Modifier.width(80.dp)
-                .clickable { onClick.invoke(category) }
+            Modifier.width(100.dp)
+                .clickable {
+                    onCategorySelected.invoke(category)
+                }
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -59,10 +63,10 @@ fun CategoryItem(
 private fun CategoryItemPreview(){
 
     CategoryItem(
-        category = Category(
+        category = CategoryDisplay(
             type = CategoryType.FOOD,
-            imageResId = android.R.mipmap.sym_def_app_icon,
-            stringResId = android.R.string.copy
+            imageResId = com.jerryalberto.mmas.feature.home.R.drawable.ic_taxi,
+            stringResId = R.string.copy
         ),
     )
 }

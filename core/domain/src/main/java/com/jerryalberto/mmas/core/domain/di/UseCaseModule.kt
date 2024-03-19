@@ -1,6 +1,6 @@
 package com.jerryalberto.mmas.core.domain.di
 
-import com.jerryalberto.mmas.core.domain.usecase.GetCategoriesUseCase
+import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ internal object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetCategoriesUseCase(): GetCategoriesUseCase {
-        return GetCategoriesUseCase()
+    fun provideGetCategoriesUseCase(): CategoriesUseCase {
+        return CategoriesUseCase()
     }
 }

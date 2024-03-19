@@ -12,5 +12,24 @@
     <string name="feature_home_recent_transaction">Recent Transaction</string>
     <string name="feature_home_sell_all">Sell All ></string>
 
+    <string name="feature_home_food_and_beverages">Food &amp; beverages</string>
+    <string name="feature_home_food">Food</string>
+    <string name="feature_home_beverages">Beverages</string>
+    <string name="feature_home_groceries">Groceries</string>
 
+    <string name="feature_home_transport">Transport</string>
+    <string name="feature_home_fuel">Fuel</string>
+    <string name="feature_home_parking">Parking</string>
+    <string name="feature_home_service_and_maintenance">Service &amp; Maintenance</string>
+    <string name="feature_home_taxi">Taxi</string>
+
+    <string name="feature_home_personal_development">Personal Development</string>
+    <string name="feature_home_business">Business</string>
+    <string name="feature_home_personal_education">Education</string>
+    <string name="feature_home_investment">Investment</string>
+
+    <string name="feature_home_shopping">Shopping</string>
+    <string name="feature_home_cloths">Cloths</string>
+    <string name="feature_home_accessories">Accessories</string>
+    <string name="feature_home_electronics">Electronics</string>
 </resources>

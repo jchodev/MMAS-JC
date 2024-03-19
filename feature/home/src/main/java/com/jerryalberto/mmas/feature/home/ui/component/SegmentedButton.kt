@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.core.designsystem.component
+package com.jerryalberto.mmas.feature.home.ui.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
