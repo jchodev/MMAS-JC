@@ -1,7 +1,8 @@
 package com.jerryalberto.mmas.core.data.repository
 
-import com.jerryalberto.mmas.core.database.dao.MoneyDao
-import com.jerryalberto.mmas.core.database.model.MoneyEntity
+import com.jerryalberto.mmas.core.database.dao.TransactionDao
+import com.jerryalberto.mmas.core.database.model.TransactionEntity
+import com.jerryalberto.mmas.core.database.model.asExternalModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -17,17 +18,17 @@ import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
 @MockKExtension.ConfirmVerification
-class MoneyRepositoryImplTest {
+class TransactionRepositoryImplTest {
 
     @MockK
-    private lateinit var dao: MoneyDao
+    private lateinit var dao: TransactionDao
 
-    private lateinit var moneyRepositoryImpl: MoneyRepositoryImpl
+    private lateinit var moneyRepositoryImpl: TransactionRepositoryImpl
 
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
-        moneyRepositoryImpl = MoneyRepositoryImpl(
+        moneyRepositoryImpl = TransactionRepositoryImpl(
             dao = dao,
             ioDispatcher = Dispatchers.IO
         )
@@ -40,23 +41,29 @@ class MoneyRepositoryImplTest {
 
     @Test
     fun getMoneyByDateTest() = runTest {
-        val date = "2024-02-03"
+        val date = Long.MAX_VALUE
         val expectedMoney = listOf(
-            MoneyEntity(
+            TransactionEntity(
                 id = 1,
                 type = "",
                 amount = 0.0,
                 category = "",
                 description = "",
-                date = "2024-02-03",
-                time = "time"
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
             )
         )
 
-        coEvery { dao.getMoneyByDate(date) } returns expectedMoney
+        coEvery { dao.getTransactionByDate(date) } returns expectedMoney
 
-        val actualMoney = moneyRepositoryImpl.getMoneyByDate(date)
+        val actualMoney = moneyRepositoryImpl.getTransactionByDate(date)
 
-        Assertions.assertEquals(expectedMoney, actualMoney)
+        Assertions.assertEquals(expectedMoney.size, actualMoney.size)
+        Assertions.assertTrue(actualMoney.isNotEmpty())
+
+        Assertions.assertEquals(expectedMoney[0].asExternalModel(), actualMoney[0])
+
     }
 }

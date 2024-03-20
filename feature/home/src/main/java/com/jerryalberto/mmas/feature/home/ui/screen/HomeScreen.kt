@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,12 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
+import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
@@ -40,20 +43,9 @@ import com.jerryalberto.mmas.feature.home.ui.component.VicoChart
 fun HomeScreen(
 
 ) {
+    val context = LocalContext.current
+
     val floatingActionButton = @Composable {
-//        FloatingActionButton(
-//            onClick = {
-//                //OnClick Method
-//            },
-//            containerColor = MaterialTheme.colorScheme.secondary,
-//            shape = MaterialTheme.shapes.medium,
-//        ) {
-//            Icon(
-//                imageVector = Icons.Rounded.Add,
-//                contentDescription = "Add Transaction",
-//                tint =  MaterialTheme.colorScheme.onSecondary,
-//            )
-//        }
         MultiFloatingActionButton (
             fabIcon = Icons.Rounded.Add,
             contentDescription = "Add Transaction",
@@ -61,14 +53,24 @@ fun HomeScreen(
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     label = "Income",
-                    bgColor = Color.Green,
-                    iconColor = Color.White
+                    bgColor = ColorConstant.IncomeGreen,
+                    iconColor = Color.White,
+                    onFabItemClicked = {
+                        val intent = Intent(context, InputActivity::class.java)
+                        intent.putExtra(InputActivity.PARAM_TYPE, TransactionType.INCOME.value)
+                        context.startActivity(intent)
+                    }
                 ),
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     label = "Expenses",
-                    bgColor = Color.Red,
-                    iconColor = Color.White
+                    bgColor = ColorConstant.ExpensesRed,
+                    iconColor = Color.White,
+                    onFabItemClicked = {
+                        val intent = Intent(context, InputActivity::class.java)
+                        intent.putExtra(InputActivity.PARAM_TYPE, TransactionType.EXPENSES.value)
+                        context.startActivity(intent)
+                    }
                 )
             )
         )
@@ -110,10 +112,12 @@ private fun HomeScreenContent() {
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
+                    bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income)
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
+                    bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses)
                 )
             }

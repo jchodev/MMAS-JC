@@ -53,6 +53,8 @@ import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
+import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
@@ -84,6 +86,9 @@ fun InputScreen(
         },
         onAmountChange = {
             viewModel.onAmountChange(it)
+        },
+        onSaveClick = {
+            viewModel.saveTransaction()
         }
     )
 }
@@ -102,8 +107,15 @@ private fun InputScreenContent(
     },
     onCategorySelected: (CategoryDisplay) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
+    onSaveClick: () -> Unit ={},
 ){
-    val bgColor = ColorConstant.ExpensesRed
+    var bgColor = ColorConstant.ExpensesRed
+
+    state.type?.let {
+        if (it == TransactionType.INCOME){
+            bgColor = ColorConstant.IncomeGreen
+        }
+    }
 
     //DatePickerPromptDialog
     var datePickerDialogVisible by remember { mutableStateOf(false) }
@@ -132,7 +144,10 @@ private fun InputScreenContent(
         CategorySelectDialog(
             list = categories,
             onDismissRequest = { categorySelectDialogVisible = false },
-            onCategorySelected = onCategorySelected
+            onCategorySelected = {
+                onCategorySelected.invoke(it)
+                categorySelectDialogVisible = false
+            }
         )
     }
 
@@ -145,7 +160,11 @@ private fun InputScreenContent(
                     navigationIconContentColor = Color.White,
                     titleContentColor= Color.White,
                 ),
-                title = "App",
+                title = if (state.type == TransactionType.INCOME){
+                    stringResource(id = R.string.feature_home_income)
+                } else {
+                    stringResource(id = R.string.feature_home_expenses)
+                },
                 onCloseClick = onTopBarLeftClick
             )
         },
@@ -155,7 +174,8 @@ private fun InputScreenContent(
                 .padding(MaterialTheme.dimens.dimen16)) {
                 MmasButton(
                     modifier = Modifier.height(MaterialTheme.dimens.dimen56),
-                    text = "Save"
+                    text = "Save",
+                    onClick = onSaveClick
                 )
             }
 

@@ -1,18 +1,18 @@
-package com.jerryalberto.mmas.feature.home.helper
+package com.jerryalberto.mmas.feature.home.ui.helper
 
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 
-class CategoryHelper {
+class UiHelper {
 
-    fun mapToDisplay(category: Category): CategoryDisplay {
+    fun categoryMapToDisplay(category: Category): CategoryDisplay {
         return CategoryDisplay(
             type = category.type,
             imageResId = getImageResId(category.type),
             stringResId = getStringResId(category.type),
-            items = category.items.map { mapToDisplay(it) }
+            items = category.items.map { categoryMapToDisplay(it) }
         )
     }
 
@@ -65,4 +65,22 @@ class CategoryHelper {
             CategoryType.ELECTRONIC_DEVICE -> R.string.feature_home_electronics
         }
     }
+
+    fun displayHourMinute(hour: Int, minute:Int): String {
+        val formattedHour = if (hour <= 9) {
+            "0$hour"
+        } else {
+            hour.toString()
+        }
+
+        val formattedMinute = if (minute <= 9) {
+            "0$minute"
+        } else {
+            minute.toString()
+        }
+
+        return "$formattedHour:$formattedMinute"
+    }
+
+
 }

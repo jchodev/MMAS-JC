@@ -62,8 +62,7 @@ fun IncomeExpenseBox2(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.dimen4),
                 tint = bgColor
             )
         }

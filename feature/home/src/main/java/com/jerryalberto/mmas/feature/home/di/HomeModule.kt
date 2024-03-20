@@ -1,6 +1,6 @@
 package com.jerryalberto.mmas.feature.home.di
 
-import com.jerryalberto.mmas.feature.home.helper.CategoryHelper
+import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ internal object HomeModule {
 
     @Provides
     @Singleton
-    fun provideCategoryHelper(): CategoryHelper {
-        return CategoryHelper()
+    fun provideCategoryHelper(): UiHelper {
+        return UiHelper()
     }
 }

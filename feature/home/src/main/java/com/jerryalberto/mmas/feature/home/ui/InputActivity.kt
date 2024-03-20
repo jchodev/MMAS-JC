@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,10 +18,21 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InputActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<InputScreenViewModel>()
+    companion object {
+        val PARAM_TYPE: String = "TYPE"
+    }
+
+    private val viewModel: InputScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        intent.getStringExtra(PARAM_TYPE)?.let {typeString->
+            val transactionType = TransactionType.entries.find { it.value == typeString}
+            transactionType?.let {
+                viewModel.setType(it)
+            } ?: viewModel.setType(TransactionType.INCOME)
+        }
 
         setContent {
             MmasTheme {
