@@ -33,11 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 enum class MultiFabState {
     COLLAPSED, EXPANDED
@@ -113,7 +116,11 @@ fun MultiFloatingActionButton(
                     translate(150f, top = 300f) {
                         scale(5f) {}
                         drawCircle(
-                            color = Color.Gray,
+                            brush = Brush.linearGradient(
+                                colors = listOf(Color.White, Color.DarkGray),
+                                start = Offset(0f, 0f),
+                                end = Offset(0f, size.height)
+                            ),
                             radius = 200.dp.toPx()
                         )
                     }
@@ -127,7 +134,8 @@ fun MultiFloatingActionButton(
                     SmallFloatingActionButtonRow(
                         item = item,
                         stateTransition = stateTransition,
-                        showLabel = showLabels
+                        showLabel = showLabels,
+                        stateChange = stateChange
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -156,7 +164,8 @@ fun MultiFloatingActionButton(
 fun SmallFloatingActionButtonRow(
     item: FabItem,
     showLabel: Boolean,
-    stateTransition: Transition<MultiFabState>
+    stateTransition: Transition<MultiFabState>,
+    stateChange: () -> Unit = {},
 ) {
     val alpha: Float by stateTransition.animateFloat(
         transitionSpec = {
@@ -181,12 +190,17 @@ fun SmallFloatingActionButtonRow(
                 text = item.label,
                 modifier = Modifier
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
-                    .clickable(onClick = { item.onFabItemClicked() })
+                    .clickable(onClick = {
+                        item.onFabItemClicked()
+                        stateChange.invoke()
+                    })
             )
         }
         FloatingActionButton(
             shape = CircleShape,
-            onClick = { item.onFabItemClicked() },
+            onClick = {
+                item.onFabItemClicked()
+            },
             containerColor = item.bgColor,
             contentColor = item.iconColor
         ) {

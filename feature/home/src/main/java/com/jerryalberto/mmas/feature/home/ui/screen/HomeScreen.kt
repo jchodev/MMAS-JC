@@ -52,7 +52,7 @@ fun HomeScreen(
             items = listOf(
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
-                    label = "Income",
+                    label = stringResource(id = R.string.feature_home_income),
                     bgColor = ColorConstant.IncomeGreen,
                     iconColor = Color.White,
                     onFabItemClicked = {
@@ -63,7 +63,7 @@ fun HomeScreen(
                 ),
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
-                    label = "Expenses",
+                    label = stringResource(id = R.string.feature_home_expenses),
                     bgColor = ColorConstant.ExpensesRed,
                     iconColor = Color.White,
                     onFabItemClicked = {

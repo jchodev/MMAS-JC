@@ -80,7 +80,6 @@ fun MmasTextEdit(
                     keyboardType = keyboardType,
                     imeAction = imeAction
                 ),
-
                 visualTransformation = visualTransformation,
             )
         error?.let {

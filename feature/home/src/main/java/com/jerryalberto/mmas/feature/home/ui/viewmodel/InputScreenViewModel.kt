@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
@@ -72,16 +72,35 @@ class InputScreenViewModel @Inject constructor(
         )
     }
 
-    fun onAmountChange(amount: String){
+    fun onAmountChange(amountString: String){
+        var amount = 0.0
+        try {
+            amount = amountString.toDouble()
+        } catch (exception: Exception){
+
+        }
         saveData(
             uiState = uiState.value.copy(
-                amount = amount.toDouble(),
-                amountString = amount
+                amount = amount,
+                amountString = amountString,
+                amountFormatted = uiHelper.formatAmount(amount / 100)
             )
         )
     }
 
-    fun setType(transactionType: TransactionType){
+    fun onSelectedUri(uri: Uri){
+        saveData(
+            uiState = uiState.value.copy(
+                uri = if (uri == Uri.EMPTY){
+                    ""
+                } else {
+                    uri.toString()
+                }
+            )
+        )
+    }
+
+    fun setTransactionType(transactionType: TransactionType){
         saveData(
             uiState = uiState.value.copy(
                 type = transactionType

@@ -4,6 +4,7 @@ import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import java.text.NumberFormat
 
 class UiHelper {
 
@@ -82,5 +83,10 @@ class UiHelper {
         return "$formattedHour:$formattedMinute"
     }
 
-
+    fun formatAmount(amount: Double): String {
+        val numberFormat = NumberFormat.getNumberInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
+        return numberFormat.format(amount)
+    }
 }

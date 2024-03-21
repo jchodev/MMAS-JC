@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,9 +42,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
@@ -53,6 +54,7 @@ import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
+import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
@@ -89,6 +91,9 @@ fun InputScreen(
         },
         onSaveClick = {
             viewModel.saveTransaction()
+        },
+        onSelectedUri = {
+            viewModel.onSelectedUri(it)
         }
     )
 }
@@ -108,6 +113,7 @@ private fun InputScreenContent(
     onCategorySelected: (CategoryDisplay) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
+    onSelectedUri: (Uri) -> Unit = {},
 ){
     var bgColor = ColorConstant.ExpensesRed
 
@@ -199,7 +205,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 Text(
-                    text =  "$" + state.amountString,
+                    text =  "$" + state.amountFormatted,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -317,12 +323,30 @@ private fun InputScreenContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    onValueChange = onAmountChange,
-                    keyboardType = KeyboardType.Decimal
+                    onValueChange = {
+                        onAmountChange (
+                            if (it.startsWith("0")) {
+                                ""
+                            } else {
+                                it
+                            }
+                        )
+                    },
+                    visualTransformation = CurrencyAmountInputVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 
-                AddAttachmentRow()
+                AddAttachmentRow(
+                    uri = if (state.uri.isEmpty()){
+                        Uri.EMPTY
+                    } else {
+                        state.uri.toUri()
+                    },
+                    onSelectedUri = onSelectedUri,
+                    onDelete = {
+                        onSelectedUri.invoke(Uri.EMPTY)
+                    }
+                )
 
             }
         }

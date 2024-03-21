@@ -12,22 +12,23 @@ data class InputUiDataState(
     val description: String = "",
     val amount: Double? = null,
     val amountString: String = "",
+    val amountFormatted: String = "",
     val date: Long? = null,
     val dateString: String = "",
     val hour: Int? = null,
     val minute: Int? = null,
     val timeString: String = "",
-    val uri: String ="",
+    val uri: String = "",
 
     val category: CategoryDisplay? = null,
 ): Parcelable
 
 fun InputUiDataState.asTransaction() = Transaction(
     type = type?.toString() ?: "",
-    category = category?.toString() ?: "",
+    category = category?.type?.value ?: "",
     amount = amount ?: 0.0,
     description = description ?: "",
-    uri = uri,
+    uri = uri ?: "",
     date = date ?: 0L,
     hour = hour ?: 0,
     minute = minute ?: 0
