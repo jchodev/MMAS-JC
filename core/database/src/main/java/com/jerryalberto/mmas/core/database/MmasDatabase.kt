@@ -2,13 +2,13 @@ package com.jerryalberto.mmas.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.jerryalberto.mmas.core.database.dao.MoneyDao
-import com.jerryalberto.mmas.core.database.model.MoneyEntity
+import com.jerryalberto.mmas.core.database.dao.TransactionDao
+import com.jerryalberto.mmas.core.database.model.TransactionEntity
 
 @Database(
-    entities = [MoneyEntity::class],
+    entities = [TransactionEntity::class],
     version = 1
 )
 internal abstract class MmasDatabase : RoomDatabase() {
-    abstract fun moneyDao(): MoneyDao
+    abstract fun moneyDao(): TransactionDao
 }

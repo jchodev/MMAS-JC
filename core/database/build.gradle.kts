@@ -13,6 +13,9 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core:model"))
+
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)

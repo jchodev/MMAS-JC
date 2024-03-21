@@ -24,12 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
-
+import com.jerryalberto.mmas.feature.home.R
 
 
 @Composable
@@ -47,7 +48,7 @@ fun IncomeExpenseBox2(
             .clip(MaterialTheme.shapes.small)
             .background(color = bgColor)
             .padding(
-                MaterialTheme.dimens.spacing16
+                MaterialTheme.dimens.dimen16
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -57,17 +58,15 @@ fun IncomeExpenseBox2(
             ),
             shape = CircleShape,
             color = textColor
-
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.dimen4),
                 tint = bgColor
             )
         }
-        Spacer(modifier = Modifier.width(MaterialTheme.dimens.spacing8))
+        Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
         Column (
             verticalArrangement = Arrangement.Center,
         ){
@@ -76,7 +75,7 @@ fun IncomeExpenseBox2(
                 color = textColor,
                 style = MaterialTheme.typography.titleSmall,
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen4))
             Text(
                 text = content,
                 color = textColor,
@@ -100,10 +99,12 @@ private fun TwoBoxPreview(){
     MmasTheme {
         Row {
             IncomeExpenseBox2(
-                Modifier.weight(1f).padding(end = 10.dp)
+                Modifier.weight(1f).padding(end = 10.dp),
+                icon = ImageVector.vectorResource(R.drawable.ic_income)
             )
             IncomeExpenseBox2(
-                Modifier.weight(1f)
+                Modifier.weight(1f),
+                icon = ImageVector.vectorResource(R.drawable.ic_expenses)
             )
         }
     }

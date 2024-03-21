@@ -6,6 +6,8 @@ plugins {
     id("module-plugin")
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
+
+    id("kotlin-parcelize")
 }
 
 android {
@@ -17,8 +19,11 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":core:model"))
+    implementation(project(":core:domain"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
+
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
 
@@ -31,6 +36,9 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
+
+    //timber
+    implementation(libs.timber)
 
     val vico_chart_version = "1.14.0"
 

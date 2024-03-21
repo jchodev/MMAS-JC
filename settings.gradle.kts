@@ -3,6 +3,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://www.jitpack.io" ) }
     }
 }
 dependencyResolutionManagement {
@@ -25,3 +26,5 @@ include(":core:common")
 include(":core:data")
 include(":core:domain")
 include(":feature:home")
+include(":core:model")
+include(":feature:nativelib")

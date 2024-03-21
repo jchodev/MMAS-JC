@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="core_domain_food_and_beverages">Food and Beverages</string>
+    <string name="core_domain_food">Food</string>
+    <string name="core_domain_beverages">Beverages</string>
+    <string name="core_domain_groceries">Groceries</string>
+
+    <string name="core_domain_transport">Transport</string>
+    <string name="core_domain_fuel">Fuel</string>
+    <string name="core_domain_parking">Parking</string>
+    <string name="core_domain_service_and_maintenance">Service and Maintenance</string>
+    <string name="core_domain_taxi">Taxi</string>
+
+    <string name="core_domain_personal_development">Personal Development</string>
+    <string name="core_domain_business">Business</string>
+    <string name="core_domain_personal_education">Education</string>
+    <string name="core_domain_investment">Investment</string>
+
+    <string name="core_domain_shopping">Shopping</string>
+    <string name="core_domain_cloths">Cloths</string>
+    <string name="core_domain_accessories">Accessories</string>
+    <string name="core_domain_electronics">Electronics</string>
+</resources>

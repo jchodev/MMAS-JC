@@ -17,6 +17,7 @@ android {
 
 dependencies {
 
+    implementation(project(":core:model"))
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
 
@@ -30,4 +31,6 @@ dependencies {
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
 
+    //timber
+    implementation(libs.timber)
 }
