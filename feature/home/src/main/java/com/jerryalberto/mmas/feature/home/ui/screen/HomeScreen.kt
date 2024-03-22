@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -36,13 +38,16 @@ import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.ui.component.TransactionBox
 import com.jerryalberto.mmas.feature.home.ui.component.VicoChart
+import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-
+    homeScreenViewModel: HomeScreenViewModel
 ) {
+    val uiState = homeScreenViewModel.uiState.collectAsState().value
     val context = LocalContext.current
 
     val floatingActionButton = @Composable {
@@ -78,13 +83,17 @@ fun HomeScreen(
     Scaffold (
         floatingActionButton = floatingActionButton
     ) { paddingValues ->
-        HomeScreenContent()
+        HomeScreenContent(
+            uiState = uiState
+        )
     }
 
 }
 
 @Composable
-private fun HomeScreenContent() {
+private fun HomeScreenContent(
+    uiState : HomeUIDataState
+) {
     LazyColumn (
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +108,7 @@ private fun HomeScreenContent() {
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             Text(
-                text = "$8999",
+                text = "$${uiState.totalAmount}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.displayMedium,
             )
@@ -113,12 +122,16 @@ private fun HomeScreenContent() {
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
                     bgColor = ColorConstant.IncomeGreen,
-                    icon = ImageVector.vectorResource(R.drawable.ic_income)
+                    icon = ImageVector.vectorResource(R.drawable.ic_income),
+                    title = stringResource(id = R.string.feature_home_income),
+                    content = "$${uiState.totalAmount}"
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
-                    icon = ImageVector.vectorResource(R.drawable.ic_expenses)
+                    icon = ImageVector.vectorResource(R.drawable.ic_expenses),
+                    title = stringResource(id = R.string.feature_home_expenses),
+                    content = "$${uiState.totalExpenses}"
                 )
             }
         }
@@ -182,6 +195,8 @@ private fun HomeScreenContent() {
 @Composable
 private fun HomeScreenContentPreview() {
     MmasTheme {
-        HomeScreenContent()
+        HomeScreenContent(
+            uiState = HomeUIDataState()
+        )
     }
 }

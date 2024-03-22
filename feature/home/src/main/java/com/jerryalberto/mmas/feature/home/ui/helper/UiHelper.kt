@@ -87,6 +87,6 @@ class UiHelper {
         val numberFormat = NumberFormat.getNumberInstance()
         numberFormat.minimumFractionDigits = 2
         numberFormat.maximumFractionDigits = 2
-        return numberFormat.format(amount)
+        return numberFormat.format(amount / 100)
     }
 }

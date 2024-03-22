@@ -45,7 +45,7 @@ fun IncomeExpenseBox2(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.small)
+            .clip(MaterialTheme.shapes.medium)
             .background(color = bgColor)
             .padding(
                 MaterialTheme.dimens.dimen16
@@ -56,7 +56,7 @@ fun IncomeExpenseBox2(
             modifier = Modifier.size(
                 MaterialTheme.dimens.iconSize
             ),
-            shape = CircleShape,
+            shape = MaterialTheme.shapes.medium,
             color = textColor
         ) {
             Icon(

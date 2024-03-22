@@ -14,6 +14,7 @@ import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -83,7 +84,7 @@ class InputScreenViewModel @Inject constructor(
             uiState = uiState.value.copy(
                 amount = amount,
                 amountString = amountString,
-                amountFormatted = uiHelper.formatAmount(amount / 100)
+                amountFormatted = uiHelper.formatAmount(amount)
             )
         )
     }
@@ -117,7 +118,7 @@ class InputScreenViewModel @Inject constructor(
             transactionUseCase.insertTransaction(
                 uiState.value.asTransaction()
             )
-            val list = transactionUseCase.getAllTransaction()
+            val list = transactionUseCase.getLatestTransaction().toList()
             list.forEach {
                 Timber.d(it.toString())
             }
