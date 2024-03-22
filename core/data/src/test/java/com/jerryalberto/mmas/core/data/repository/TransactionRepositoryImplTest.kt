@@ -51,9 +51,9 @@ class TransactionRepositoryImplTest {
         val expectedMoney = listOf(
             TransactionEntity(
                 id = 1,
-                type = "",
+                type = "INCOME",
                 amount = 0.0,
-                category = "",
+                category = "FOOD",
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -62,9 +62,9 @@ class TransactionRepositoryImplTest {
             ),
             TransactionEntity(
                 id = 2,
-                type = "",
+                type = "INCOME",
                 amount = 1.0,
-                category = "",
+                category = "FOOD",
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -82,5 +82,72 @@ class TransactionRepositoryImplTest {
 
         Assertions.assertEquals(expectedMoney[0].asExternalModel(), actualMoney[0])
 
+    }
+
+    @Test
+    fun getLatestTransactionTest() = runTest {
+        val expectedMoney = listOf(
+            TransactionEntity(
+                id = 1,
+                type = "INCOME",
+                amount = 0.0,
+                category = "FOOD",
+                description = "",
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
+            ),
+            TransactionEntity(
+                id = 2,
+                type = "INCOME",
+                amount = 1.0,
+                category = "FOOD",
+                description = "",
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
+            ),
+            TransactionEntity(
+                id = 3,
+                type = "INCOME",
+                amount = 1.0,
+                category = "FOOD",
+                description = "",
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
+            ),
+            TransactionEntity(
+                id = 4,
+                type = "INCOME",
+                amount = 1.0,
+                category = "FOOD",
+                description = "",
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
+            ),
+            TransactionEntity(
+                id = 5,
+                type = "INCOME",
+                amount = 1.0,
+                category = "FOOD",
+                description = "",
+                date = Long.MAX_VALUE,
+                hour = 1,
+                minute = 1,
+                uri = "",
+            )
+        )
+
+        coEvery { dao.getAllTransaction() } returns flowOf(expectedMoney)
+
+        val actualMoney = moneyRepositoryImpl.getLatestTransaction(4).first()
+
+        Assertions.assertEquals(4, actualMoney.size)
     }
 }

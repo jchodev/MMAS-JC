@@ -1,6 +1,5 @@
 package com.jerryalberto.mmas.core.domain.usecase
 
-import com.jerryalberto.mmas.core.database.model.TransactionSummaryQueryResult
 import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionSummary
@@ -13,7 +12,7 @@ class TransactionUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {
     suspend fun getLatestTransaction(): Flow<List<Transaction>> {
-        return transactionRepository.getLatestTransaction()
+        return transactionRepository.getLatestTransaction(latest = 4)
     }
 
     suspend fun insertTransaction(transaction: Transaction){

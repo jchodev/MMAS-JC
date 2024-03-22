@@ -124,7 +124,7 @@ private fun HomeScreenContent(
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = "$${uiState.totalAmount}"
+                    content = "$${uiState.totalIncome}"
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
@@ -186,7 +186,9 @@ private fun HomeScreenContent(
                 )
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            TransactionBox()
+            TransactionBox(
+                transactions = uiState.latestTransaction
+            )
         }
     }
 }

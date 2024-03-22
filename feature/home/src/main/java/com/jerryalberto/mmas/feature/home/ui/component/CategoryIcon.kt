@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 @Composable
@@ -23,16 +24,18 @@ fun CategoryIcon(
     size: Dp = MaterialTheme.dimens.dimen48,
     contentDescription: String = "",
     icon: ImageVector,
+    iconColor: Color = ColorConstant.ExpensesRed
 ) {
     Surface(
         modifier = Modifier.size(size), // Adjust size as needed
-        shape = CircleShape,
+        shape = MaterialTheme.shapes.medium,
         color = bgColor
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.dimen8)
+            modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.dimen8),
+            tint = iconColor
         )
     }
 }

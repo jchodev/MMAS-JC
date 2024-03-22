@@ -24,7 +24,7 @@ class HomeScreenViewModel @Inject constructor(
     private val uiHelper: UiHelper,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeUIDataState>(HomeUIDataState())
+    private val _uiState = MutableStateFlow(HomeUIDataState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -62,7 +62,6 @@ class HomeScreenViewModel @Inject constructor(
                 }
             }
         }
-
     }
 
     fun getLastFourTransaction(){

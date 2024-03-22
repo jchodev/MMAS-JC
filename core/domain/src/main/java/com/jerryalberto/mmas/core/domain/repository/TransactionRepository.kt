@@ -9,7 +9,7 @@ interface TransactionRepository {
 
     suspend fun getTransactionByDate(date: Long): Flow<List<Transaction>>
 
-    suspend fun getLatestTransaction(latest: Int = 4): Flow<List<Transaction>>
+    suspend fun getLatestTransaction(latest: Int): Flow<List<Transaction>>
     suspend fun getSumAmountGroupedByType(): Flow<List<TransactionSummaryQueryResult>>
 
     suspend fun getAllTransaction(): Flow<List<Transaction>>

@@ -12,8 +12,12 @@ import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
+import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -32,9 +36,12 @@ class InputScreenViewModel @Inject constructor(
         INPUT_STATE_KEY, InputUiDataState()
     )
 
+    private val _onSaved = MutableStateFlow<Boolean?>(null)
+    val onSaved = _onSaved.asStateFlow()
+
     fun getCategories(): List<CategoryDisplay> {
         return categoriesUseCase.getExpenseCategory().map {
-            uiHelper.categoryMapToDisplay(it)
+            it.toCategoryDisplay()
         }
     }
 
@@ -122,6 +129,15 @@ class InputScreenViewModel @Inject constructor(
             list.forEach {
                 Timber.d(it.toString())
             }
+
+            saveData(
+                uiState = InputUiDataState()
+            )
+            _onSaved.emit(_onSaved.value?.not() ?: false)
         }
+    }
+
+    fun saveTransaction2(){
+        _onSaved.value = _onSaved.value?.not() ?: false
     }
 }

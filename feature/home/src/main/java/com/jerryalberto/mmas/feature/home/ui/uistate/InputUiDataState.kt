@@ -4,6 +4,7 @@ import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.feature.home.model.toCategory
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -24,8 +25,8 @@ data class InputUiDataState(
 ): Parcelable
 
 fun InputUiDataState.asTransaction() = Transaction(
-    type = type?.toString() ?: "",
-    category = category?.type?.value ?: "",
+    type = type,
+    category = category?.toCategory(),
     amount = amount ?: 0.0,
     description = description ?: "",
     uri = uri ?: "",

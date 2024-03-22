@@ -6,9 +6,9 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 
 fun Transaction.asEntity() = TransactionEntity(
     id = id,
-    type = type,
+    type = type?.value ?: "",
     amount = amount,
-    category = category,
+    category = category?.type?.value ?: "",
     description = description,
     uri = uri,
     date = date,

@@ -42,9 +42,8 @@ class TransactionRepositoryImpl @Inject constructor(
     override suspend fun getLatestTransaction(latest: Int): Flow<List<Transaction>> {
         return withContext(ioDispatcher) {
             dao.getAllTransaction()
-                .take(latest)
                 .map {
-                    it.map(TransactionEntity::asExternalModel)
+                    it.take(latest).map(TransactionEntity::asExternalModel)
                 }
         }
     }
