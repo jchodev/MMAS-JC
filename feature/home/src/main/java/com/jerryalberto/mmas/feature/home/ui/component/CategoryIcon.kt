@@ -20,7 +20,7 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 @Composable
 fun CategoryIcon(
-    bgColor: Color = Color.Gray,
+    bgColor: Color = ColorConstant.ExpensesRedBg,
     size: Dp = MaterialTheme.dimens.dimen48,
     contentDescription: String = "",
     icon: ImageVector,

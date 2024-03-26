@@ -11,9 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType()) { transactions, summaries ->
+            transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL)) { transactions, summaries ->
                 Pair(transactions, summaries)
             }.asResult().collect {
                 when (it){
@@ -62,6 +61,75 @@ class HomeScreenViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getAmountByType(type: AccountBalanceDataType = AccountBalanceDataType.TOTAL) {
+        viewModelScope.launch {
+            transactionUseCase.getSumAmountGroupedByType(type).asResult().collect{
+                when (it){
+                    is Result.Loading -> {
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = true
+                            )
+                        )
+                    }
+                    is Result.Success -> {
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                type = type,
+                                loading = false,
+                                totalIncome = uiHelper.formatAmount(it.data.income),
+                                totalExpenses = uiHelper.formatAmount(it.data.expenses),
+                                totalAmount = uiHelper.formatAmount(it.data.income - it.data.expenses)
+                            )
+                        )
+                    }
+                    else -> {
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = false,
+                            )
+                        )
+                        //TODO
+                    }
+                }
+            }
+        }
+//        viewModelScope.launch {
+//            transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(uiState.value.type)) { transactions, summaries ->
+//                Pair(transactions, summaries)
+//            }.asResult().collect {
+//                when (it){
+//                    is Result.Loading -> {
+//                        updateUI (
+//                            uiState = uiState.value.copy(
+//                                loading = true
+//                            )
+//                        )
+//                    }
+//                    is Result.Success -> {
+//                        updateUI (
+//                            uiState = uiState.value.copy(
+//                                loading = false,
+//                                latestTransaction = it.data.first,
+//                                totalIncome = uiHelper.formatAmount(it.data.second.income),
+//                                totalExpenses = uiHelper.formatAmount(it.data.second.expenses),
+//                                totalAmount = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
+//                            )
+//                        )
+//                    }
+//                    else -> {
+//                        updateUI (
+//                            uiState = uiState.value.copy(
+//                                loading = false,
+//                            )
+//                        )
+//                        //TODO
+//                    }
+//                }
+//            }
+//        }
     }
 
     fun getLastFourTransaction(){

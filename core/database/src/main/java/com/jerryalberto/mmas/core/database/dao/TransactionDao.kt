@@ -36,8 +36,16 @@ interface TransactionDao {
     )
     fun getAllTransaction(): Flow<List<TransactionEntity>>
 
-    @Query("SELECT type, SUM(amount) as total_amount FROM transaction_tbl GROUP BY type")
-    fun getSumAmountGroupedByType(): Flow<List<TransactionSummaryQueryResult>>
+
+    @Query(
+        value = """
+        SELECT type, SUM(amount) as total_amount 
+        FROM transaction_tbl 
+        WHERE date >= :dateFrom AND date <= :dateTo  
+        GROUP BY type
+    """,
+    )
+    fun getSumAmountGroupedByDateRange(dateFrom: Long, dateTo: Long): Flow<List<TransactionSummaryQueryResult>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

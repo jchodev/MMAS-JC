@@ -48,9 +48,9 @@ class TransactionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSumAmountGroupedByType(): Flow<List<TransactionSummaryQueryResult>> {
+    override suspend fun getSumAmountGroupedByDateRange(dateFrom: Long, dataTo: Long): Flow<List<TransactionSummaryQueryResult>> {
         return withContext(ioDispatcher) {
-            dao.getSumAmountGroupedByType()
+            dao.getSumAmountGroupedByDateRange(dateFrom = dateFrom , dateTo = dataTo)
         }
     }
 

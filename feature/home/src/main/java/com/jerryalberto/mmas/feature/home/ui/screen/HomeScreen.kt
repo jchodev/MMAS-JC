@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 
@@ -25,19 +28,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
+import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.ui.component.TransactionBox
-import com.jerryalberto.mmas.feature.home.ui.component.VicoChart
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
@@ -84,7 +87,12 @@ fun HomeScreen(
         floatingActionButton = floatingActionButton
     ) { paddingValues ->
         HomeScreenContent(
-            uiState = uiState
+            uiState = uiState,
+            onTypeClicked = {
+                homeScreenViewModel.getAmountByType(
+                    it
+                )
+            }
         )
     }
 
@@ -92,7 +100,8 @@ fun HomeScreen(
 
 @Composable
 private fun HomeScreenContent(
-    uiState : HomeUIDataState
+    uiState : HomeUIDataState,
+    onTypeClicked: (AccountBalanceDataType) -> Unit = {}
 ) {
     LazyColumn (
         modifier = Modifier
@@ -102,7 +111,7 @@ private fun HomeScreenContent(
         //account balance
         item {
             Text(
-                text = stringResource(id = R.string.feature_home_title),
+                text = stringResource(id = R.string.feature_home_title) + "(" + uiState.type.value + ")",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
             )
@@ -135,31 +144,117 @@ private fun HomeScreenContent(
                 )
             }
         }
+
         //chart
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-            VicoChart()
+//            val viewData = DonutChartDataCollection(
+//                listOf(
+//                    DonutChartData(
+//                        amount = 1.1f,
+//                        color = Color.Red,
+//                        title = "title1"
+//                    ),
+//                    DonutChartData(
+//                        amount = 1.2f,
+//                        color = Color.Green,
+//                        title = "title2"
+//                    ),
+//                )
+//            )
+//            DonutChart(data = viewData
+//            ) { selected->
+//                // 3
+//                AnimatedContent(targetState = selected) {
+//                    val amount = it?.amount ?: viewData.totalAmount
+//                    val text = it?.title ?: "Total"
+//
+//                    // 4
+//                    Column(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalAlignment = Alignment.CenterHorizontally
+//                    ) {
+//                        Text("$${amount}")
+//                        Text(text)
+//
+//                    }
+//                }
+//            }
+
+            //Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
+
+            PieChart(
+                data = listOf(
+                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toDouble()),
+                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toDouble()),
+                )
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
+
         //today, week, month
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            Row {
-                //today
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_today),
-                    selected = true
-                )
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_week),
-                    selected = false
-                )
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_month),
-                    selected = false
-                )
+            LazyRow {
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_total),
+                        selected = uiState.type == AccountBalanceDataType.TOTAL,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.TOTAL)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_today),
+                        selected = uiState.type == AccountBalanceDataType.TODAY,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.TODAY)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_week),
+                        selected = uiState.type == AccountBalanceDataType.WEEK,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.WEEK)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_month),
+                        selected = uiState.type == AccountBalanceDataType.MONTH,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.MONTH)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+//                SpendFrequencyButton(
+//                    modifier = Modifier.weight(1f),
+//                    text = stringResource(id = R.string.feature_home_today),
+//                    selected = false
+//                )
+//                SpendFrequencyButton(
+//                    modifier = Modifier.weight(1f),
+//                    text = stringResource(id = R.string.feature_home_week),
+//                    selected = false
+//                )
+//                SpendFrequencyButton(
+//                    modifier = Modifier.weight(1f),
+//                    text = stringResource(id = R.string.feature_home_month),
+//                    selected = false
+//                )
             }
         }
         //list of transaction

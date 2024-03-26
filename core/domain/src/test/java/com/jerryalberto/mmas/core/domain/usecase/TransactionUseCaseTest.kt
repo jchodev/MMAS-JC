@@ -18,6 +18,10 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
+import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.model.data.TransactionType
 
 @ExperimentalCoroutinesApi
 @MockKExtension.ConfirmVerification
@@ -46,9 +50,9 @@ class TransactionUseCaseTest {
         val transactions = listOf(
             Transaction(
                 id = 1,
-                type = "",
+                type = TransactionType.EXPENSES,
                 amount = 0.0,
-                category = "",
+                category = Category(type = CategoryType.ACCESSORIES),
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -57,9 +61,9 @@ class TransactionUseCaseTest {
             ),
             Transaction(
                 id = 2,
-                type = "",
+                type =  TransactionType.EXPENSES,
                 amount = 1.0,
-                category = "",
+                category = Category(type = CategoryType.ACCESSORIES),
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -68,7 +72,7 @@ class TransactionUseCaseTest {
             )
         )
 
-        coEvery { transactionRepository.getLatestTransaction() } returns flowOf(transactions)
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(transactions)
 
         val actualTranactions = transactionUseCase.getLatestTransaction().first()
 
@@ -84,9 +88,9 @@ class TransactionUseCaseTest {
         val transactions = listOf(
             Transaction(
                 id = 1,
-                type = "",
+                type = TransactionType.EXPENSES,
                 amount = 0.0,
-                category = "",
+                category = Category(type = CategoryType.ACCESSORIES),
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -95,9 +99,9 @@ class TransactionUseCaseTest {
             ),
             Transaction(
                 id = 2,
-                type = "",
+                type =  TransactionType.EXPENSES,
                 amount = 1.0,
-                category = "",
+                category = Category(type = CategoryType.ACCESSORIES),
                 description = "",
                 date = Long.MAX_VALUE,
                 hour = 1,
@@ -106,7 +110,7 @@ class TransactionUseCaseTest {
             )
         )
 
-        coEvery { transactionRepository.getLatestTransaction() } returns flowOf(transactions)
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(transactions)
 
         val actualResult = transactionUseCase.getLatestTransaction().asResult().toList()
 
@@ -116,4 +120,5 @@ class TransactionUseCaseTest {
         Assertions.assertEquals(transactions.size, (actualResult[1] as Result.Success<List<Transaction>>).data.size)
         Assertions.assertEquals(transactions, (actualResult[1] as Result.Success<List<Transaction>>).data)
     }
+
 }

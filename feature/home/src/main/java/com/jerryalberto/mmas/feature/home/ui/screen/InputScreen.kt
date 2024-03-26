@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
@@ -332,7 +333,8 @@ private fun InputScreenContent(
                             }
                         )
                     },
-                    visualTransformation = CurrencyAmountInputVisualTransformation()
+                    visualTransformation = CurrencyAmountInputVisualTransformation(),
+                    keyboardType = KeyboardType.NumberPassword
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 

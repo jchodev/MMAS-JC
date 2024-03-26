@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class MultiFabState {
     COLLAPSED, EXPANDED
@@ -62,6 +64,7 @@ fun MultiFloatingActionButton(
     contentDescription: String = "",
     items: List<FabItem> = listOf(),
     showLabels: Boolean = true,
+
     onStateChanged: ((state: MultiFabState) -> Unit)? = null
 ) {
     var currentState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
@@ -179,6 +182,7 @@ fun SmallFloatingActionButtonRow(
     ) { state ->
         if (state == MultiFabState.EXPANDED) 1.0f else 0f
     }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -191,14 +195,15 @@ fun SmallFloatingActionButtonRow(
                 modifier = Modifier
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
                     .clickable(onClick = {
-                        item.onFabItemClicked()
                         stateChange.invoke()
+                        item.onFabItemClicked()
                     })
             )
         }
         FloatingActionButton(
             shape = CircleShape,
             onClick = {
+                stateChange.invoke()
                 item.onFabItemClicked()
             },
             containerColor = item.bgColor,

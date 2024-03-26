@@ -133,11 +133,9 @@ class InputScreenViewModel @Inject constructor(
             saveData(
                 uiState = InputUiDataState()
             )
-            _onSaved.emit(_onSaved.value?.not() ?: false)
+            //_onSaved.emit(_onSaved.value?.not() ?: false)
         }
-    }
-
-    fun saveTransaction2(){
         _onSaved.value = _onSaved.value?.not() ?: false
     }
+
 }

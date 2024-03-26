@@ -27,6 +27,7 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
+import java.util.Calendar
 
 @Composable
 fun TransactionItem(
@@ -109,7 +110,7 @@ private fun TransactionItemPreview(
                 category = Category(
                     type = CategoryType.ACCESSORIES
                 ),
-                date = UiHelper().getCurrentDateDateMillis(),
+                date = Calendar.getInstance().timeInMillis,
                 hour = 1,
                 minute = 12,
                 description = "this is desc",
