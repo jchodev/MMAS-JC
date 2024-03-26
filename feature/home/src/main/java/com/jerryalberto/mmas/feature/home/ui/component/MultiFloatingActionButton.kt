@@ -64,8 +64,6 @@ fun MultiFloatingActionButton(
     contentDescription: String = "",
     items: List<FabItem> = listOf(),
     showLabels: Boolean = true,
-
-    onStateChanged: ((state: MultiFabState) -> Unit)? = null
 ) {
     var currentState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
     val stateTransition: Transition<MultiFabState> =
@@ -74,8 +72,12 @@ fun MultiFloatingActionButton(
         currentState = if (stateTransition.currentState == MultiFabState.EXPANDED) {
             MultiFabState.COLLAPSED
         } else MultiFabState.EXPANDED
-        onStateChanged?.invoke(currentState)
     }
+
+    val collapsed: () -> Unit = {
+        currentState = MultiFabState.COLLAPSED
+    }
+
     val rotation: Float by stateTransition.animateFloat(
         transitionSpec = {
             if (targetState == MultiFabState.EXPANDED) {
@@ -91,7 +93,8 @@ fun MultiFloatingActionButton(
     val isEnable = currentState == MultiFabState.EXPANDED
 
     BackHandler(isEnable) {
-        currentState = MultiFabState.COLLAPSED
+        //currentState = MultiFabState.COLLAPSED
+        collapsed()
     }
 
     val modifier = if(currentState ==   MultiFabState.EXPANDED)
@@ -138,7 +141,7 @@ fun MultiFloatingActionButton(
                         item = item,
                         stateTransition = stateTransition,
                         showLabel = showLabels,
-                        stateChange = stateChange
+                        collapsed = collapsed
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -168,7 +171,7 @@ fun SmallFloatingActionButtonRow(
     item: FabItem,
     showLabel: Boolean,
     stateTransition: Transition<MultiFabState>,
-    stateChange: () -> Unit = {},
+    collapsed: () -> Unit = {},
 ) {
     val alpha: Float by stateTransition.animateFloat(
         transitionSpec = {
@@ -195,7 +198,7 @@ fun SmallFloatingActionButtonRow(
                 modifier = Modifier
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
                     .clickable(onClick = {
-                        stateChange.invoke()
+                        collapsed.invoke()
                         item.onFabItemClicked()
                     })
             )
@@ -203,7 +206,7 @@ fun SmallFloatingActionButtonRow(
         FloatingActionButton(
             shape = CircleShape,
             onClick = {
-                stateChange.invoke()
+                collapsed.invoke()
                 item.onFabItemClicked()
             },
             containerColor = item.bgColor,
