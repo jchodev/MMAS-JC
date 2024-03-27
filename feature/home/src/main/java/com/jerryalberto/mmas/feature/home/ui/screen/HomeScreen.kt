@@ -103,6 +103,12 @@ private fun HomeScreenContent(
     uiState : HomeUIDataState,
     onTypeClicked: (AccountBalanceDataType) -> Unit = {}
 ) {
+    val accountBalanceDataTypeDesc = when (uiState.type) {
+        AccountBalanceDataType.TOTAL -> stringResource(id = R.string.feature_home_total)
+        AccountBalanceDataType.TODAY -> stringResource(id = R.string.feature_home_today)
+        AccountBalanceDataType.MONTH -> stringResource(id = R.string.feature_home_month)
+        AccountBalanceDataType.WEEK -> stringResource(id = R.string.feature_home_week)
+    }
     LazyColumn (
         modifier = Modifier
             .fillMaxWidth()
@@ -111,7 +117,7 @@ private fun HomeScreenContent(
         //account balance
         item {
             Text(
-                text = stringResource(id = R.string.feature_home_title) + "(" + uiState.type.value + ")",
+                text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
             )
@@ -148,41 +154,6 @@ private fun HomeScreenContent(
         //chart
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-//            val viewData = DonutChartDataCollection(
-//                listOf(
-//                    DonutChartData(
-//                        amount = 1.1f,
-//                        color = Color.Red,
-//                        title = "title1"
-//                    ),
-//                    DonutChartData(
-//                        amount = 1.2f,
-//                        color = Color.Green,
-//                        title = "title2"
-//                    ),
-//                )
-//            )
-//            DonutChart(data = viewData
-//            ) { selected->
-//                // 3
-//                AnimatedContent(targetState = selected) {
-//                    val amount = it?.amount ?: viewData.totalAmount
-//                    val text = it?.title ?: "Total"
-//
-//                    // 4
-//                    Column(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        horizontalAlignment = Alignment.CenterHorizontally
-//                    ) {
-//                        Text("$${amount}")
-//                        Text(text)
-//
-//                    }
-//                }
-//            }
-
-            //Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-
             PieChart(
                 data = listOf(
                     Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toDouble()),
@@ -240,21 +211,6 @@ private fun HomeScreenContent(
                     )
                     Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
                 }
-//                SpendFrequencyButton(
-//                    modifier = Modifier.weight(1f),
-//                    text = stringResource(id = R.string.feature_home_today),
-//                    selected = false
-//                )
-//                SpendFrequencyButton(
-//                    modifier = Modifier.weight(1f),
-//                    text = stringResource(id = R.string.feature_home_week),
-//                    selected = false
-//                )
-//                SpendFrequencyButton(
-//                    modifier = Modifier.weight(1f),
-//                    text = stringResource(id = R.string.feature_home_month),
-//                    selected = false
-//                )
             }
         }
         //list of transaction

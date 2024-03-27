@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,12 +11,13 @@ import javax.inject.Inject
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
-import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.toList
@@ -28,6 +30,7 @@ class InputScreenViewModel @Inject constructor(
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
     private val uiHelper: UiHelper,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val INPUT_STATE_KEY = "INPUT_STATE_KEY"
@@ -121,6 +124,69 @@ class InputScreenViewModel @Inject constructor(
     }
 
     fun saveTransaction(){
+        //clear error
+        saveData(
+            uiState = uiState.value.copy(
+                descriptionError = null,
+                amountError = null,
+                dateError = null,
+                timeError = null,
+                categoryError = null
+            )
+        )
+
+        //basic checking
+        if (uiState.value.category == null){
+            saveData(
+                uiState = uiState.value.copy(
+                    categoryError = context.getString(R.string.feature_home_error_field_require)
+                )
+            )
+            return
+        }
+        if (uiState.value.description.isBlank()){
+            saveData(
+                uiState = uiState.value.copy(
+                    descriptionError = context.getString(R.string.feature_home_error_field_require)
+                )
+            )
+            return
+        }
+
+        if (uiState.value.dateString.isBlank()){
+            saveData(
+                uiState = uiState.value.copy(
+                    dateError = context.getString(R.string.feature_home_error_field_require)
+                )
+            )
+            return
+        }
+        if (uiState.value.timeString.isBlank()){
+            saveData(
+                uiState = uiState.value.copy(
+                    timeError = context.getString(R.string.feature_home_error_field_require)
+                )
+            )
+            return
+        }
+
+        if (uiState.value.amountFormatted.isBlank()){
+            saveData(
+                uiState = uiState.value.copy(
+                    amountError = context.getString(R.string.feature_home_error_field_require)
+                )
+            )
+            return
+        }
+        if (uiState.value.amount!! <= 0.0){
+            saveData(
+                uiState = uiState.value.copy(
+                    amountError = context.getString(R.string.feature_home_error_amount_greater_than_zero)
+                )
+            )
+            return
+        }
+
         viewModelScope.launch {
             transactionUseCase.insertTransaction(
                 uiState.value.asTransaction()

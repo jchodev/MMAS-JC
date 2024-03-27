@@ -21,20 +21,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.jerryalberto.mmas.core.designsystem.R
+import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import java.util.Calendar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerPromptDialog(
+    defaultHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+    defaultMin: Int = Calendar.getInstance().get(Calendar.MINUTE),
     title: String = "Select Time",
     onSelected: (Int, Int) -> Unit,
     onDismiss: () -> Unit ={}
 ) {
-    val timePickerState = rememberTimePickerState()
+    val timePickerState = rememberTimePickerState(
+        initialHour = defaultHour,
+        initialMinute = defaultMin
+    )
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -44,7 +50,7 @@ fun TimePickerPromptDialog(
     ) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp,
+            tonalElevation = MaterialTheme.dimens.dimen8,
             modifier = Modifier
                 .width(IntrinsicSize.Min)
                 .height(IntrinsicSize.Min)
@@ -54,13 +60,13 @@ fun TimePickerPromptDialog(
                 ),
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(MaterialTheme.dimens.dimen24),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 20.dp),
+                        .padding(bottom = MaterialTheme.dimens.dimen24),
                     text = title,
                     style = MaterialTheme.typography.labelMedium
                 )
@@ -69,13 +75,13 @@ fun TimePickerPromptDialog(
                 )
                 Row(
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(MaterialTheme.dimens.dimen40)
                         .fillMaxWidth()
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
 
                     Button(
-                        modifier = Modifier.padding(end = 8.dp),
+                        modifier = Modifier.padding(end = MaterialTheme.dimens.dimen8),
                         onClick = {
                         onDismiss()
                     }) {

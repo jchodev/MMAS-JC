@@ -13,13 +13,13 @@ class UiHelper {
         val formattedHour = if (hour <= 9) {
             "0$hour"
         } else {
-            hour.toString()
+            "$hour"
         }
 
         val formattedMinute = if (minute <= 9) {
             "0$minute"
         } else {
-            minute.toString()
+            "$minute"
         }
 
         return "$formattedHour:$formattedMinute"

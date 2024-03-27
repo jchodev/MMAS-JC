@@ -63,6 +63,7 @@ import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
+import java.util.Calendar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -138,6 +139,8 @@ private fun InputScreenContent(
     var timePickerDialogVisible by remember { mutableStateOf(false) }
     if (timePickerDialogVisible){
         TimePickerPromptDialog(
+            defaultHour = state.hour ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+            defaultMin = state.minute ?: Calendar.getInstance().get(Calendar.MINUTE),
             onSelected = { hour, minute ->
                 onTimeSelected.invoke(hour, minute)
             },
@@ -181,7 +184,7 @@ private fun InputScreenContent(
                 .padding(MaterialTheme.dimens.dimen16)) {
                 MmasButton(
                     modifier = Modifier.height(MaterialTheme.dimens.dimen56),
-                    text = "Save",
+                    text = stringResource(id = R.string.feature_home_save),
                     onClick = onSaveClick
                 )
             }
@@ -230,6 +233,7 @@ private fun InputScreenContent(
                     } else {
                         ""
                     },
+                    error = state.categoryError,
                     placeHolder = "Category",
                     readOnly = true,
                     leadingIcon = {
@@ -272,6 +276,7 @@ private fun InputScreenContent(
                         )
                     },
                     value = state.description,
+                    error = state.descriptionError,
                     placeHolder = "Description",
                     onValueChange = onDescriptionChange
                 )
@@ -283,6 +288,7 @@ private fun InputScreenContent(
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
                         value = state.dateString,
+                        error = state.dateError,
                         placeHolder = "Date",
                         readOnly = true,
                         leadingIcon = {
@@ -298,6 +304,7 @@ private fun InputScreenContent(
                     )
                     MmasTextEdit(
                         value = state.timeString,
+                        error = state.timeError,
                         modifier = Modifier.weight(1f),
                         placeHolder = "Time",
                         readOnly = true,
@@ -316,6 +323,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
                     value = state.amountString,
+                    error = state.amountError,
                     placeHolder = "Amount",
                     leadingIcon = {
                         Icon(
