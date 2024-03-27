@@ -10,25 +10,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.model.data.Transaction
 
 
 @Composable
 fun TransactionBox(
     modifier: Modifier = Modifier,
+    transactions: List<Transaction> = listOf(),
 ) {
     Column (
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
-            .background(color = MaterialTheme.colorScheme.surfaceVariant)
+            //.background(color = MaterialTheme.colorScheme.surfaceVariant)
 
 
     ) {
         //items
-        TransactionItem()
-        TransactionItem()
-        TransactionItem()
-        TransactionItem()
+        transactions.forEach {
+            TransactionItem(
+                transaction = it
+            )
+        }
     }
 }
 

@@ -8,11 +8,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class InputActivity : ComponentActivity() {
@@ -50,6 +56,20 @@ class InputActivity : ComponentActivity() {
 
             }
         }
+
+        observeViewModelEvents()
     }
 
+    private fun observeViewModelEvents() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.onSaved.collectLatest {
+                    Timber.d("observe::${it}")
+                    it?.let {
+                        finish()
+                    }
+                }
+            }
+        }
+    }
 }

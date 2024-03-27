@@ -10,9 +10,11 @@ import com.jerryalberto.mmas.feature.calendar.ui.screen.CalendarScreen
 import com.jerryalberto.mmas.feature.input.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
 @Composable
 fun MainNavigation(
+    homeScreenViewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
@@ -23,7 +25,7 @@ fun MainNavigation(
     ) {
 
         composable(MainActivityScreen.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(homeScreenViewModel = homeScreenViewModel)
         }
 
         composable(MainActivityScreen.InputScreen.route) {

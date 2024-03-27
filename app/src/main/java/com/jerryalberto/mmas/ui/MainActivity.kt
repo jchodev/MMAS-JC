@@ -1,22 +1,17 @@
 package com.jerryalberto.mmas.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.feature.home.ui.InputActivity
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 import com.jerryalberto.mmas.ui.navigation.MainActivityScreen
@@ -37,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
+
+    private val homeScreenViewModel by viewModels<HomeScreenViewModel>()
 
     private val bottomBar = @Composable {
         BottomBar(
@@ -49,17 +46,17 @@ class MainActivity : ComponentActivity() {
                         navController?.navigate(MainActivityScreen.HomeScreen.route)
                     }
                 ),
-                BottomBarItem(
-                    title = "Add",
-                    selectedIcon = Icons.Filled.Add,
-                    unselectedIcon = Icons.Outlined.Add,
-                    onClick = {
-                        //navController?.navigate(MainActivityScreen.InputScreen.route)
-
-                        val intent = Intent(this, InputActivity::class.java)
-                        startActivity(intent)
-                    }
-                ),
+//                BottomBarItem(
+//                    title = "Add",
+//                    selectedIcon = Icons.Filled.Add,
+//                    unselectedIcon = Icons.Outlined.Add,
+//                    onClick = {
+//                        //navController?.navigate(MainActivityScreen.InputScreen.route)
+//
+//                        val intent = Intent(this, InputActivity::class.java)
+//                        startActivity(intent)
+//                    }
+//                ),
                 BottomBarItem(
                     title = "Analysis",
                     selectedIcon = Icons.Filled.Face,
@@ -95,6 +92,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     navController?.let {
                         MainScreen(
+                            homeScreenViewModel = homeScreenViewModel,
                             navController = it,
                             bottomBar = bottomBar
                         )

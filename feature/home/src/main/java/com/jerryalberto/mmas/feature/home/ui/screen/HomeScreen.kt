@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 
@@ -17,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,22 +31,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
+import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.ui.component.TransactionBox
-import com.jerryalberto.mmas.feature.home.ui.component.VicoChart
+import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-
+    homeScreenViewModel: HomeScreenViewModel
 ) {
+    val uiState = homeScreenViewModel.uiState.collectAsState().value
     val context = LocalContext.current
 
     val floatingActionButton = @Composable {
@@ -78,13 +86,29 @@ fun HomeScreen(
     Scaffold (
         floatingActionButton = floatingActionButton
     ) { paddingValues ->
-        HomeScreenContent()
+        HomeScreenContent(
+            uiState = uiState,
+            onTypeClicked = {
+                homeScreenViewModel.getAmountByType(
+                    it
+                )
+            }
+        )
     }
 
 }
 
 @Composable
-private fun HomeScreenContent() {
+private fun HomeScreenContent(
+    uiState : HomeUIDataState,
+    onTypeClicked: (AccountBalanceDataType) -> Unit = {}
+) {
+    val accountBalanceDataTypeDesc = when (uiState.type) {
+        AccountBalanceDataType.TOTAL -> stringResource(id = R.string.feature_home_total)
+        AccountBalanceDataType.TODAY -> stringResource(id = R.string.feature_home_today)
+        AccountBalanceDataType.MONTH -> stringResource(id = R.string.feature_home_month)
+        AccountBalanceDataType.WEEK -> stringResource(id = R.string.feature_home_week)
+    }
     LazyColumn (
         modifier = Modifier
             .fillMaxWidth()
@@ -93,13 +117,13 @@ private fun HomeScreenContent() {
         //account balance
         item {
             Text(
-                text = stringResource(id = R.string.feature_home_title),
+                text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             Text(
-                text = "$8999",
+                text = "$${uiState.totalAmount}",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.displayMedium,
             )
@@ -113,40 +137,80 @@ private fun HomeScreenContent() {
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
                     bgColor = ColorConstant.IncomeGreen,
-                    icon = ImageVector.vectorResource(R.drawable.ic_income)
+                    icon = ImageVector.vectorResource(R.drawable.ic_income),
+                    title = stringResource(id = R.string.feature_home_income),
+                    content = "$${uiState.totalIncome}"
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
-                    icon = ImageVector.vectorResource(R.drawable.ic_expenses)
+                    icon = ImageVector.vectorResource(R.drawable.ic_expenses),
+                    title = stringResource(id = R.string.feature_home_expenses),
+                    content = "$${uiState.totalExpenses}"
                 )
             }
         }
+
         //chart
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-            VicoChart()
+            PieChart(
+                data = listOf(
+                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toDouble()),
+                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toDouble()),
+                )
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
+
         //today, week, month
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            Row {
-                //today
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_today),
-                    selected = true
-                )
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_week),
-                    selected = false
-                )
-                SpendFrequencyButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.feature_home_month),
-                    selected = false
-                )
+            LazyRow {
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_total),
+                        selected = uiState.type == AccountBalanceDataType.TOTAL,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.TOTAL)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_today),
+                        selected = uiState.type == AccountBalanceDataType.TODAY,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.TODAY)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_week),
+                        selected = uiState.type == AccountBalanceDataType.WEEK,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.WEEK)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
+                item {
+                    SpendFrequencyButton(
+                        modifier = Modifier.wrapContentSize(),
+                        text = stringResource(id = R.string.feature_home_month),
+                        selected = uiState.type == AccountBalanceDataType.MONTH,
+                        onClick = {
+                            onTypeClicked.invoke(AccountBalanceDataType.MONTH)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                }
             }
         }
         //list of transaction
@@ -173,7 +237,9 @@ private fun HomeScreenContent() {
                 )
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            TransactionBox()
+            TransactionBox(
+                transactions = uiState.latestTransaction
+            )
         }
     }
 }
@@ -182,6 +248,8 @@ private fun HomeScreenContent() {
 @Composable
 private fun HomeScreenContentPreview() {
     MmasTheme {
-        HomeScreenContent()
+        HomeScreenContent(
+            uiState = HomeUIDataState()
+        )
     }
 }

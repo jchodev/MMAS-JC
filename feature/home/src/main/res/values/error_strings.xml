@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feature_home_error_field_require">*Field required</string>
+    <string name="feature_home_error_amount_greater_than_zero">*Amount must be greater than 0</string>
+
+</resources>

@@ -20,7 +20,7 @@ fun SpendFrequencyButton(
     modifier: Modifier = Modifier,
     selected: Boolean = true,
     onClick: () -> Unit = {},
-    text: String = "com/jerryalberto/mmas/core/designsystem/text",
+    text: String = "text",
 ) {
     Button(
         modifier = modifier

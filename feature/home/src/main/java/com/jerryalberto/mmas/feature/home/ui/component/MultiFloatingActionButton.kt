@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class MultiFabState {
     COLLAPSED, EXPANDED
@@ -62,7 +64,6 @@ fun MultiFloatingActionButton(
     contentDescription: String = "",
     items: List<FabItem> = listOf(),
     showLabels: Boolean = true,
-    onStateChanged: ((state: MultiFabState) -> Unit)? = null
 ) {
     var currentState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
     val stateTransition: Transition<MultiFabState> =
@@ -71,8 +72,12 @@ fun MultiFloatingActionButton(
         currentState = if (stateTransition.currentState == MultiFabState.EXPANDED) {
             MultiFabState.COLLAPSED
         } else MultiFabState.EXPANDED
-        onStateChanged?.invoke(currentState)
     }
+
+    val collapsed: () -> Unit = {
+        currentState = MultiFabState.COLLAPSED
+    }
+
     val rotation: Float by stateTransition.animateFloat(
         transitionSpec = {
             if (targetState == MultiFabState.EXPANDED) {
@@ -88,7 +93,8 @@ fun MultiFloatingActionButton(
     val isEnable = currentState == MultiFabState.EXPANDED
 
     BackHandler(isEnable) {
-        currentState = MultiFabState.COLLAPSED
+        //currentState = MultiFabState.COLLAPSED
+        collapsed()
     }
 
     val modifier = if(currentState ==   MultiFabState.EXPANDED)
@@ -135,7 +141,7 @@ fun MultiFloatingActionButton(
                         item = item,
                         stateTransition = stateTransition,
                         showLabel = showLabels,
-                        stateChange = stateChange
+                        collapsed = collapsed
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -165,7 +171,7 @@ fun SmallFloatingActionButtonRow(
     item: FabItem,
     showLabel: Boolean,
     stateTransition: Transition<MultiFabState>,
-    stateChange: () -> Unit = {},
+    collapsed: () -> Unit = {},
 ) {
     val alpha: Float by stateTransition.animateFloat(
         transitionSpec = {
@@ -179,6 +185,7 @@ fun SmallFloatingActionButtonRow(
     ) { state ->
         if (state == MultiFabState.EXPANDED) 1.0f else 0f
     }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -191,14 +198,15 @@ fun SmallFloatingActionButtonRow(
                 modifier = Modifier
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
                     .clickable(onClick = {
+                        collapsed.invoke()
                         item.onFabItemClicked()
-                        stateChange.invoke()
                     })
             )
         }
         FloatingActionButton(
             shape = CircleShape,
             onClick = {
+                collapsed.invoke()
                 item.onFabItemClicked()
             },
             containerColor = item.bgColor,

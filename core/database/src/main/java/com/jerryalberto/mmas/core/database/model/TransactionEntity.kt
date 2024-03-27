@@ -2,7 +2,10 @@ package com.jerryalberto.mmas.core.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
+import com.jerryalberto.mmas.core.model.data.TransactionType
 
 //ref: https://github.com/android/nowinandroid/blob/main/core/database/src/main/kotlin/com/google/samples/apps/nowinandroid/core/database/model/TopicEntity.kt
 @Entity(
@@ -23,9 +26,9 @@ data class TransactionEntity (
 
 fun TransactionEntity.asExternalModel() = Transaction (
     id = id,
-    type = type,
+    type = TransactionType.valueOf(type),
     amount = amount,
-    category = category,
+    category = Category(type = CategoryType.valueOf(category)),
     description = description,
     uri = uri,
     date = date,

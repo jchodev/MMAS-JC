@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
+import com.jerryalberto.mmas.core.database.model.TransactionSummaryQueryResult
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,7 +26,7 @@ interface TransactionDao {
         ORDER BY hour, minute
     """,
     )
-    suspend fun getTransactionByDate(date: Long): List<TransactionEntity>
+    fun getTransactionByDate(date: Long): Flow<List<TransactionEntity>>
 
     @Query(
         value = """
@@ -33,7 +34,19 @@ interface TransactionDao {
         ORDER BY date DESC, hour DESC, minute DESC
     """,
     )
-    suspend fun getAllTransaction(): List<TransactionEntity>
+    fun getAllTransaction(): Flow<List<TransactionEntity>>
+
+
+    @Query(
+        value = """
+        SELECT type, SUM(amount) as total_amount 
+        FROM transaction_tbl 
+        WHERE date >= :dateFrom AND date <= :dateTo  
+        GROUP BY type
+    """,
+    )
+    fun getSumAmountGroupedByDateRange(dateFrom: Long, dateTo: Long): Flow<List<TransactionSummaryQueryResult>>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transactionEntity: TransactionEntity)
