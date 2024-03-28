@@ -3,6 +3,7 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,8 +22,10 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 
@@ -60,6 +63,7 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
+import com.jerryalberto.mmas.feature.home.ui.component.CategoryIcon
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
@@ -75,7 +79,8 @@ fun InputScreen(
     InputScreenContent(
         state = viewModel.uiState.collectAsState().value,
         onTopBarLeftClick = onTopBarLeftClick,
-        categories = viewModel.getCategories(),
+        expensesCategories = viewModel.getExpenseCategories(),
+        incomeCategories = viewModel.getIncomeCategories(),
         onDescriptionChange = {
             viewModel.onDescriptionChange(it)
         },
@@ -106,7 +111,8 @@ fun InputScreen(
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    categories: List<CategoryDisplay> = listOf(),
+    incomeCategories: List<CategoryDisplay> = listOf(),
+    expensesCategories: List<CategoryDisplay> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
@@ -118,6 +124,14 @@ private fun InputScreenContent(
     onSelectedUri: (Uri) -> Unit = {},
 ){
     var bgColor = ColorConstant.ExpensesRed
+    var isExpenses = true
+
+    state.type?.let {
+        if (it == TransactionType.INCOME){
+            bgColor = ColorConstant.IncomeGreen
+            isExpenses = false
+        }
+    }
 
     state.type?.let {
         if (it == TransactionType.INCOME){
@@ -152,7 +166,7 @@ private fun InputScreenContent(
     var categorySelectDialogVisible by remember { mutableStateOf(false) }
     if (categorySelectDialogVisible) {
         CategorySelectDialog(
-            list = categories,
+            list = if (isExpenses) expensesCategories else incomeCategories,
             onDismissRequest = { categorySelectDialogVisible = false },
             onCategorySelected = {
                 onCategorySelected.invoke(it)
@@ -227,6 +241,7 @@ private fun InputScreenContent(
                     .fillMaxWidth()
                     .padding(MaterialTheme.dimens.dimen32)
             ){
+
                 MmasTextEdit(
                     value = if (state.category != null) {
                         stringResource(id = state.category.stringResId)
@@ -237,7 +252,7 @@ private fun InputScreenContent(
                     placeHolder = "Category",
                     readOnly = true,
                     leadingIcon = {
-                        if (state.category != null){
+                        if (state.category != null) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(state.category.imageResId),
                                 contentDescription = stringResource(id = state.category.stringResId),
@@ -245,8 +260,7 @@ private fun InputScreenContent(
                                     MaterialTheme.dimens.dimen24
                                 ),
                             )
-                        }
-                        else {
+                        } else {
                             Icon(
                                 imageVector = Icons.Default.Category,
                                 contentDescription = "select catergory",
@@ -266,6 +280,8 @@ private fun InputScreenContent(
                         }
                     }
                 )
+
+
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
                     leadingIcon = {

@@ -17,11 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.CategoryType
@@ -31,6 +33,7 @@ import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 fun CategoryGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
     category: CategoryDisplay,
+    isExpenses: Boolean = true,
     onCategorySelected: (CategoryDisplay) -> Unit = {}
 ){
     Column(
@@ -40,75 +43,87 @@ fun CategoryGroup(
             .padding(MaterialTheme.dimens.dimen16)
     ) {
 
-        //row1
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.secondary,
-                    shape = RoundedCornerShape(
-                        topStart = MaterialTheme.dimens.dimen16,
-                        topEnd = MaterialTheme.dimens.dimen16
-                    )
-                )
-        ) {
-            // Content for the first row
-            Row (
+        if (category.items.isEmpty()) {
+            CategorySingleGroup(
+                modifier = modifier,
+                category = category,
+                onCategorySelected = onCategorySelected
+            )
+        } else {
+            //row1
+            Box(
                 modifier = Modifier
-                    .padding(MaterialTheme.dimens.dimen16)
-                    .clickable {
-                        onCategorySelected.invoke(category)
-                    },
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(
+                            topStart = MaterialTheme.dimens.dimen16,
+                            topEnd = MaterialTheme.dimens.dimen16
+                        )
+                    )
             ) {
+                // Content for the first row
+                Row(
+                    modifier = Modifier
+                        .padding(MaterialTheme.dimens.dimen16)
+                        .clickable {
+                            onCategorySelected.invoke(category)
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                CategoryIcon(
-                    size = MaterialTheme.dimens.dimen56,
-                    icon = ImageVector.vectorResource(category.imageResId),
-                    contentDescription = stringResource(id = category.stringResId)
-                )
+                    CategoryIcon(
+                        size = MaterialTheme.dimens.dimen56,
+                        icon = ImageVector.vectorResource(category.imageResId),
+                        contentDescription = stringResource(id = category.stringResId),
+                        bgColor = if (isExpenses) ColorConstant.ExpensesRedBg else ColorConstant.IncomeGreenBg,
+                        iconColor = if (isExpenses) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
+                    )
 
-                Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
 
-                Text(
-                    text = stringResource(id = category.stringResId),
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSecondary
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                    Text(
+                        text = stringResource(id = category.stringResId),
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            color = MaterialTheme.colorScheme.onSecondary
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-        }
 
-        //row 2
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                    shape = RoundedCornerShape(
-                        bottomStart = MaterialTheme.dimens.dimen16,
-                        bottomEnd = MaterialTheme.dimens.dimen16
+            //row 2
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(
+                            bottomStart = MaterialTheme.dimens.dimen16,
+                            bottomEnd = MaterialTheme.dimens.dimen16
+                        )
                     )
-                )
-                .padding(
-                    start = MaterialTheme.dimens.dimen8,
-                    top = MaterialTheme.dimens.dimen16,
-                    end = MaterialTheme.dimens.dimen8,
-                    bottom = MaterialTheme.dimens.dimen24
-                )
-        ) {
-            LazyRow {
-                items(category.items.size) { index ->
-                    val item = category.items[index]
-                    CategoryItem(
-                        category = item,
-                        textColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                        onCategorySelected = onCategorySelected
+                    .padding(
+                        start = MaterialTheme.dimens.dimen8,
+                        top = MaterialTheme.dimens.dimen16,
+                        end = MaterialTheme.dimens.dimen8,
+                        bottom = MaterialTheme.dimens.dimen24
                     )
+            ) {
+                LazyRow {
+                    items(category.items.size) { index ->
+                        val item = category.items[index]
+                        CategoryItem(
+                            bgColor = if (isExpenses) ColorConstant.ExpensesRedBg else ColorConstant.IncomeGreenBg,
+                            iconColor = if (isExpenses) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
+                            category = item,
+                            textColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                            onCategorySelected = onCategorySelected,
+                        )
 
-                    if (index < category.items.size - 1) {
-                        Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                        if (index < category.items.size - 1) {
+                            Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                        }
                     }
                 }
             }
@@ -116,7 +131,7 @@ fun CategoryGroup(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
 @Composable
 private fun CategoryGroupPreview(){
     MmasTheme {
@@ -143,8 +158,69 @@ private fun CategoryGroupPreview(){
                     )
                 )
             ),
-
         )
     }
 }
 
+@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@Composable
+private fun CategoryGroupSinglePreview(){
+    MmasTheme {
+        CategoryGroup(
+            category = CategoryDisplay(
+                type = CategoryType.FOOD_AND_BEVERAGES,
+                imageResId = R.mipmap.sym_def_app_icon,
+                stringResId = R.string.copy,
+            ),
+        )
+    }
+}
+
+
+@Composable
+private fun CategorySingleGroup(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    category: CategoryDisplay,
+    onCategorySelected: (CategoryDisplay) -> Unit = {},
+    bgColor: Color = ColorConstant.ExpensesRedBg,
+    iconColor: Color = ColorConstant.ExpensesRed
+){
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.secondary,
+                shape = MaterialTheme.shapes.medium,
+            )
+    ) {
+        // Content for the first row
+        Row (
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.dimen16)
+                .clickable {
+                    onCategorySelected.invoke(category)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            CategoryIcon(
+                size = MaterialTheme.dimens.dimen56,
+                icon = ImageVector.vectorResource(category.imageResId),
+                contentDescription = stringResource(id = category.stringResId),
+                bgColor = bgColor,
+                iconColor = iconColor
+            )
+
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+
+            Text(
+                text = stringResource(id = category.stringResId),
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onSecondary
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}

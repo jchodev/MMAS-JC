@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.component
 
+import android.R
 import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.foundation.layout.padding
@@ -12,12 +13,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.window.DialogProperties
+import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
+import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +43,7 @@ fun CategorySelectDialog(
 ) {
 
     BasicAlertDialog(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         onDismissRequest = onDismissRequest,
         properties = properties,
         content = {
@@ -66,4 +72,35 @@ fun CategorySelectDialog(
             }
         }
     )
+}
+
+
+@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@Composable
+private fun CategorySelectDialogPreview(){
+    MmasTheme {
+        CategorySelectDialog(
+            list = listOf(
+                //food and beverage
+                Category(
+                    type = CategoryType.FOOD_AND_BEVERAGES,
+                    items = listOf(
+                        Category(
+                            type = CategoryType.FOOD,
+                        ),
+                        Category(
+                            type = CategoryType.BEVERAGES,
+                        ),
+                        Category(
+                            type = CategoryType.GROCERIES,
+                        )
+                    )
+                ),
+                Category(CategoryType.OTHER)
+            ).map {
+                it.toCategoryDisplay()
+            }
+
+        )
+    }
 }

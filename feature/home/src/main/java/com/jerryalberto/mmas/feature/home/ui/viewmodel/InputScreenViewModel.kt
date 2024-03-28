@@ -42,8 +42,14 @@ class InputScreenViewModel @Inject constructor(
     private val _onSaved = MutableStateFlow<Boolean?>(null)
     val onSaved = _onSaved.asStateFlow()
 
-    fun getCategories(): List<CategoryDisplay> {
-        return categoriesUseCase.getExpenseCategory().map {
+    fun getExpenseCategories(): List<CategoryDisplay> {
+        return categoriesUseCase.getExpenseCategories().map {
+            it.toCategoryDisplay()
+        }
+    }
+
+    fun getIncomeCategories(): List<CategoryDisplay> {
+        return categoriesUseCase.getIncomeCategories().map {
             it.toCategoryDisplay()
         }
     }

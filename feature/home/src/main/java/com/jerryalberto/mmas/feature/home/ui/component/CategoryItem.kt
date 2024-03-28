@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
@@ -28,6 +30,8 @@ import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 
 @Composable
 fun CategoryItem(
+    bgColor: Color = ColorConstant.ExpensesRedBg,
+    iconColor: Color = ColorConstant.ExpensesRed,
     textColor: Color = Color.Black,
     category: CategoryDisplay,
     onCategorySelected: (CategoryDisplay) -> Unit = {}
@@ -43,7 +47,9 @@ fun CategoryItem(
     ) {
         CategoryIcon(
             icon =  ImageVector.vectorResource(category.imageResId),
-            contentDescription = stringResource(id = category.stringResId)
+            contentDescription = stringResource(id = category.stringResId),
+            bgColor = bgColor,
+            iconColor = iconColor
         )
 
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))

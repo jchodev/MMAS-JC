@@ -38,4 +38,10 @@
     <string name="feature_home_cloths">Cloths</string>
     <string name="feature_home_accessories">Accessories</string>
     <string name="feature_home_electronics">Electronics</string>
+
+    <string name="feature_home_others">Others</string>
+    <string name="feature_home_salary">Salary</string>
+    <string name="feature_home_bonus">Bonus</string>
+    <string name="feature_home_side_job">Side Job</string>
+    <string name="feature_home_gifts">Gifts</string>
 </resources>

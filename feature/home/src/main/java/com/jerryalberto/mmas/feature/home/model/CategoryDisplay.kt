@@ -50,6 +50,13 @@ private fun getImageResId(categoryType: CategoryType): Int {
         CategoryType.CLOTHES -> R.drawable.ic_clothes
         CategoryType.ACCESSORIES -> R.drawable.ic_accessories
         CategoryType.ELECTRONIC_DEVICE -> R.drawable.ic_electronics
+
+        CategoryType.OTHER -> R.drawable.ic_other
+        CategoryType.SALARY -> R.drawable.ic_salary
+        CategoryType.BONUS -> R.drawable.ic_bonus
+        CategoryType.SIDE_JOB -> R.drawable.ic_side_job
+        CategoryType.GIFTS -> R.drawable.ic_gifts
+
     }
 }
 
@@ -75,5 +82,12 @@ private fun getStringResId(categoryType: CategoryType): Int {
         CategoryType.CLOTHES -> R.string.feature_home_cloths
         CategoryType.ACCESSORIES -> R.string.feature_home_accessories
         CategoryType.ELECTRONIC_DEVICE -> R.string.feature_home_electronics
+
+
+        CategoryType.OTHER -> R.string.feature_home_others
+        CategoryType.SALARY -> R.string.feature_home_salary
+        CategoryType.BONUS -> R.string.feature_home_bonus
+        CategoryType.SIDE_JOB -> R.string.feature_home_side_job
+        CategoryType.GIFTS -> R.string.feature_home_gifts
     }
 }

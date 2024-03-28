@@ -6,6 +6,7 @@ data class Category (
 )
 
 enum class CategoryType(val value: String){
+    //Expenses
     FOOD_AND_BEVERAGES("FOOD_AND_BEVERAGES"),
     FOOD("FOOD"),
     BEVERAGES("BEVERAGES"),
@@ -25,6 +26,14 @@ enum class CategoryType(val value: String){
     SHOPPING("SHOPPING"),
     CLOTHES("CLOTHES"),
     ACCESSORIES("ACCESSORIES"),
-    ELECTRONIC_DEVICE("ELECTRONIC_DEVICE")
+    ELECTRONIC_DEVICE("ELECTRONIC_DEVICE"),
+
+    OTHER("OTHERS"),
+
+    //income
+    SALARY("SALARY"),
+    BONUS("BONUS"),
+    SIDE_JOB("SIDE_JOB"),
+    GIFTS("GIFTS"),
 
 }
