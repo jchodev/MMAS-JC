@@ -1,6 +1,5 @@
-package com.jerryalberto.mmas.feature.home.ui.component
+package com.jerryalberto.mmas.core.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 

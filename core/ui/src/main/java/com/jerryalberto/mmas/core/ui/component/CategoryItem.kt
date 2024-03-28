@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.ui.component
+package com.jerryalberto.mmas.core.ui.component
 
 import android.R
 import androidx.compose.foundation.clickable
@@ -18,15 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 import com.jerryalberto.mmas.core.model.data.CategoryType
-
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
 
 @Composable
 fun CategoryItem(
@@ -71,7 +69,7 @@ private fun CategoryItemPreview(){
     CategoryItem(
         category = CategoryDisplay(
             type = CategoryType.FOOD,
-            imageResId = com.jerryalberto.mmas.feature.home.R.drawable.ic_taxi,
+            imageResId = com.jerryalberto.mmas.core.ui.R.drawable.ic_taxi,
             stringResId = R.string.copy
         ),
     )

@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.ui.component
+package com.jerryalberto.mmas.core.ui.component
 
 import android.R
 import androidx.compose.foundation.background
@@ -27,14 +27,14 @@ import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
 
 @Composable
 fun CategoryGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: CategoryDisplay,
+    category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay,
     isExpenses: Boolean = true,
-    onCategorySelected: (CategoryDisplay) -> Unit = {}
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {}
 ){
     Column(
         modifier = modifier
@@ -162,7 +162,7 @@ private fun CategoryGroupPreview(){
     }
 }
 
-@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@Preview
 @Composable
 private fun CategoryGroupSinglePreview(){
     MmasTheme {
@@ -180,8 +180,8 @@ private fun CategoryGroupSinglePreview(){
 @Composable
 private fun CategorySingleGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: CategoryDisplay,
-    onCategorySelected: (CategoryDisplay) -> Unit = {},
+    category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay,
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {},
     bgColor: Color = ColorConstant.ExpensesRedBg,
     iconColor: Color = ColorConstant.ExpensesRed
 ){

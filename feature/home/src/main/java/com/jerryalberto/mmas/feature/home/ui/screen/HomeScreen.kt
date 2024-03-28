@@ -40,7 +40,7 @@ import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
-import com.jerryalberto.mmas.feature.home.ui.component.TransactionBox
+import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
@@ -237,7 +237,7 @@ private fun HomeScreenContent(
                 )
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            TransactionBox(
+            com.jerryalberto.mmas.core.ui.component.TransactionBox(
                 transactions = uiState.latestTransaction
             )
         }

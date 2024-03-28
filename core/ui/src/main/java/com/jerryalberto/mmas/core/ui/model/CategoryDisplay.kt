@@ -1,9 +1,9 @@
-package com.jerryalberto.mmas.feature.home.model
+package com.jerryalberto.mmas.core.ui.model
 
 import android.os.Parcelable
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.feature.home.R
+import com.jerryalberto.mmas.core.ui.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -62,32 +62,32 @@ private fun getImageResId(categoryType: CategoryType): Int {
 
 private fun getStringResId(categoryType: CategoryType): Int {
     return when (categoryType){
-        CategoryType.FOOD_AND_BEVERAGES -> R.string.feature_home_food_and_beverages
-        CategoryType.FOOD -> R.string.feature_home_food
-        CategoryType.BEVERAGES -> R.string.feature_home_beverages
-        CategoryType.GROCERIES -> R.string.feature_home_groceries
+        CategoryType.FOOD_AND_BEVERAGES -> R.string.core_ui_food_and_beverages
+        CategoryType.FOOD -> R.string.core_ui_food
+        CategoryType.BEVERAGES -> R.string.core_ui_beverages
+        CategoryType.GROCERIES -> R.string.core_ui_groceries
 
-        CategoryType.TRANSPORT -> R.string.feature_home_transport
-        CategoryType.FUEL -> R.string.feature_home_fuel
-        CategoryType.PARKING -> R.string.feature_home_parking
-        CategoryType.SERVICE_AND_MAINTENANCE -> R.string.feature_home_service_and_maintenance
-        CategoryType.TAXI -> R.string.feature_home_taxi
+        CategoryType.TRANSPORT -> R.string.core_ui_transport
+        CategoryType.FUEL -> R.string.core_ui_fuel
+        CategoryType.PARKING -> R.string.core_ui_parking
+        CategoryType.SERVICE_AND_MAINTENANCE -> R.string.core_ui_service_and_maintenance
+        CategoryType.TAXI -> R.string.core_ui_taxi
 
-        CategoryType.PERSONAL_DEVELOPMENT -> R.string.feature_home_personal_development
-        CategoryType.BUSINESS -> R.string.feature_home_business
-        CategoryType.EDUCATION -> R.string.feature_home_personal_education
-        CategoryType.INVESTMENT -> R.string.feature_home_investment
+        CategoryType.PERSONAL_DEVELOPMENT -> R.string.core_ui_personal_development
+        CategoryType.BUSINESS -> R.string.core_ui_business
+        CategoryType.EDUCATION -> R.string.core_ui_personal_education
+        CategoryType.INVESTMENT -> R.string.core_ui_investment
 
-        CategoryType.SHOPPING -> R.string.feature_home_shopping
-        CategoryType.CLOTHES -> R.string.feature_home_cloths
-        CategoryType.ACCESSORIES -> R.string.feature_home_accessories
-        CategoryType.ELECTRONIC_DEVICE -> R.string.feature_home_electronics
+        CategoryType.SHOPPING -> R.string.core_ui_shopping
+        CategoryType.CLOTHES -> R.string.core_ui_cloths
+        CategoryType.ACCESSORIES -> R.string.core_ui_accessories
+        CategoryType.ELECTRONIC_DEVICE -> R.string.core_ui_electronics
 
 
-        CategoryType.OTHER -> R.string.feature_home_others
-        CategoryType.SALARY -> R.string.feature_home_salary
-        CategoryType.BONUS -> R.string.feature_home_bonus
-        CategoryType.SIDE_JOB -> R.string.feature_home_side_job
-        CategoryType.GIFTS -> R.string.feature_home_gifts
+        CategoryType.OTHER -> R.string.core_ui_others
+        CategoryType.SALARY -> R.string.core_ui_salary
+        CategoryType.BONUS -> R.string.core_ui_bonus
+        CategoryType.SIDE_JOB -> R.string.core_ui_side_job
+        CategoryType.GIFTS -> R.string.core_ui_gifts
     }
 }

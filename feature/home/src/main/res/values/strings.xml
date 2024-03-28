@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    error_field_require
-
     <string name="feature_home_title">Account Balance</string>
     <string name="feature_home_income">Income</string>
     <string name="feature_home_expenses">Expenses</string>

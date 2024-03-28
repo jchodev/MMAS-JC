@@ -1,6 +1,5 @@
 package com.jerryalberto.mmas.feature.home.ui.component
 
-
 import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.foundation.layout.padding
@@ -23,16 +22,16 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.ui.component.CategoryGroup
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
-import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategorySelectDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    list: List<CategoryDisplay> = listOf(),
+    list: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
     properties: DialogProperties = DialogProperties().let {
         DialogProperties(
             dismissOnBackPress = it.dismissOnBackPress,
@@ -41,7 +40,7 @@ fun CategorySelectDialog(
             usePlatformDefaultWidth = false,
         )
     },
-    onCategorySelected: (CategoryDisplay) -> Unit = {}
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {}
 ) {
 
     BasicAlertDialog(

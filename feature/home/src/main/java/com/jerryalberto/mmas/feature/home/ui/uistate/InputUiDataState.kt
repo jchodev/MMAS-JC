@@ -1,11 +1,10 @@
 package com.jerryalberto.mmas.feature.home.ui.uistate
 
 import android.os.Parcelable
-import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
-import com.jerryalberto.mmas.feature.home.model.toCategory
+import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.toCategory
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -31,10 +30,10 @@ data class InputUiDataState(
 
     val uri: String = "",
 
-    val category: CategoryDisplay? = null,
+    val category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay? = null,
     val categoryError: String? = null,
 
-): Parcelable
+    ): Parcelable
 
 fun InputUiDataState.asTransaction() = Transaction(
     type = type,

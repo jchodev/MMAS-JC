@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.ui.helper
+package com.jerryalberto.mmas.core.ui.helper
 
 import androidx.compose.ui.graphics.Color
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant

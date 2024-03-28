@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
+import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val uiHelper: UiHelper,
+    private val uiHelper: com.jerryalberto.mmas.core.ui.helper.UiHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUIDataState())

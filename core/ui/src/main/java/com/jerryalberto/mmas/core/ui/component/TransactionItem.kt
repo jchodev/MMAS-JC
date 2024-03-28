@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.ui.component
+package com.jerryalberto.mmas.core.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +22,10 @@ import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
-import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
-import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
+import com.jerryalberto.mmas.core.ui.helper.UiHelper
+import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
+
 import java.util.Calendar
 
 @Composable

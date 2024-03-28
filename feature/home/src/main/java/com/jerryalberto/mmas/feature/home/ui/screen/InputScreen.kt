@@ -3,7 +3,6 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +21,8 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 
@@ -61,9 +58,8 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
-import com.jerryalberto.mmas.feature.home.ui.component.CategoryIcon
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
@@ -111,14 +107,14 @@ fun InputScreen(
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    incomeCategories: List<CategoryDisplay> = listOf(),
-    expensesCategories: List<CategoryDisplay> = listOf(),
+    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
+    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
             hour, minute ->
     },
-    onCategorySelected: (CategoryDisplay) -> Unit = {},
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
