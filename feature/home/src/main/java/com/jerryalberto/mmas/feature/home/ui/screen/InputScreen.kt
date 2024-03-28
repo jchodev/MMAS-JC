@@ -216,7 +216,7 @@ private fun InputScreenContent(
                 .padding(horizontal = MaterialTheme.dimens.dimen32)){
                 //how much
                 Text(
-                    text = "How much?",
+                    text = stringResource(id = R.string.feature_home_how_much),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                 )
@@ -249,7 +249,7 @@ private fun InputScreenContent(
                         ""
                     },
                     error = state.categoryError,
-                    placeHolder = "Category",
+                    placeHolder = stringResource(id = R.string.feature_home_category),
                     readOnly = true,
                     leadingIcon = {
                         if (state.category != null) {
@@ -263,7 +263,7 @@ private fun InputScreenContent(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Category,
-                                contentDescription = "select catergory",
+                                contentDescription = stringResource(id = R.string.feature_home_select_category),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -287,13 +287,13 @@ private fun InputScreenContent(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Description,
-                            contentDescription = "",
+                            contentDescription = stringResource(id = R.string.feature_home_description),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
                     value = state.description,
                     error = state.descriptionError,
-                    placeHolder = "Description",
+                    placeHolder = stringResource(id = R.string.feature_home_description),
                     onValueChange = onDescriptionChange
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
@@ -305,12 +305,12 @@ private fun InputScreenContent(
                             .padding(end = MaterialTheme.dimens.dimen8),
                         value = state.dateString,
                         error = state.dateError,
-                        placeHolder = "Date",
+                        placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.CalendarMonth,
-                                contentDescription = "",
+                                contentDescription = stringResource(id = R.string.feature_home_date),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
@@ -322,12 +322,12 @@ private fun InputScreenContent(
                         value = state.timeString,
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
-                        placeHolder = "Time",
+                        placeHolder = stringResource(id = R.string.feature_home_time),
                         readOnly = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.AvTimer,
-                                contentDescription = "",
+                                contentDescription = stringResource(id = R.string.feature_home_time),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
@@ -340,11 +340,11 @@ private fun InputScreenContent(
                 MmasTextEdit(
                     value = state.amountString,
                     error = state.amountError,
-                    placeHolder = "Amount",
+                    placeHolder = stringResource(id = R.string.feature_home_amount),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MonetizationOn,
-                            contentDescription = "",
+                            contentDescription = stringResource(id = R.string.feature_home_amount),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },

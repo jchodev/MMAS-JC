@@ -1,6 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.component
 
-import android.R
+
 import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.foundation.layout.padding
@@ -13,15 +13,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.window.DialogProperties
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
-import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
+
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
 
@@ -52,7 +54,7 @@ fun CategorySelectDialog(
                     MmaTopBar(
                         modifier = Modifier
                             .shadow(elevation = MaterialTheme.dimens.dimen4),
-                        title = "Select Category",
+                        title = stringResource(id = R.string.feature_home_select_category),
                         onCloseClick = onDismissRequest
                     )
                 },
