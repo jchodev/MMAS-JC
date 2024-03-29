@@ -7,21 +7,21 @@ import com.jerryalberto.mmas.core.ui.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CategoryDisplay (
+data class CategoryGroup (
     val type: CategoryType,
     val imageResId: Int = 0,
     val stringResId: Int = 0,
-    val items: List<CategoryDisplay> = listOf(),
+    val items: List<CategoryGroup> = listOf(),
 ): Parcelable
 
-fun CategoryDisplay.toCategory(): Category = Category(
+fun CategoryGroup.toCategory(): Category = Category(
     type = type,
     items = items.map {
         it.toCategory()
     }
 )
 
-fun Category.toCategoryDisplay(): CategoryDisplay = CategoryDisplay(
+fun Category.toCategoryDisplay(): CategoryGroup = CategoryGroup(
     type = type,
     imageResId = getImageResId(type),
     stringResId = getStringResId(type),

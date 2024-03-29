@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.di
+package com.jerryalberto.mmas.core.ui.di
 
 import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import dagger.Module
@@ -7,13 +7,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+
 @Module
 @InstallIn(SingletonComponent::class)
-internal object HomeModule {
+internal object UiModule {
 
     @Provides
     @Singleton
-    fun provideCategoryHelper(): com.jerryalberto.mmas.core.ui.helper.UiHelper {
-        return com.jerryalberto.mmas.core.ui.helper.UiHelper()
+    fun provideCategoryHelper(): UiHelper {
+        return UiHelper()
     }
 }

@@ -1,9 +1,8 @@
 package com.jerryalberto.mmas.core.data.repository
 
+import com.jerryalberto.mmas.core.data.TransactionsDataTestTubs
 import com.jerryalberto.mmas.core.database.dao.TransactionDao
-import com.jerryalberto.mmas.core.database.model.TransactionEntity
 import com.jerryalberto.mmas.core.database.model.asExternalModel
-import com.jerryalberto.mmas.core.model.data.Transaction
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -11,11 +10,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -46,108 +42,53 @@ class TransactionRepositoryImplTest {
     }
 
     @Test
-    fun getMoneyByDateTest() = runTest {
-        val date = Long.MAX_VALUE
-        val expectedMoney = listOf(
-            TransactionEntity(
-                id = 1,
-                type = "INCOME",
-                amount = 0.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            TransactionEntity(
-                id = 2,
-                type = "INCOME",
-                amount = 1.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            )
-        )
+    fun `test get transaction by date with expected result`() = runTest {
+        val date = TransactionsDataTestTubs.currentDateCalendar
+        val expectedTransaction = TransactionsDataTestTubs.todayTransactions
 
-        coEvery { dao.getTransactionByDate(date) } returns flowOf(expectedMoney)
+        //assign
+        coEvery { dao.getTransactionByDate(date.timeInMillis) } returns flowOf(expectedTransaction)
 
-        val actualMoney = moneyRepositoryImpl.getTransactionByDate(date).first()
+        //action
+        val actualResult = moneyRepositoryImpl.getTransactionByDate(date.timeInMillis).first()
 
-        Assertions.assertEquals(expectedMoney.size, actualMoney.size)
-        Assertions.assertTrue(actualMoney.isNotEmpty())
-
-        Assertions.assertEquals(expectedMoney[0].asExternalModel(), actualMoney[0])
-
+        //verify
+        Assertions.assertEquals(expectedTransaction.size, actualResult.size)
+        Assertions.assertTrue(actualResult.isNotEmpty())
+        Assertions.assertEquals(expectedTransaction[0].asExternalModel(), actualResult[0])
     }
 
     @Test
-    fun getLatestTransactionTest() = runTest {
-        val expectedMoney = listOf(
-            TransactionEntity(
-                id = 1,
-                type = "INCOME",
-                amount = 0.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            TransactionEntity(
-                id = 2,
-                type = "INCOME",
-                amount = 1.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            TransactionEntity(
-                id = 3,
-                type = "INCOME",
-                amount = 1.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            TransactionEntity(
-                id = 4,
-                type = "INCOME",
-                amount = 1.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            TransactionEntity(
-                id = 5,
-                type = "INCOME",
-                amount = 1.0,
-                category = "FOOD",
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            )
-        )
+    fun `test get latest transaction expected return 4 record only`() = runTest {
+        val expectedTransaction = TransactionsDataTestTubs.todayTransactions
 
-        coEvery { dao.getAllTransaction() } returns flowOf(expectedMoney)
+        //assign
+        coEvery { dao.getAllTransaction() } returns flowOf(expectedTransaction)
 
-        val actualMoney = moneyRepositoryImpl.getLatestTransaction(4).first()
+        //action
+        val actualResult = moneyRepositoryImpl.getLatestTransaction(4).first()
 
-        Assertions.assertEquals(4, actualMoney.size)
+        //verify
+        Assertions.assertEquals(4, actualResult.size)
+    }
+
+    @Test
+    fun `test getAllTransactionGroupByDate return expected map`() = runTest {
+        val expectedTransaction = TransactionsDataTestTubs.todayTransactions +
+                TransactionsDataTestTubs.lastWeekTransactions + TransactionsDataTestTubs.lastMonthTransactions
+
+        //assign
+        coEvery { dao.getAllTransaction() } returns flowOf(expectedTransaction)
+
+        //action
+        val actualResult = moneyRepositoryImpl.getAllTransactionGroupByDate().first()
+
+        //verify
+        Assertions.assertEquals(3, actualResult.size)
+
+        actualResult.forEach { long, transaction ->
+            println(transaction.toString())
+        }
+
     }
 }

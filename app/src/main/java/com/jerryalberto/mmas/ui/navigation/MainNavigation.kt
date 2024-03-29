@@ -11,6 +11,7 @@ import com.jerryalberto.mmas.feature.input.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
+import com.jerryalberto.mmas.feature.transaction.ui.screen.TransactionScreen
 
 @Composable
 fun MainNavigation(
@@ -43,6 +44,10 @@ fun MainNavigation(
         composable(MainActivityScreen.SettingScreen.route) {
             SettingScreen()
         }
+
+        composable(MainActivityScreen.TransactionScreen.route) {
+            TransactionScreen()
+        }
     }
 }
 
@@ -53,4 +58,5 @@ sealed class MainActivityScreen(val route: String) {
     data object AnalysisScreen : MainActivityScreen("analysis_screen")
     data object CalendarScreen : MainActivityScreen("calendar_screen")
     data object SettingScreen : MainActivityScreen("setting_screen")
+    data object TransactionScreen : MainActivityScreen("transaction_screen")
 }

@@ -24,15 +24,15 @@ import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryGroup
 
 @Composable
 fun CategoryItem(
     bgColor: Color = ColorConstant.ExpensesRedBg,
     iconColor: Color = ColorConstant.ExpensesRed,
     textColor: Color = Color.Black,
-    category: CategoryDisplay,
-    onCategorySelected: (CategoryDisplay) -> Unit = {}
+    category: CategoryGroup,
+    onCategorySelected: (CategoryGroup) -> Unit = {}
 ) {
     Column(
         modifier =
@@ -67,7 +67,7 @@ fun CategoryItem(
 private fun CategoryItemPreview(){
 
     CategoryItem(
-        category = CategoryDisplay(
+        category = CategoryGroup(
             type = CategoryType.FOOD,
             imageResId = com.jerryalberto.mmas.core.ui.R.drawable.ic_taxi,
             stringResId = R.string.copy

@@ -41,9 +41,9 @@ import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
+import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -123,7 +123,7 @@ private fun HomeScreenContent(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             Text(
-                text = "$${uiState.totalAmount}",
+                text = uiState.totalAmount,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.displayMedium,
             )
@@ -216,28 +216,15 @@ private fun HomeScreenContent(
         //list of transaction
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
-                Text(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = stringResource(id = R.string.feature_home_recent_transaction),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    modifier = Modifier.clickable {
+            TransactionHeader(
+                leftText = stringResource(id = R.string.feature_home_recent_transaction),
+                rightText = stringResource(id = R.string.feature_home_sell_all),
+                rightTextOnClick = {
 
-                    },
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = stringResource(id = R.string.feature_home_sell_all),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+                }
+            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            com.jerryalberto.mmas.core.ui.component.TransactionBox(
+            TransactionBox(
                 transactions = uiState.latestTransaction
             )
         }

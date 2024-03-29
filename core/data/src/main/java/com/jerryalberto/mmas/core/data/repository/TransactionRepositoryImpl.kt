@@ -11,8 +11,10 @@ import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import com.jerryalberto.mmas.core.model.data.Transaction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlin.collections.HashMap
+import kotlin.collections.groupBy
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -35,6 +37,16 @@ class TransactionRepositoryImpl @Inject constructor(
         return withContext(ioDispatcher) {
             dao.getAllTransaction().map {
                 it.map(TransactionEntity::asExternalModel)
+            }
+        }
+    }
+
+    override suspend fun getAllTransactionGroupByDate(): Flow<Map<Long, List<Transaction>>> {
+        return withContext(ioDispatcher) {
+            dao.getAllTransaction().map {transitions ->
+                transitions.groupBy {
+                    it.date
+                }.mapValues { (_,transactionsList) -> transactionsList.map(TransactionEntity::asExternalModel) }
             }
         }
     }

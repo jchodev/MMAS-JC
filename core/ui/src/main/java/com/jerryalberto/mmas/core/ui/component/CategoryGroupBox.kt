@@ -27,14 +27,14 @@ import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryGroup
 
 @Composable
-fun CategoryGroup(
+fun CategoryGroupBox(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay,
+    category: com.jerryalberto.mmas.core.ui.model.CategoryGroup,
     isExpenses: Boolean = true,
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {}
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {}
 ){
     Column(
         modifier = modifier
@@ -133,25 +133,25 @@ fun CategoryGroup(
 
 @Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
 @Composable
-private fun CategoryGroupPreview(){
+private fun CategoryGroupBoxPreview(){
     MmasTheme {
-        CategoryGroup(
-            category = CategoryDisplay(
+        CategoryGroupBox(
+            category = CategoryGroup(
                 type = CategoryType.FOOD_AND_BEVERAGES,
                 imageResId = R.mipmap.sym_def_app_icon,
                 stringResId = R.string.copy,
                 items = listOf(
-                    CategoryDisplay(
+                    CategoryGroup(
                         type = CategoryType.FOOD,
                         imageResId = R.mipmap.sym_def_app_icon,
                         stringResId = R.string.copy
                     ),
-                    CategoryDisplay(
+                    CategoryGroup(
                         type = CategoryType.BEVERAGES,
                         imageResId = R.mipmap.sym_def_app_icon,
                         stringResId = R.string.copy
                     ),
-                    CategoryDisplay(
+                    CategoryGroup(
                         type = CategoryType.GROCERIES,
                         imageResId = R.mipmap.sym_def_app_icon,
                         stringResId = R.string.copy
@@ -166,8 +166,8 @@ private fun CategoryGroupPreview(){
 @Composable
 private fun CategoryGroupSinglePreview(){
     MmasTheme {
-        CategoryGroup(
-            category = CategoryDisplay(
+        CategoryGroupBox(
+            category = CategoryGroup(
                 type = CategoryType.FOOD_AND_BEVERAGES,
                 imageResId = R.mipmap.sym_def_app_icon,
                 stringResId = R.string.copy,
@@ -180,14 +180,14 @@ private fun CategoryGroupSinglePreview(){
 @Composable
 private fun CategorySingleGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay,
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {},
+    category: CategoryGroup,
+    onCategorySelected: (CategoryGroup) -> Unit = {},
     bgColor: Color = ColorConstant.ExpensesRedBg,
     iconColor: Color = ColorConstant.ExpensesRed
 ){
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.secondary,

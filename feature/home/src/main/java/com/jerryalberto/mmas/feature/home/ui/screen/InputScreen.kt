@@ -58,7 +58,6 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
@@ -107,14 +106,14 @@ fun InputScreen(
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
-    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
+    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
+    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
             hour, minute ->
     },
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {},
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},

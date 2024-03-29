@@ -6,9 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
@@ -58,11 +60,11 @@ class MainActivity : ComponentActivity() {
 //                    }
 //                ),
                 BottomBarItem(
-                    title = "Analysis",
-                    selectedIcon = Icons.Filled.Face,
-                    unselectedIcon = Icons.Outlined.Face,
+                    title = "Transaction",
+                    selectedIcon = Icons.Filled.Analytics,
+                    unselectedIcon = Icons.Outlined.Analytics,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.AnalysisScreen.route)
+                        navController?.navigate(MainActivityScreen.TransactionScreen.route)
                     }
                 ),
 

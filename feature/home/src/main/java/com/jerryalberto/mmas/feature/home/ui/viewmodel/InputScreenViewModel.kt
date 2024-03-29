@@ -12,8 +12,6 @@ import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.core.ui.helper.UiHelper
-import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
 import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
@@ -42,13 +40,13 @@ class InputScreenViewModel @Inject constructor(
     private val _onSaved = MutableStateFlow<Boolean?>(null)
     val onSaved = _onSaved.asStateFlow()
 
-    fun getExpenseCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> {
+    fun getExpenseCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
         return categoriesUseCase.getExpenseCategories().map {
             it.toCategoryDisplay()
         }
     }
 
-    fun getIncomeCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> {
+    fun getIncomeCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
         return categoriesUseCase.getIncomeCategories().map {
             it.toCategoryDisplay()
         }
@@ -81,7 +79,7 @@ class InputScreenViewModel @Inject constructor(
         )
     }
 
-    fun onCategorySelected(category: com.jerryalberto.mmas.core.ui.model.CategoryDisplay){
+    fun onCategorySelected(category: com.jerryalberto.mmas.core.ui.model.CategoryGroup){
         saveData(
             uiState = uiState.value.copy(
                 category = category

@@ -22,7 +22,7 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.core.ui.component.CategoryGroup
+import com.jerryalberto.mmas.core.ui.component.CategoryGroupBox
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 
@@ -31,7 +31,7 @@ import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 fun CategorySelectDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    list: List<com.jerryalberto.mmas.core.ui.model.CategoryDisplay> = listOf(),
+    list: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
     properties: DialogProperties = DialogProperties().let {
         DialogProperties(
             dismissOnBackPress = it.dismissOnBackPress,
@@ -40,7 +40,7 @@ fun CategorySelectDialog(
             usePlatformDefaultWidth = false,
         )
     },
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryDisplay) -> Unit = {}
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {}
 ) {
 
     BasicAlertDialog(
@@ -64,7 +64,7 @@ fun CategorySelectDialog(
                         .fillMaxSize(),
                 ) {
                     items(list) {
-                        CategoryGroup(
+                        CategoryGroupBox(
                             category = it,
                             onCategorySelected = onCategorySelected
                         )

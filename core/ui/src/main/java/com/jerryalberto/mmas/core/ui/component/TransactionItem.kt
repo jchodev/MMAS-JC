@@ -23,7 +23,7 @@ import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.helper.UiHelper
-import com.jerryalberto.mmas.core.ui.model.CategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.CategoryGroup
 import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 
 import java.util.Calendar
@@ -34,7 +34,7 @@ fun TransactionItem(
     modifier: Modifier = Modifier,
     transaction: Transaction,
 ) {
-    val category = transaction.category?.toCategoryDisplay() ?: CategoryDisplay(
+    val category = transaction.category?.toCategoryDisplay() ?: CategoryGroup(
         CategoryType.ACCESSORIES
     )
     
@@ -56,7 +56,6 @@ fun TransactionItem(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Center,
         ){
-
             Text(
                 text = stringResource(id = category.stringResId),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

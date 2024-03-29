@@ -25,11 +25,39 @@ class UiHelper {
         return "$formattedHour:$formattedMinute"
     }
 
-    fun formatAmount(amount: Double): String {
+//    fun formatAmount(amount: Double): String {
+//        val numberFormat = NumberFormat.getNumberInstance()
+//        numberFormat.minimumFractionDigits = 2
+//        numberFormat.maximumFractionDigits = 2
+//        return numberFormat.format(amount / 100)
+//    }
+
+    fun formatAmount(
+            amount: Double,
+            withPlus: Boolean = false
+    ): String {
+        val isNegative = amount < 0.0
+        val amountForCalc = if (isNegative){
+            amount * -1
+        } else {
+            amount
+        }
+
         val numberFormat = NumberFormat.getNumberInstance()
         numberFormat.minimumFractionDigits = 2
         numberFormat.maximumFractionDigits = 2
-        return numberFormat.format(amount / 100)
+
+        val formattedStr = "$" + numberFormat.format(amountForCalc / 100)
+
+        return if (isNegative) {
+            "- ".plus(formattedStr)
+        } else {
+            if (withPlus){
+                "+ ".plus(formattedStr)
+            } else {
+                formattedStr
+            }
+        }
     }
 
     fun formatAmount(amount: Double, type: TransactionType): String {
@@ -37,7 +65,7 @@ class UiHelper {
         return if (type == TransactionType.EXPENSES)
             "- ".plus(amountStr)
         else
-            amountStr
+            "+ ".plus(amountStr)
     }
 
     fun displayDateTime(date: Long, hour: Int, minute:Int): String {
