@@ -84,6 +84,7 @@ class TransactionsDataTestTubs {
         //last week transaction
         val lastWeekTransactions = todayTransactions.map {
             it.copy(
+                id = it.id * 10,
                 date = getLastWeekDateDateMillis().timeInMillis
             )
         }
@@ -91,6 +92,7 @@ class TransactionsDataTestTubs {
         //last Month transaction
         val lastMonthTransactions  = todayTransactions.map {
             it.copy(
+                id = it.id * 100,
                 date = getLastMonthDateDateMillis().timeInMillis
             )
         }
