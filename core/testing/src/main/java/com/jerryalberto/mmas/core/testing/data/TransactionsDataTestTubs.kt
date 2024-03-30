@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.core.testing.data
 
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
+import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
 import java.util.Calendar
 
 class TransactionsDataTestTubs {
@@ -19,7 +20,9 @@ class TransactionsDataTestTubs {
                 amount = 0.0,
                 category = "FOOD",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 1,
                 minute = 1,
                 uri = "",
@@ -30,7 +33,9 @@ class TransactionsDataTestTubs {
                 amount = 2.0,
                 category = "SALARY",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 2,
                 minute = 2,
                 uri = "",
@@ -41,7 +46,9 @@ class TransactionsDataTestTubs {
                 amount = 0.0,
                 category = "FOOD",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 3,
                 minute = 3,
                 uri = "",
@@ -52,7 +59,9 @@ class TransactionsDataTestTubs {
                 amount = 2.0,
                 category = "SALARY",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 4,
                 minute = 4,
                 uri = "",
@@ -63,7 +72,9 @@ class TransactionsDataTestTubs {
                 amount = 0.0,
                 category = "FOOD",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 5,
                 minute = 5,
                 uri = "",
@@ -74,7 +85,9 @@ class TransactionsDataTestTubs {
                 amount = 2.0,
                 category = "SALARY",
                 description = "",
-                date = currentDateCalendar.timeInMillis,
+                year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
+                month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
+                day = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().third,
                 hour = 6,
                 minute = 6,
                 uri = "",
@@ -85,7 +98,9 @@ class TransactionsDataTestTubs {
         val lastWeekTransactions = todayTransactions.map {
             it.copy(
                 id = it.id * 10,
-                date = getLastWeekDateDateMillis().timeInMillis
+                year = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
+                month = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
+                day = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().third,
             )
         }
 
@@ -93,7 +108,9 @@ class TransactionsDataTestTubs {
         val lastMonthTransactions  = todayTransactions.map {
             it.copy(
                 id = it.id * 100,
-                date = getLastMonthDateDateMillis().timeInMillis
+                year = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
+                month = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
+                day = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().third,
             )
         }
 

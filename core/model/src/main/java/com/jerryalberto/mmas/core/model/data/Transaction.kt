@@ -1,7 +1,7 @@
 package com.jerryalberto.mmas.core.model.data
 
 data class Transaction(
-    var id: Int = 0,//last so that we don't have to pass an ID value or named arguments
+    var id: Int = 0,
     val type : TransactionType? = null,
     val amount: Double,
     val category : Category?= null,

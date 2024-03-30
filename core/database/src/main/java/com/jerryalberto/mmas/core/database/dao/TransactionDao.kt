@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.jerryalberto.mmas.core.database.model.TransactionDateQueryResult
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
 import com.jerryalberto.mmas.core.database.model.TransactionSummaryQueryResult
 import kotlinx.coroutines.flow.Flow
@@ -22,16 +23,18 @@ interface TransactionDao {
     @Query(
         value = """
         SELECT * FROM transaction_tbl
-        WHERE date = :date
-        ORDER BY hour, minute
+        WHERE year = :year
+        AND month = :month
+        AND day = :day
+        ORDER BY hour DESC, minute DESC
     """,
     )
-    fun getTransactionByDate(date: Long): Flow<List<TransactionEntity>>
+    fun getTransactionByDate(year: Int, month: Int, day: Int): Flow<List<TransactionEntity>>
 
     @Query(
         value = """
         SELECT * FROM transaction_tbl
-        ORDER BY date DESC, hour DESC, minute DESC
+        ORDER BY year DESC, month DESC, day DESC, hour DESC, minute DESC
     """,
     )
     fun getAllTransaction(): Flow<List<TransactionEntity>>
@@ -39,7 +42,7 @@ interface TransactionDao {
     @Query(
         value = """
         SELECT * FROM transaction_tbl
-        ORDER BY date DESC, hour DESC, minute DESC
+        ORDER BY year DESC, month DESC, day DESC, hour DESC, minute DESC
         LIMIT :latest
     """,
     )
@@ -50,21 +53,31 @@ interface TransactionDao {
         value = """
         SELECT type, SUM(amount) as total_amount 
         FROM transaction_tbl 
-        WHERE date >= :dateFrom AND date <= :dateTo  
+        WHERE year >= :yearFrom AND month >= :monthFrom AND day >= :dayFrom
+        AND year <= :yearTo AND month <= :monthTo AND day <= :dayTo
         GROUP BY type
     """,
     )
-    fun getSumAmountGroupedByDateRange(dateFrom: Long, dateTo: Long): Flow<List<TransactionSummaryQueryResult>>
+    fun getSumAmountGroupedByDateRange(yearFrom: Int, monthFrom: Int, dayFrom: Int, yearTo: Int, monthTo: Int, dayTo: Int): Flow<List<TransactionSummaryQueryResult>>
 
     @Query(
         value = """
-        SELECT date as date
-        FROM transaction_tbl 
-        GROUP BY date        
-        ORDER BY date 
+        SELECT type, SUM(amount) as total_amount 
+        FROM transaction_tbl
+        GROUP BY type
     """,
     )
-    fun getTransactionDates(): Flow<List<Long>>
+    fun getSumAmountGrouped(): Flow<List<TransactionSummaryQueryResult>>
+
+    @Query(
+        value = """
+        SELECT year, month, day
+        FROM transaction_tbl 
+        GROUP BY year, month, day        
+        ORDER BY year DESC, month DESC, day DESC 
+    """,
+    )
+    fun getTransactionDates(): Flow<List<TransactionDateQueryResult>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transactionEntity: TransactionEntity)

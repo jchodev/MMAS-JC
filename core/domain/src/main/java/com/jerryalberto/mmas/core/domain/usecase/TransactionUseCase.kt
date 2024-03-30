@@ -26,17 +26,22 @@ class TransactionUseCase @Inject constructor(
     suspend fun getSumAmountGroupedByType(
         dataType: AccountBalanceDataType
     ): Flow<TransactionSummary> {
-        val dateRange = when (dataType){
-            AccountBalanceDataType.TODAY -> {
-                val currentDateMillis = getCurrentDateMillis()
-                Pair(currentDateMillis, currentDateMillis)
+        val daoResult = if (dataType == AccountBalanceDataType.TOTAL){
+            transactionRepository.getSumAmountGrouped()
+        } else {
+            val dateRange = when (dataType){
+                AccountBalanceDataType.TODAY -> {
+                    val currentDateMillis = getCurrentDateMillis()
+                    Pair(currentDateMillis, currentDateMillis)
+                }
+                AccountBalanceDataType.WEEK -> getThisWeekDateMillisRange()
+                AccountBalanceDataType.MONTH -> getThisMonthDateMillisRange()
+                else -> Pair(Long.MIN_VALUE, Long.MAX_VALUE)
             }
-            AccountBalanceDataType.WEEK -> getThisWeekDateMillisRange()
-            AccountBalanceDataType.MONTH -> getThisMonthDateMillisRange()
-            else -> Pair(Long.MIN_VALUE, Long.MAX_VALUE)
+            transactionRepository.getSumAmountGroupedByDateRange(dateRange.first, dateRange.second)
         }
-        Timber.d("dateRange:${dateRange}")
-        return transactionRepository.getSumAmountGroupedByDateRange(dateRange.first, dateRange.second).map { results->
+
+        return daoResult.map { results->
             TransactionSummary(
                 income = results.find { it.type == TransactionType.INCOME.value }?.totalAmount ?: 0.0,
                 expenses = results.find { it.type == TransactionType.EXPENSES.value }?.totalAmount ?: 0.0

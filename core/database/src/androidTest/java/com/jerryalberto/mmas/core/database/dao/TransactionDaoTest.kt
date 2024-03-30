@@ -5,7 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jerryalberto.mmas.core.database.MmasDatabase
-import com.jerryalberto.mmas.core.database.model.TransactionEntity
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

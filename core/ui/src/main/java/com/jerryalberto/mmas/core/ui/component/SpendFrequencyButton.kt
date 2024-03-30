@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.feature.home.ui.component
+package com.jerryalberto.mmas.core.ui.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 
 
 @Composable
@@ -50,7 +51,7 @@ fun SpendFrequencyButton(
     }
 }
 
-@Preview(showBackground = true)
+@DevicePreviews
 @Composable
 private fun SpendFrequencyButtonPreview(){
     MmasTheme {
@@ -60,7 +61,7 @@ private fun SpendFrequencyButtonPreview(){
     }
 }
 
-@Preview(showBackground = true)
+@DevicePreviews
 @Composable
 private fun SpendFrequencyButtonNonSelectedPreview(){
     MmasTheme {

@@ -2,7 +2,9 @@ package com.jerryalberto.mmas.core.data.repository
 
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import com.jerryalberto.mmas.core.database.dao.TransactionDao
+import com.jerryalberto.mmas.core.database.model.TransactionDateQueryResult
 import com.jerryalberto.mmas.core.database.model.asExternalModel
+import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -47,7 +49,12 @@ class TransactionRepositoryImplTest {
         val expectedTransaction = TransactionsDataTestTubs.todayTransactions
 
         //assign
-        coEvery { dao.getTransactionByDate(date.timeInMillis) } returns flowOf(expectedTransaction)
+        val triple = date.timeInMillis.convertMillisToYearMonthDay()
+        coEvery { dao.getTransactionByDate(
+            year = triple.first,
+            month = triple.second,
+            day = triple.third
+        ) } returns flowOf(expectedTransaction)
 
         //action
         val actualResult = moneyRepositoryImpl.getTransactionByDate(date.timeInMillis).first()
@@ -90,18 +97,20 @@ class TransactionRepositoryImplTest {
 
     //getTransactionDates
     @Test
-    fun `test getTransactionDates return expected long`() = runTest {
+    fun `test getTransactionDates return expected result`() = runTest {
         //assign
         coEvery { dao.getTransactionDates() } returns flowOf(listOf(
-            TransactionsDataTestTubs.currentDateCalendar.timeInMillis,
-            TransactionsDataTestTubs.getLastWeekDateDateMillis().timeInMillis,
-            TransactionsDataTestTubs.getLastMonthDateDateMillis().timeInMillis,
+            TransactionDateQueryResult(
+                year = 1,
+                month = 1,
+                day = 1
+            )
         ))
 
         //action
         val actualResult = moneyRepositoryImpl.getTransactionDates().first()
 
         //verify
-        Assertions.assertEquals(3, actualResult.size)
+        Assertions.assertEquals(1, actualResult.size)
     }
 }

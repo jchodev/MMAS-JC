@@ -31,15 +31,19 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
-import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
+import com.jerryalberto.mmas.feature.home.ui.component.DonutChart
+import com.jerryalberto.mmas.feature.home.ui.component.DonutChartData
+import com.jerryalberto.mmas.feature.home.ui.component.DonutChartDataCollection
+import com.jerryalberto.mmas.feature.home.ui.component.PieChartWithText
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
@@ -158,6 +162,28 @@ private fun HomeScreenContent(
                     Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
                 )
             )
+//            PieChartWithText(
+//                chartDataList = listOf(
+//                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toFloat()),
+//                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toFloat()),
+//                )
+//            )
+
+//            DonutChart(data = DonutChartDataCollection(
+//                    listOf(
+//                        DonutChartData(
+//                            amount = uiState.totalExpenses.toFloat(),
+//                            color = ColorConstant.ExpensesRed,
+//                            title = "title1"
+//                        ),
+//                        DonutChartData(
+//                            amount = uiState.totalIncome.toFloat(),
+//                            color = ColorConstant.IncomeGreen,
+//                            title = "title2"
+//                        ),
+//                    )
+//                )
+//            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
 
