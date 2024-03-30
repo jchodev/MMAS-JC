@@ -41,6 +41,12 @@ class TransactionRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTransactionDates(): Flow<List<Long>> {
+        return withContext(ioDispatcher) {
+            dao.getTransactionDates()
+        }
+    }
+
     override suspend fun getAllTransactionGroupByDate(): Flow<Map<Long, List<Transaction>>> {
         return withContext(ioDispatcher) {
             dao.getAllTransaction().map {transitions ->
@@ -53,10 +59,9 @@ class TransactionRepositoryImpl @Inject constructor(
 
     override suspend fun getLatestTransaction(latest: Int): Flow<List<Transaction>> {
         return withContext(ioDispatcher) {
-            dao.getAllTransaction()
-                .map {
-                    it.take(latest).map(TransactionEntity::asExternalModel)
-                }
+            dao.getLastTTransactionsByLimit(latest = latest).map {
+                it.map(TransactionEntity::asExternalModel)
+            }
         }
     }
 

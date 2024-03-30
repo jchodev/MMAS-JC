@@ -2,8 +2,6 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -123,7 +121,7 @@ private fun HomeScreenContent(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             Text(
-                text = uiState.totalAmount,
+                text = uiState.totalAmountStr,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.displayMedium,
             )
@@ -139,14 +137,14 @@ private fun HomeScreenContent(
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = "$${uiState.totalIncome}"
+                    content = uiState.totalIncomeStr
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    content = "$${uiState.totalExpenses}"
+                    content = uiState.totalExpensesStr
                 )
             }
         }
@@ -156,8 +154,8 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             PieChart(
                 data = listOf(
-                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toDouble()),
-                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toDouble()),
+                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses),
+                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
                 )
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))

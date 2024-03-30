@@ -36,6 +36,15 @@ interface TransactionDao {
     )
     fun getAllTransaction(): Flow<List<TransactionEntity>>
 
+    @Query(
+        value = """
+        SELECT * FROM transaction_tbl
+        ORDER BY date DESC, hour DESC, minute DESC
+        LIMIT :latest
+    """,
+    )
+    fun getLastTTransactionsByLimit(latest: Int): Flow<List<TransactionEntity>>
+
 
     @Query(
         value = """
@@ -47,6 +56,15 @@ interface TransactionDao {
     )
     fun getSumAmountGroupedByDateRange(dateFrom: Long, dateTo: Long): Flow<List<TransactionSummaryQueryResult>>
 
+    @Query(
+        value = """
+        SELECT date as date
+        FROM transaction_tbl 
+        GROUP BY date        
+        ORDER BY date 
+    """,
+    )
+    fun getTransactionDates(): Flow<List<Long>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transactionEntity: TransactionEntity)
@@ -58,4 +76,11 @@ interface TransactionDao {
         """,
     )
     suspend fun deleteTransactionById(id: Int)
+
+    @Query(
+        value = """
+            DELETE FROM transaction_tbl
+        """,
+    )
+    suspend fun deleteAllTransaction()
 }

@@ -9,9 +9,13 @@ data class HomeUIDataState(
     val loading: Boolean = false,
 
     val type: AccountBalanceDataType = AccountBalanceDataType.TOTAL,
-    val totalAmount: String = "0.00",
-    val totalIncome: String = "0.00",
-    val totalExpenses: String = "0.00",
+    val totalAmountStr: String = "0.00",
+
+    val totalIncome: Double = 0.0,
+    val totalIncomeStr: String = "0.00",
+
+    val totalExpenses: Double = 0.0,
+    val totalExpensesStr: String = "0.00",
 
     val latestTransaction: List<Transaction> = listOf(),
 

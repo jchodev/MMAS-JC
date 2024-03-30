@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,9 +43,11 @@ class HomeScreenViewModel @Inject constructor(
                             uiState = uiState.value.copy(
                                 loading = false,
                                 latestTransaction = it.data.first,
-                                totalIncome = uiHelper.formatAmount(it.data.second.income),
-                                totalExpenses = uiHelper.formatAmount(it.data.second.expenses),
-                                totalAmount = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
+                                totalIncome = it.data.second.income,
+                                totalIncomeStr = uiHelper.formatAmount(it.data.second.income),
+                                totalExpenses = it.data.second.expenses,
+                                totalExpensesStr = uiHelper.formatAmount(it.data.second.expenses),
+                                totalAmountStr = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
                             )
                         )
                     }
@@ -79,9 +80,9 @@ class HomeScreenViewModel @Inject constructor(
                             uiState = uiState.value.copy(
                                 type = type,
                                 loading = false,
-                                totalIncome = uiHelper.formatAmount(it.data.income),
-                                totalExpenses = uiHelper.formatAmount(it.data.expenses),
-                                totalAmount = uiHelper.formatAmount(it.data.income - it.data.expenses)
+                                totalIncomeStr = uiHelper.formatAmount(it.data.income),
+                                totalExpensesStr = uiHelper.formatAmount(it.data.expenses),
+                                totalAmountStr = uiHelper.formatAmount(it.data.income - it.data.expenses)
                             )
                         )
                     }
