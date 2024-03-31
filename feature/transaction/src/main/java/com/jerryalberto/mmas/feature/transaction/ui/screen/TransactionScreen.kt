@@ -29,10 +29,11 @@ import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
 import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
 import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import java.util.Calendar
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun TransactionScreen(
-    viewModel: TransactionViewModel
+    viewModel: TransactionViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     TransactionScreenContent(

@@ -17,7 +17,6 @@ import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewMod
 @Composable
 fun MainNavigation(
     homeScreenViewModel: HomeScreenViewModel,
-    transactionViewModel: TransactionViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
@@ -48,7 +47,7 @@ fun MainNavigation(
         }
 
         composable(MainActivityScreen.TransactionScreen.route) {
-            TransactionScreen(viewModel = transactionViewModel)
+            TransactionScreen()
         }
     }
 }

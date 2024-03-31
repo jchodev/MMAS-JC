@@ -49,6 +49,7 @@ material = "1.11.0"
 
 agp = "8.1.4"
 squareup-javapoet = "1.13.0"
+hilt-navigation-compose = "1.1.0"
 
 [libraries]
 # must have libraries
@@ -65,7 +66,7 @@ androidx-multidex = { group = "androidx.multidex", name = "multidex", version.re
 androidx-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splash" }
 androidx-test-core = {group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
 androidx-test-core-ktx = {group = "androidx.test", name = "core-ktx", version.ref = "androidx-test-core" }
-
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 
 # compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -134,6 +135,7 @@ androidx-compose = [
     "compose.foundation.layout",
     "compose.runtime",
     "compose.constraintlayout",
+    "androidx.hilt.navigation.compose"
 ]
 
 junit5-test-implementation = [

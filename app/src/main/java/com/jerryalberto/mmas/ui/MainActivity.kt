@@ -36,8 +36,6 @@ class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
 
-    private val homeScreenViewModel by viewModels<HomeScreenViewModel>()
-    private val transactionViewModel by viewModels<TransactionViewModel>()
 
     private val bottomBar = @Composable {
         BottomBar(
@@ -50,17 +48,6 @@ class MainActivity : ComponentActivity() {
                         navController?.navigate(MainActivityScreen.HomeScreen.route)
                     }
                 ),
-//                BottomBarItem(
-//                    title = "Add",
-//                    selectedIcon = Icons.Filled.Add,
-//                    unselectedIcon = Icons.Outlined.Add,
-//                    onClick = {
-//                        //navController?.navigate(MainActivityScreen.InputScreen.route)
-//
-//                        val intent = Intent(this, InputActivity::class.java)
-//                        startActivity(intent)
-//                    }
-//                ),
                 BottomBarItem(
                     title = "Transaction",
                     selectedIcon = Icons.Filled.Analytics,
@@ -69,7 +56,6 @@ class MainActivity : ComponentActivity() {
                         navController?.navigate(MainActivityScreen.TransactionScreen.route)
                     }
                 ),
-
                 BottomBarItem(
                     title = "Setting",
                     selectedIcon = Icons.Filled.Settings,
@@ -96,8 +82,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     navController?.let {
                         MainScreen(
-                            homeScreenViewModel = homeScreenViewModel,
-                            transactionViewModel = transactionViewModel,
                             navController = it,
                             bottomBar = bottomBar
                         )
@@ -105,21 +89,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MmasTheme {
-        Greeting("Android")
     }
 }
