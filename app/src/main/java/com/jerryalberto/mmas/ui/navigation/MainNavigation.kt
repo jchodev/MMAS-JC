@@ -12,10 +12,12 @@ import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 import com.jerryalberto.mmas.feature.transaction.ui.screen.TransactionScreen
+import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 
 @Composable
 fun MainNavigation(
     homeScreenViewModel: HomeScreenViewModel,
+    transactionViewModel: TransactionViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
@@ -46,7 +48,7 @@ fun MainNavigation(
         }
 
         composable(MainActivityScreen.TransactionScreen.route) {
-            TransactionScreen()
+            TransactionScreen(viewModel = transactionViewModel)
         }
     }
 }

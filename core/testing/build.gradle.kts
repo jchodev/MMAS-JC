@@ -15,6 +15,4 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:database"))
-
-    implementation(project(":core:testing"))
 }

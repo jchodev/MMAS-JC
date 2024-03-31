@@ -15,7 +15,6 @@ class TransactionsDataTestTubs {
         //today transaction
         val todayTransactions = listOf(
             TransactionEntity(
-                id = 1,
                 type = "INCOME",
                 amount = 0.0,
                 category = "FOOD",
@@ -28,7 +27,6 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                id = 2,
                 type = "EXPENSES",
                 amount = 2.0,
                 category = "SALARY",
@@ -41,7 +39,6 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                id = 3,
                 type = "INCOME",
                 amount = 0.0,
                 category = "FOOD",
@@ -54,7 +51,6 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                id = 4,
                 type = "EXPENSES",
                 amount = 2.0,
                 category = "SALARY",
@@ -67,7 +63,6 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                id = 5,
                 type = "INCOME",
                 amount = 0.0,
                 category = "FOOD",
@@ -80,7 +75,6 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                id = 6,
                 type = "EXPENSES",
                 amount = 2.0,
                 category = "SALARY",
@@ -97,7 +91,6 @@ class TransactionsDataTestTubs {
         //last week transaction
         val lastWeekTransactions = todayTransactions.map {
             it.copy(
-                id = it.id * 10,
                 year = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
                 month = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
                 day = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().third,
@@ -107,7 +100,6 @@ class TransactionsDataTestTubs {
         //last Month transaction
         val lastMonthTransactions  = todayTransactions.map {
             it.copy(
-                id = it.id * 100,
                 year = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
                 month = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
                 day = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().third,
@@ -123,13 +115,13 @@ class TransactionsDataTestTubs {
             return calendar
         }
 
-        fun getLastWeekDateDateMillis(): Calendar {
+        private fun getLastWeekDateDateMillis(): Calendar {
             val calendar = currentDateCalendar.clone() as Calendar
             calendar.add(Calendar.DAY_OF_YEAR, -7)
             return calendar
         }
 
-        fun getLastMonthDateDateMillis(): Calendar {
+        private fun getLastMonthDateDateMillis(): Calendar {
             val calendar = currentDateCalendar.clone() as Calendar
             calendar.add(Calendar.MONTH, -1)
             return calendar

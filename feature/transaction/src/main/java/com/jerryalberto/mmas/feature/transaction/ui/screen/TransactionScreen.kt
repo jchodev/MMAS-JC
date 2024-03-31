@@ -2,7 +2,6 @@ package com.jerryalberto.mmas.feature.transaction.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -11,16 +10,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
-import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
@@ -28,17 +24,31 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
-import com.jerryalberto.mmas.feature.transaction.model.TransactionDate
+import com.jerryalberto.mmas.feature.transaction.model.TransactionData
+import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
+import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
+import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import java.util.Calendar
 
 @Composable
-fun TransactionScreen() {
-    TransactionScreenContent()
+fun TransactionScreen(
+    viewModel: TransactionViewModel
+) {
+    val uiState = viewModel.uiState.collectAsState().value
+    TransactionScreenContent(
+        uiState = uiState,
+        onYearMonthItemClick = {
+            viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TransactionScreenContent(){
+private fun TransactionScreenContent(
+    uiState: TransactionUIDataState = TransactionUIDataState(),
+    onYearMonthItemClick : (YearMonthItem) -> Unit = {}
+){
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -52,47 +62,56 @@ private fun TransactionScreenContent(){
     ) { paddingValues ->
 
         //data select lazyRow
-        Column (modifier =  Modifier.padding(paddingValues).padding(MaterialTheme.dimens.dimen16)){
+        Column (modifier = Modifier
+            .padding(paddingValues)
+            .padding(MaterialTheme.dimens.dimen16)){
             LazyRow {
-                item {
-                    SpendFrequencyButton(
-                        modifier = Modifier.wrapContentSize(),
-                        text = "Mar 2024",
-                        selected = true,
-                        onClick = {
-
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
-                }
-                item {
-                    SpendFrequencyButton(
-                        modifier = Modifier.wrapContentSize(),
-                        text = "Feb 2024",
-                        selected = false,
-                        onClick = {
-
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
-                }
-                item {
-                    SpendFrequencyButton(
-                        modifier = Modifier.wrapContentSize(),
-                        text = "Jan 2024",
-                        selected = false,
-                        onClick = {
-
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                uiState.listOfYearMonth.forEach {
+                    item {
+                        SpendFrequencyButton(
+                            modifier = Modifier.wrapContentSize(),
+                            text = it.month.toString() + " " + it.year.toString(),
+                            selected = it.selected,
+                            onClick = {
+                                onYearMonthItemClick.invoke(it)
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
 
             TransactionsList(
-                transactionDates = listOf(
-                    TransactionDate(
+                transactionData = uiState.transactionList
+            )
+        }
+
+    }
+}
+
+
+@DevicePreviews
+@Composable
+private fun TransactionScreenContentPreview() {
+
+    MmasTheme {
+        TransactionScreenContent(
+            uiState = TransactionUIDataState(
+                listOfYearMonth = listOf(
+                    YearMonthItem(
+                        year = 2024,
+                        month = 1,
+                        selected  = false,
+                    ),
+                    YearMonthItem(
+                        year = 2024,
+                        month = 2,
+                        selected  = true,
+                    )
+                ),
+                transactionList = listOf(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = 1.0,
                         transactions = listOf(
@@ -120,7 +139,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = -2.0,
                         transactions = listOf(
@@ -148,7 +167,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = 3.0,
                         transactions = listOf(
@@ -176,7 +195,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = 4.0,
                         transactions = listOf(
@@ -204,7 +223,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = 5.0,
                         transactions = listOf(
@@ -232,7 +251,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = 6.0,
                         transactions = listOf(
@@ -260,7 +279,7 @@ private fun TransactionScreenContent(){
                             )
                         )
                     ),
-                    TransactionDate(
+                    TransactionData(
                         date = Calendar.getInstance().timeInMillis,
                         totalAmount = -70.0,
                         transactions = listOf(
@@ -290,18 +309,7 @@ private fun TransactionScreenContent(){
                     ),
                 )
             )
-        }
-
-    }
-}
-
-
-@DevicePreviews
-@Composable
-private fun TransactionScreenContentPreview() {
-
-    MmasTheme {
-        TransactionScreenContent()
+        )
     }
 
 }

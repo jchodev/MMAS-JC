@@ -2,9 +2,10 @@ package com.jerryalberto.mmas.core.data.repository
 
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import com.jerryalberto.mmas.core.database.dao.TransactionDao
-import com.jerryalberto.mmas.core.database.model.TransactionDateQueryResult
-import com.jerryalberto.mmas.core.database.model.asExternalModel
+import com.jerryalberto.mmas.core.database.model.TransactionYearMonthQueryResult
+import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
+import com.jerryalberto.mmas.core.ext.convertToDateMillis
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 @MockKExtension.ConfirmVerification
@@ -62,7 +64,7 @@ class TransactionRepositoryImplTest {
         //verify
         Assertions.assertEquals(expectedTransaction.size, actualResult.size)
         Assertions.assertTrue(actualResult.isNotEmpty())
-        Assertions.assertEquals(expectedTransaction[0].asExternalModel(), actualResult[0])
+        Assertions.assertEquals(expectedTransaction[0].toTransaction(), actualResult[0])
     }
 
     @Test
@@ -95,22 +97,52 @@ class TransactionRepositoryImplTest {
 
     }
 
-    //getTransactionDates
     @Test
-    fun `test getTransactionDates return expected result`() = runTest {
+    fun `test getListOfYearMonth return expected result`() = runTest {
         //assign
-        coEvery { dao.getTransactionDates() } returns flowOf(listOf(
-            TransactionDateQueryResult(
+        coEvery { dao.getListOfYearMonth() } returns flowOf( listOf(
+            TransactionYearMonthQueryResult(
                 year = 1,
-                month = 1,
-                day = 1
-            )
+                month = 1
+            ),
+            TransactionYearMonthQueryResult(
+                year = 1,
+                month = 2
+            ),
         ))
 
         //action
-        val actualResult = moneyRepositoryImpl.getTransactionDates().first()
+        val actualResult = moneyRepositoryImpl.getListOfYearMonth().first()
+
+        //verify
+        Assertions.assertEquals(2, actualResult.size)
+    }
+
+    @Test
+    fun `test getAllTransactionGroupByYearMonth return expected result`() = runTest {
+        val year = TransactionsDataTestTubs.currentDateCalendar.get(Calendar.YEAR)
+        val month = TransactionsDataTestTubs.currentDateCalendar.get(Calendar.MONTH) + 1 // Month is zero-based, so add 1
+
+        //assign
+        coEvery { dao.getAllTransactionByYearMonth(year = year, month = month) } returns flowOf(
+            TransactionsDataTestTubs.todayTransactions
+        )
+
+        //action
+        val actualResult = moneyRepositoryImpl.getAllTransactionByYearMonth(year = year, month = month).first()
 
         //verify
         Assertions.assertEquals(1, actualResult.size)
+        Assertions.assertEquals(TransactionsDataTestTubs.todayTransactions.size, actualResult.values.first().size)
+        val triple = Triple(
+            first = TransactionsDataTestTubs.todayTransactions.first().year,
+            second = TransactionsDataTestTubs.todayTransactions.first().month,
+            third = TransactionsDataTestTubs.todayTransactions.first().day
+        )
+
+        Assertions.assertEquals(triple.convertToDateMillis(), actualResult.keys.first())
+
     }
+
+
 }

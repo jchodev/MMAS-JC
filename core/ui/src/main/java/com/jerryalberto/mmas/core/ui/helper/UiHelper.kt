@@ -25,13 +25,6 @@ class UiHelper {
         return "$formattedHour:$formattedMinute"
     }
 
-//    fun formatAmount(amount: Double): String {
-//        val numberFormat = NumberFormat.getNumberInstance()
-//        numberFormat.minimumFractionDigits = 2
-//        numberFormat.maximumFractionDigits = 2
-//        return numberFormat.format(amount / 100)
-//    }
-
     fun formatAmount(
             amount: Double,
             withPlus: Boolean = false

@@ -13,6 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Calendar
 
 
 @RunWith(AndroidJUnit4::class)
@@ -38,30 +39,55 @@ class TransactionDaoTest {
 
     @Test
     fun getTransactionByIdTest() = runBlocking {
-
-        transactionDao.deleteAllTransaction()
-
-        // Insert a sample transaction into the database
-        val transaction = TransactionsDataTestTubs.todayTransactions[0]
-        transactionDao.insertTransaction(transaction)
-        val result = transactionDao.getTransactionById(transaction.id).first()
-        assertEquals(transaction.id, result.id)
-    }
-
-    @Test
-    fun getTransactionDatesTest() = runBlocking {
         transactionDao.deleteAllTransaction()
 
         //assign
-        (TransactionsDataTestTubs.todayTransactions + TransactionsDataTestTubs.lastWeekTransactions + TransactionsDataTestTubs.lastMonthTransactions).forEach {
-            db.transactionDao().insertTransaction(it)
+        val transaction = TransactionsDataTestTubs.todayTransactions[0]
+        val id = transactionDao.insertTransaction(transaction)
+
+        //action
+        val result = transactionDao.getTransactionById(id).first()
+
+        //verify
+        assertEquals(transaction.type, result.type)
+
+    }
+
+    @Test
+    fun getListOfYearMonthTest() = runBlocking {
+        transactionDao.deleteAllTransaction()
+
+        //assign
+        TransactionsDataTestTubs.todayTransactions.forEach {
+            transactionDao.insertTransaction(it)
+        }
+        TransactionsDataTestTubs.lastMonthTransactions.forEach {
+            transactionDao.insertTransaction(it)
         }
 
         //action
-        val result = transactionDao.getTransactionDates().first()
+        val result = transactionDao.getListOfYearMonth().first()
 
         //verify
-        assertEquals(3, result.size)
+        assertEquals(2, result.size)
     }
 
+
+    @Test
+    fun getAllTransactionByYearMonthTest() = runBlocking {
+        transactionDao.deleteAllTransaction()
+
+        //assign
+        TransactionsDataTestTubs.todayTransactions.forEach {
+            transactionDao.insertTransaction(it)
+        }
+
+        val year = TransactionsDataTestTubs.currentDateCalendar.get(Calendar.YEAR)
+        val month = TransactionsDataTestTubs.currentDateCalendar.get(Calendar.MONTH) + 1 // Month is zero-based, so add 1
+        //action
+        val result = transactionDao.getAllTransactionByYearMonth(year = year, month = month).first()
+
+        //verify
+        assertEquals(TransactionsDataTestTubs.todayTransactions.size, result.size)
+    }
 }

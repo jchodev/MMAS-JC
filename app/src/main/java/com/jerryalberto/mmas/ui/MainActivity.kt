@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
+import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 import com.jerryalberto.mmas.ui.navigation.MainActivityScreen
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
     private var navController: NavHostController? = null
 
     private val homeScreenViewModel by viewModels<HomeScreenViewModel>()
+    private val transactionViewModel by viewModels<TransactionViewModel>()
 
     private val bottomBar = @Composable {
         BottomBar(
@@ -95,6 +97,7 @@ class MainActivity : ComponentActivity() {
                     navController?.let {
                         MainScreen(
                             homeScreenViewModel = homeScreenViewModel,
+                            transactionViewModel = transactionViewModel,
                             navController = it,
                             bottomBar = bottomBar
                         )

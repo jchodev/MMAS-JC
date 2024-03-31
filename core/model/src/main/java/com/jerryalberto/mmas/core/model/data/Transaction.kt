@@ -1,7 +1,7 @@
 package com.jerryalberto.mmas.core.model.data
 
 data class Transaction(
-    var id: Int = 0,
+    var id: Long = 0,
     val type : TransactionType? = null,
     val amount: Double,
     val category : Category?= null,
@@ -11,4 +11,3 @@ data class Transaction(
     val hour: Int,
     val minute: Int,
 )
-
