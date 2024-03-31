@@ -27,9 +27,7 @@ class TransactionViewModel  @Inject constructor(
     init {
         viewModelScope.launch {
             showLoading(true)
-            transactionUseCase.deleteAllTransaction()
-
-            insertTestDate()
+            showLoading(true)
             var latestYear = 0
             var latestMonth = 0
 

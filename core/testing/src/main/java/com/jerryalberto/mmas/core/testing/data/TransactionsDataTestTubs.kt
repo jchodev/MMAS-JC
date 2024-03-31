@@ -16,8 +16,8 @@ class TransactionsDataTestTubs {
         val todayTransactions = listOf(
             TransactionEntity(
                 type = "INCOME",
-                amount = 0.0,
-                category = "FOOD",
+                amount = 100.0,
+                category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
@@ -28,8 +28,8 @@ class TransactionsDataTestTubs {
             ),
             TransactionEntity(
                 type = "EXPENSES",
-                amount = 2.0,
-                category = "SALARY",
+                amount = 200.0,
+                category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
@@ -40,8 +40,8 @@ class TransactionsDataTestTubs {
             ),
             TransactionEntity(
                 type = "INCOME",
-                amount = 0.0,
-                category = "FOOD",
+                amount = 100.0,
+                category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
@@ -52,8 +52,8 @@ class TransactionsDataTestTubs {
             ),
             TransactionEntity(
                 type = "EXPENSES",
-                amount = 2.0,
-                category = "SALARY",
+                amount = 200.0,
+                category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
@@ -64,8 +64,8 @@ class TransactionsDataTestTubs {
             ),
             TransactionEntity(
                 type = "INCOME",
-                amount = 0.0,
-                category = "FOOD",
+                amount = 100.0,
+                category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,
@@ -76,8 +76,8 @@ class TransactionsDataTestTubs {
             ),
             TransactionEntity(
                 type = "EXPENSES",
-                amount = 2.0,
-                category = "SALARY",
+                amount = 200.0,
+                category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
                 month = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().second,

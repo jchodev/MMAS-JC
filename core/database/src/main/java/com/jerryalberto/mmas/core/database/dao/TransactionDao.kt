@@ -54,8 +54,8 @@ interface TransactionDao {
         value = """
         SELECT type, SUM(amount) as total_amount 
         FROM transaction_tbl 
-        WHERE year >= :yearFrom AND month >= :monthFrom AND day >= :dayFrom
-        AND year <= :yearTo AND month <= :monthTo AND day <= :dayTo
+        WHERE (year, month, day) >= (:yearFrom, :monthFrom, :dayFrom)
+        AND (year, month, day) <= (:yearTo, :monthTo, :dayTo)
         GROUP BY type
     """,
     )

@@ -25,6 +25,8 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
     implementation(project(":core:ui"))
+    implementation(project(":core:database"))
+    implementation(project(":core:testing"))
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)

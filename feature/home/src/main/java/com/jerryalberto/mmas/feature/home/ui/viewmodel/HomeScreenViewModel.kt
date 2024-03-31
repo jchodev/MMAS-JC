@@ -10,7 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
+import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +29,11 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+
+            transactionUseCase.deleteAllTransaction()
+
+            insertTestDate()
+
             transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL)) { transactions, summaries ->
                 Pair(transactions, summaries)
             }.asResult().collect {
@@ -166,4 +173,17 @@ class HomeScreenViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    private suspend fun insertTestDate(){
+        TransactionsDataTestTubs.todayTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+
+        TransactionsDataTestTubs.lastWeekTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+
+        TransactionsDataTestTubs.lastMonthTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+    }
 }
