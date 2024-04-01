@@ -29,13 +29,13 @@ android {
 dependencies {
 
     implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
     implementation(project(":feature:home"))
     implementation(project(":feature:input"))
     implementation(project(":feature:analysis"))
     implementation(project(":feature:calendar"))
     implementation(project(":feature:setting"))
     implementation(project(":feature:transaction"))
-
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)

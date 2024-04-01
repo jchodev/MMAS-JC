@@ -48,7 +48,7 @@ class TransactionRepositoryImplTest {
     @Test
     fun `test get transaction by date with expected result`() = runTest {
         val date = TransactionsDataTestTubs.currentDateCalendar
-        val expectedTransaction = TransactionsDataTestTubs.todayTransactions
+        val expectedTransaction = TransactionsDataTestTubs.mockTodayTransactions
 
         //assign
         val triple = date.timeInMillis.convertMillisToYearMonthDay()
@@ -69,7 +69,7 @@ class TransactionRepositoryImplTest {
 
     @Test
     fun `test get latest transaction expected return 4 record only`() = runTest {
-        val expectedTransaction = TransactionsDataTestTubs.todayTransactions
+        val expectedTransaction = TransactionsDataTestTubs.mockTodayTransactions
 
         //assign
         coEvery { dao.getLastTTransactionsByLimit(4) } returns flowOf(expectedTransaction.take(4))
@@ -83,7 +83,7 @@ class TransactionRepositoryImplTest {
 
     @Test
     fun `test getAllTransactionGroupByDate return expected map`() = runTest {
-        val expectedTransaction = TransactionsDataTestTubs.todayTransactions +
+        val expectedTransaction = TransactionsDataTestTubs.mockTodayTransactions +
                 TransactionsDataTestTubs.lastWeekTransactions + TransactionsDataTestTubs.lastMonthTransactions
 
         //assign
@@ -125,7 +125,7 @@ class TransactionRepositoryImplTest {
 
         //assign
         coEvery { dao.getAllTransactionByYearMonth(year = year, month = month) } returns flowOf(
-            TransactionsDataTestTubs.todayTransactions
+            TransactionsDataTestTubs.mockTodayTransactions
         )
 
         //action
@@ -133,11 +133,11 @@ class TransactionRepositoryImplTest {
 
         //verify
         Assertions.assertEquals(1, actualResult.size)
-        Assertions.assertEquals(TransactionsDataTestTubs.todayTransactions.size, actualResult.values.first().size)
+        Assertions.assertEquals(TransactionsDataTestTubs.mockTodayTransactions.size, actualResult.values.first().size)
         val triple = Triple(
-            first = TransactionsDataTestTubs.todayTransactions.first().year,
-            second = TransactionsDataTestTubs.todayTransactions.first().month,
-            third = TransactionsDataTestTubs.todayTransactions.first().day
+            first = TransactionsDataTestTubs.mockTodayTransactions.first().year,
+            second = TransactionsDataTestTubs.mockTodayTransactions.first().month,
+            third = TransactionsDataTestTubs.mockTodayTransactions.first().day
         )
 
         Assertions.assertEquals(triple.convertToDateMillis(), actualResult.keys.first())

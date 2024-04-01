@@ -174,7 +174,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private suspend fun insertTestDate(){
-        TransactionsDataTestTubs.todayTransactions.forEach {
+        TransactionsDataTestTubs.mockTodayTransactions.forEach {
             transactionUseCase.insertTransaction(it.toTransaction())
         }
 

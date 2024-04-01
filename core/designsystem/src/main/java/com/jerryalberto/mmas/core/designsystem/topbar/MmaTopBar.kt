@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.core.designsystem.topbar
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
@@ -25,8 +26,10 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 fun MmaTopBar(
     modifier: Modifier = Modifier,
     title: String = "title",
+    showBack: Boolean = true,
     onCloseClick: () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         colors = colors,
@@ -38,21 +41,18 @@ fun MmaTopBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                onCloseClick()
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = stringResource(id = R.string.close),
-                )
+            if (showBack) {
+                IconButton(onClick = {
+                    onCloseClick()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBackIosNew,
+                        contentDescription = stringResource(id = R.string.close),
+                    )
+                }
             }
         },
-        actions = {
-            // RowScope here, so these icons will be placed horizontally
-            IconButton(onClick = { }) {
-                Icon(Icons.Filled.Search, contentDescription = null)
-            }
-        },
+        actions = actions
 
     )
 }

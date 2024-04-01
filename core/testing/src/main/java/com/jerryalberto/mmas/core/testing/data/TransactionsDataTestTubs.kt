@@ -1,6 +1,8 @@
 package com.jerryalberto.mmas.core.testing.data
 
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
+import com.jerryalberto.mmas.core.database.model.toTransaction
+import com.jerryalberto.mmas.core.database.model.toTransactionEntity
 import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
 import java.util.Calendar
 
@@ -13,7 +15,7 @@ class TransactionsDataTestTubs {
         }
 
         //today transaction
-        val todayTransactions = listOf(
+        val mockTodayTransactions = listOf(
             TransactionEntity(
                 type = "INCOME",
                 amount = 100.0,
@@ -89,7 +91,7 @@ class TransactionsDataTestTubs {
         )
 
         //last week transaction
-        val lastWeekTransactions = todayTransactions.map {
+        val lastWeekTransactions = mockTodayTransactions.map {
             it.copy(
                 year = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
                 month = getLastWeekDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
@@ -98,7 +100,7 @@ class TransactionsDataTestTubs {
         }
 
         //last Month transaction
-        val lastMonthTransactions  = todayTransactions.map {
+        val lastMonthTransactions  = mockTodayTransactions.map {
             it.copy(
                 year = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().first,
                 month = getLastMonthDateDateMillis().timeInMillis.convertMillisToYearMonthDay().second,
@@ -126,6 +128,7 @@ class TransactionsDataTestTubs {
             calendar.add(Calendar.MONTH, -1)
             return calendar
         }
+
     }
 
 

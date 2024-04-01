@@ -1,9 +1,13 @@
 package com.jerryalberto.mmas.core.model.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Category (
     val type: CategoryType,
     val items: List<Category> = listOf()
-)
+) : Parcelable
 
 enum class CategoryType(val value: String){
     //Expenses

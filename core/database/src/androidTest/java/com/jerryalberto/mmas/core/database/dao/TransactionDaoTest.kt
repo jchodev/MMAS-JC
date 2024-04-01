@@ -42,7 +42,7 @@ class TransactionDaoTest {
         transactionDao.deleteAllTransaction()
 
         //assign
-        val transaction = TransactionsDataTestTubs.todayTransactions[0]
+        val transaction = TransactionsDataTestTubs.mockTodayTransactions[0]
         val id = transactionDao.insertTransaction(transaction)
 
         //action
@@ -58,7 +58,7 @@ class TransactionDaoTest {
         transactionDao.deleteAllTransaction()
 
         //assign
-        TransactionsDataTestTubs.todayTransactions.forEach {
+        TransactionsDataTestTubs.mockTodayTransactions.forEach {
             transactionDao.insertTransaction(it)
         }
         TransactionsDataTestTubs.lastMonthTransactions.forEach {
@@ -78,7 +78,7 @@ class TransactionDaoTest {
         transactionDao.deleteAllTransaction()
 
         //assign
-        TransactionsDataTestTubs.todayTransactions.forEach {
+        TransactionsDataTestTubs.mockTodayTransactions.forEach {
             transactionDao.insertTransaction(it)
         }
 
@@ -88,6 +88,6 @@ class TransactionDaoTest {
         val result = transactionDao.getAllTransactionByYearMonth(year = year, month = month).first()
 
         //verify
-        assertEquals(TransactionsDataTestTubs.todayTransactions.size, result.size)
+        assertEquals(TransactionsDataTestTubs.mockTodayTransactions.size, result.size)
     }
 }

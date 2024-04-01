@@ -6,6 +6,8 @@ plugins {
     id("module-without-jetpack-plugin")
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
+
+    id("kotlin-parcelize")
 }
 
 android {

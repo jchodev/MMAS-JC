@@ -46,6 +46,7 @@ import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
@@ -67,7 +68,7 @@ import java.util.Calendar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InputScreen(
-    viewModel: InputScreenViewModel,
+    viewModel: InputScreenViewModel = hiltViewModel(),
     onTopBarLeftClick: () -> Unit = {},
 ) {
 

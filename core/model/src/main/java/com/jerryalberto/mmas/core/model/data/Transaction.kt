@@ -1,5 +1,9 @@
 package com.jerryalberto.mmas.core.model.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Transaction(
     var id: Long = 0,
     val type : TransactionType? = null,
@@ -10,4 +14,4 @@ data class Transaction(
     val date: Long,
     val hour: Int,
     val minute: Int,
-)
+) : Parcelable

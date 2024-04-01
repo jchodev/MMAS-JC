@@ -5,7 +5,7 @@
     <string name="feature_home_income">Income</string>
     <string name="feature_home_expenses">Expenses</string>
     <string name="feature_home_spend_frequency">Spend Frequency</string>
-
+    <string name="feature_home_add_transaction">Add Transaction</string>
     <string name="feature_home_save">Save</string>
 
     <string name="feature_home_total">Total</string>

@@ -2,8 +2,11 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -47,7 +52,8 @@ import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel
+    homeScreenViewModel: HomeScreenViewModel,
+    navController: NavHostController,
 ) {
     val uiState = homeScreenViewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -55,7 +61,7 @@ fun HomeScreen(
     val floatingActionButton = @Composable {
         MultiFloatingActionButton (
             fabIcon = Icons.Rounded.Add,
-            contentDescription = "Add Transaction",
+            contentDescription = stringResource(id = R.string.feature_home_add_transaction),
             items = listOf(
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
@@ -115,17 +121,24 @@ private fun HomeScreenContent(
     ) {
         //account balance
         item {
-            Text(
-                text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.labelLarge,
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            Text(
-                text = uiState.totalAmountStr,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.displayMedium,
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
+                Text(
+                    text = uiState.totalAmountStr,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.displayMedium,
+                )
+            }
         }
         //income and expense box
         item {

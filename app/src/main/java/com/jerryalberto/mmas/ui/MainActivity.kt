@@ -3,31 +3,24 @@ package com.jerryalberto.mmas.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Analytics
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
+import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
-import com.jerryalberto.mmas.ui.navigation.MainActivityScreen
 import com.jerryalberto.mmas.ui.screen.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     selectedIcon = Icons.Filled.Home,
                     unselectedIcon = Icons.Outlined.Home,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.HomeScreen.route)
+                        navController?.navigate(MmasScreen.HomeScreen.route)
                     }
                 ),
                 BottomBarItem(
@@ -53,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     selectedIcon = Icons.Filled.Analytics,
                     unselectedIcon = Icons.Outlined.Analytics,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.TransactionScreen.route)
+                        navController?.navigate(MmasScreen.TransactionScreen.route)
                     }
                 ),
                 BottomBarItem(
@@ -61,7 +54,7 @@ class MainActivity : ComponentActivity() {
                     selectedIcon = Icons.Filled.Settings,
                     unselectedIcon = Icons.Outlined.Settings,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.SettingScreen.route)
+                        navController?.navigate(MmasScreen.SettingScreen.route)
                     }
                 )
             )

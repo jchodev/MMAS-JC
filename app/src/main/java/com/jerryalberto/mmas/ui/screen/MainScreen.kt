@@ -9,8 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
-import com.jerryalberto.mmas.ui.navigation.MainNavigation
+import com.jerryalberto.mmas.ui.navigation.MmasNavigation
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -24,7 +23,7 @@ fun MainScreen(
         bottomBar = bottomBar
     ) { paddingValues ->
 
-        MainNavigation(
+        MmasNavigation(
             homeScreenViewModel = homeScreenViewModel,
             modifier = Modifier.padding(paddingValues),
             navController = navController
