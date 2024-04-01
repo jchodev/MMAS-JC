@@ -3,17 +3,37 @@ package com.jerryalberto.mmas.feature.transaction.ui.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
@@ -30,6 +50,7 @@ import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataSta
 import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import java.util.Calendar
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jerryalberto.mmas.feature.transaction.R
 
 @Composable
 fun TransactionScreen(
@@ -48,16 +69,99 @@ fun TransactionScreen(
 @Composable
 private fun TransactionScreenContent(
     uiState: TransactionUIDataState = TransactionUIDataState(),
-    onYearMonthItemClick : (YearMonthItem) -> Unit = {}
+    onYearMonthItemClick : (YearMonthItem) -> Unit = {},
 ){
+
+    var searchValue by remember { mutableStateOf("") }
+    var isSearch by remember { mutableStateOf(false) }
+    var filteredItems by remember { mutableStateOf(uiState.transactionList) }
+
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            MmaTopBar(
-                modifier = Modifier
-                    .shadow(elevation = MaterialTheme.dimens.dimen4),
-                title = "this is title",
-                //onCloseClick = onTopBarLeftClick
+//            MmaTopBar(
+//                modifier = Modifier
+//                    .shadow(elevation = MaterialTheme.dimens.dimen4),
+//                title = "this is title",
+//                //onCloseClick = onTopBarLeftClick
+//            )
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(isSearch) {
+                if (isSearch) {
+                    focusRequester.requestFocus()
+                }
+            }
+            CenterAlignedTopAppBar(
+                modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
+                title = {
+                    if (isSearch) {
+                        TextField(
+                            modifier = Modifier.focusRequester(focusRequester),
+                            value = searchValue,
+                            onValueChange = { searchStr ->
+                                searchValue = searchStr
+                                filteredItems = uiState.transactionList.searchForAnItem(searchStr)
+                            },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.feature_transaction_search),
+                                    color = MaterialTheme.colorScheme.outline,
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            },
+                            colors = TextFieldDefaults.colors(
+                                disabledContainerColor = Color.Transparent,
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                            ),
+                            textStyle = MaterialTheme.typography.labelLarge,
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.feature_transaction_title),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                },
+                navigationIcon = {
+                    if (isSearch){
+                        IconButton(onClick = {
+
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.feature_transaction_search),
+                            )
+                        }
+                    }
+                },
+                actions = {
+                    if (isSearch){
+                        IconButton(onClick = {
+                            isSearch = false
+                            searchValue = ""
+                            filteredItems = uiState.transactionList.searchForAnItem(searchValue)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = stringResource(id = R.string.feature_transaction_clear),
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            isSearch = true
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(id = R.string.feature_transaction_search),
+                            )
+                        }
+                    }
+
+                },
             )
         }
     ) { paddingValues ->
@@ -84,7 +188,11 @@ private fun TransactionScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
 
             TransactionsList(
-                transactionData = uiState.transactionList
+                transactionData = if (searchValue.isEmpty()) {
+                    uiState.transactionList
+                } else {
+                    filteredItems
+                }
             )
         }
 
@@ -313,4 +421,27 @@ private fun TransactionScreenContentPreview() {
         )
     }
 
+}
+
+private fun List<TransactionData>.searchForAnItem(
+    searchStr: String,
+): List<TransactionData> {
+    val output: MutableList<TransactionData> = mutableListOf()
+    forEach {
+        val filtered = it.transactions.filter { transaction ->
+            transaction.description.contains(searchStr, ignoreCase = true) ||
+                    transaction.category?.type?.value?.contains(searchStr, ignoreCase = true) == true
+        }
+        if (filtered.isNotEmpty()){
+            output.add(
+                TransactionData(
+                    date = it.date,
+                    transactions = filtered,
+                    totalAmount = filtered.sumOf { it.amount }
+                )
+            )
+        }
+    }
+
+    return output
 }

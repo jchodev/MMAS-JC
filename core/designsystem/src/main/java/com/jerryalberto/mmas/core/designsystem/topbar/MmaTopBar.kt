@@ -33,10 +33,8 @@ fun MmaTopBar(
         modifier = modifier,
         title = {
             Text(
-                //modifier = Modifier.offset(y = (-2).dp),
                 text = title,
                 style = MaterialTheme.typography.titleMedium
-
             )
         },
         navigationIcon = {

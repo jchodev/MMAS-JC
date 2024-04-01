@@ -148,15 +148,6 @@ class InputScreenViewModel @Inject constructor(
             )
             return
         }
-        if (uiState.value.description.isBlank()){
-            saveData(
-                uiState = uiState.value.copy(
-                    descriptionError = context.getString(R.string.feature_home_error_field_require)
-                )
-            )
-            return
-        }
-
         if (uiState.value.dateString.isBlank()){
             saveData(
                 uiState = uiState.value.copy(

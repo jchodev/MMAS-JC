@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -46,8 +47,10 @@ fun TransactionsList(
                             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                         }
                         TransactionHeader(
+                            bgColor = MaterialTheme.colorScheme.surfaceVariant,
                             leftText = group.date.convertMillisToDate("dd/MM/yyyy"),
                             rightText = uiHelper.formatAmount(group.totalAmount, withPlus = true),
+                            rightTextColor =  if (group.totalAmount < 0.0) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                     }
