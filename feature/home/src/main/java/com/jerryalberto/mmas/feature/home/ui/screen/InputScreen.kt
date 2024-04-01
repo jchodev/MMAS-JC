@@ -46,6 +46,7 @@ import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
@@ -58,7 +59,6 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
@@ -68,14 +68,15 @@ import java.util.Calendar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InputScreen(
-    viewModel: InputScreenViewModel,
+    viewModel: InputScreenViewModel = hiltViewModel(),
     onTopBarLeftClick: () -> Unit = {},
 ) {
 
     InputScreenContent(
         state = viewModel.uiState.collectAsState().value,
         onTopBarLeftClick = onTopBarLeftClick,
-        categories = viewModel.getCategories(),
+        expensesCategories = viewModel.getExpenseCategories(),
+        incomeCategories = viewModel.getIncomeCategories(),
         onDescriptionChange = {
             viewModel.onDescriptionChange(it)
         },
@@ -106,18 +107,27 @@ fun InputScreen(
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    categories: List<CategoryDisplay> = listOf(),
+    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
+    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
             hour, minute ->
     },
-    onCategorySelected: (CategoryDisplay) -> Unit = {},
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
 ){
     var bgColor = ColorConstant.ExpensesRed
+    var isExpenses = true
+
+    state.type?.let {
+        if (it == TransactionType.INCOME){
+            bgColor = ColorConstant.IncomeGreen
+            isExpenses = false
+        }
+    }
 
     state.type?.let {
         if (it == TransactionType.INCOME){
@@ -152,7 +162,7 @@ private fun InputScreenContent(
     var categorySelectDialogVisible by remember { mutableStateOf(false) }
     if (categorySelectDialogVisible) {
         CategorySelectDialog(
-            list = categories,
+            list = if (isExpenses) expensesCategories else incomeCategories,
             onDismissRequest = { categorySelectDialogVisible = false },
             onCategorySelected = {
                 onCategorySelected.invoke(it)
@@ -202,7 +212,7 @@ private fun InputScreenContent(
                 .padding(horizontal = MaterialTheme.dimens.dimen32)){
                 //how much
                 Text(
-                    text = "How much?",
+                    text = stringResource(id = R.string.feature_home_how_much),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                 )
@@ -227,6 +237,7 @@ private fun InputScreenContent(
                     .fillMaxWidth()
                     .padding(MaterialTheme.dimens.dimen32)
             ){
+
                 MmasTextEdit(
                     value = if (state.category != null) {
                         stringResource(id = state.category.stringResId)
@@ -234,10 +245,10 @@ private fun InputScreenContent(
                         ""
                     },
                     error = state.categoryError,
-                    placeHolder = "Category",
+                    placeHolder = stringResource(id = R.string.feature_home_category),
                     readOnly = true,
                     leadingIcon = {
-                        if (state.category != null){
+                        if (state.category != null) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(state.category.imageResId),
                                 contentDescription = stringResource(id = state.category.stringResId),
@@ -245,11 +256,10 @@ private fun InputScreenContent(
                                     MaterialTheme.dimens.dimen24
                                 ),
                             )
-                        }
-                        else {
+                        } else {
                             Icon(
                                 imageVector = Icons.Default.Category,
-                                contentDescription = "select catergory",
+                                contentDescription = stringResource(id = R.string.feature_home_select_category),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -266,18 +276,20 @@ private fun InputScreenContent(
                         }
                     }
                 )
+
+
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Description,
-                            contentDescription = "",
+                            contentDescription = stringResource(id = R.string.feature_home_description),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
                     value = state.description,
                     error = state.descriptionError,
-                    placeHolder = "Description",
+                    placeHolder = stringResource(id = R.string.feature_home_description),
                     onValueChange = onDescriptionChange
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
@@ -289,12 +301,12 @@ private fun InputScreenContent(
                             .padding(end = MaterialTheme.dimens.dimen8),
                         value = state.dateString,
                         error = state.dateError,
-                        placeHolder = "Date",
+                        placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.CalendarMonth,
-                                contentDescription = "",
+                                contentDescription = stringResource(id = R.string.feature_home_date),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
@@ -306,12 +318,12 @@ private fun InputScreenContent(
                         value = state.timeString,
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
-                        placeHolder = "Time",
+                        placeHolder = stringResource(id = R.string.feature_home_time),
                         readOnly = true,
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.AvTimer,
-                                contentDescription = "",
+                                contentDescription = stringResource(id = R.string.feature_home_time),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         },
@@ -324,11 +336,11 @@ private fun InputScreenContent(
                 MmasTextEdit(
                     value = state.amountString,
                     error = state.amountError,
-                    placeHolder = "Amount",
+                    placeHolder = stringResource(id = R.string.feature_home_amount),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MonetizationOn,
-                            contentDescription = "",
+                            contentDescription = stringResource(id = R.string.feature_home_amount),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },

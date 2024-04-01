@@ -12,19 +12,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.window.DialogProperties
+import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
+
 import com.jerryalberto.mmas.core.model.data.Category
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
+import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.ui.component.CategoryGroupBox
+import com.jerryalberto.mmas.feature.home.R
+import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategorySelectDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    list: List<CategoryDisplay> = listOf(),
+    list: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
     properties: DialogProperties = DialogProperties().let {
         DialogProperties(
             dismissOnBackPress = it.dismissOnBackPress,
@@ -33,11 +40,11 @@ fun CategorySelectDialog(
             usePlatformDefaultWidth = false,
         )
     },
-    onCategorySelected: (CategoryDisplay) -> Unit = {}
+    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {}
 ) {
 
     BasicAlertDialog(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         onDismissRequest = onDismissRequest,
         properties = properties,
         content = {
@@ -46,7 +53,7 @@ fun CategorySelectDialog(
                     MmaTopBar(
                         modifier = Modifier
                             .shadow(elevation = MaterialTheme.dimens.dimen4),
-                        title = "Select Category",
+                        title = stringResource(id = R.string.feature_home_select_category),
                         onCloseClick = onDismissRequest
                     )
                 },
@@ -57,7 +64,7 @@ fun CategorySelectDialog(
                         .fillMaxSize(),
                 ) {
                     items(list) {
-                        CategoryGroup(
+                        CategoryGroupBox(
                             category = it,
                             onCategorySelected = onCategorySelected
                         )
@@ -66,4 +73,35 @@ fun CategorySelectDialog(
             }
         }
     )
+}
+
+
+@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@Composable
+private fun CategorySelectDialogPreview(){
+    MmasTheme {
+        CategorySelectDialog(
+            list = listOf(
+                //food and beverage
+                Category(
+                    type = CategoryType.FOOD_AND_BEVERAGES,
+                    items = listOf(
+                        Category(
+                            type = CategoryType.FOOD,
+                        ),
+                        Category(
+                            type = CategoryType.BEVERAGES,
+                        ),
+                        Category(
+                            type = CategoryType.GROCERIES,
+                        )
+                    )
+                ),
+                Category(CategoryType.OTHER)
+            ).map {
+                it.toCategoryDisplay()
+            }
+
+        )
+    }
 }

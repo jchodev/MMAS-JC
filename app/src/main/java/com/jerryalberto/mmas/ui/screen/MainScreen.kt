@@ -5,16 +5,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-import com.jerryalberto.mmas.ui.navigation.MainNavigation
+import com.jerryalberto.mmas.ui.navigation.MmasNavigation
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    homeScreenViewModel: HomeScreenViewModel,
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold (
@@ -22,7 +23,7 @@ fun MainScreen(
         bottomBar = bottomBar
     ) { paddingValues ->
 
-        MainNavigation(
+        MmasNavigation(
             homeScreenViewModel = homeScreenViewModel,
             modifier = Modifier.padding(paddingValues),
             navController = navController

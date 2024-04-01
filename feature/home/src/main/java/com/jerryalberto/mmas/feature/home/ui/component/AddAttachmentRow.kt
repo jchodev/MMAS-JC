@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
@@ -75,7 +76,7 @@ fun AddAttachmentRow(
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
             Text(
-                text = "Add attachment",
+                text = stringResource(id = R.string.feature_home_add_attachment),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.titleMedium
             )

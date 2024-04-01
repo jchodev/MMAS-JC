@@ -8,6 +8,7 @@ androidx-lifecycle = "2.6.1"
 androidx-multidex = "2.0.1"
 androidx-splash = "1.0.1"
 androidx-appcompat = "1.6.1"
+androidx-test-core = "1.5.0"
 # compose
 compose-bom = "2023.08.00"
 compose-activity = "1.7.2"
@@ -48,6 +49,7 @@ material = "1.11.0"
 
 agp = "8.1.4"
 squareup-javapoet = "1.13.0"
+hilt-navigation-compose = "1.1.0"
 
 [libraries]
 # must have libraries
@@ -62,6 +64,9 @@ androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-k
 androidx-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "androidx-multidex" }
 androidx-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splash" }
+androidx-test-core = {group = "androidx.test", name = "core", version.ref = "androidx-test-core" }
+androidx-test-core-ktx = {group = "androidx.test", name = "core-ktx", version.ref = "androidx-test-core" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 
 # compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -98,6 +103,7 @@ timber =  { group = "com.jakewharton.timber", name = "timber", version.ref = "ti
 #junit5
 junit-jupiter-api =  { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
 junit-jupiter-params =  { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
+junit-jupiter =  { group = "org.junit.jupiter", name = "junit-jupiter" }
 junit-jupiter-engine =  { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
 junit-vintage-engine =  { group = "org.junit.vintage", name = "junit-vintage-engine" }
 
@@ -110,6 +116,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+
 
 [bundles]
 androidx-compose = [
@@ -127,6 +135,7 @@ androidx-compose = [
     "compose.foundation.layout",
     "compose.runtime",
     "compose.constraintlayout",
+    "androidx.hilt.navigation.compose"
 ]
 
 junit5-test-implementation = [

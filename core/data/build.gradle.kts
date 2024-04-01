@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
 
+
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)
@@ -35,4 +36,5 @@ dependencies {
     //junit5
     testImplementation(libs.bundles.junit5.test.implementation)
     testRuntimeOnly(libs.bundles.junit5.test.runtime.only)
+    testImplementation(project(":core:testing"))
 }

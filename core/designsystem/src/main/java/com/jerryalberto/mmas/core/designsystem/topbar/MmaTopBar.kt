@@ -1,7 +1,9 @@
 package com.jerryalberto.mmas.core.designsystem.topbar
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -14,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.R
+import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,29 +26,43 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 fun MmaTopBar(
     modifier: Modifier = Modifier,
     title: String = "title",
+    showBack: Boolean = true,
     onCloseClick: () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
         colors = colors,
         modifier = modifier,
         title = {
             Text(
-                //modifier = Modifier.offset(y = (-2).dp),
                 text = title,
                 style = MaterialTheme.typography.titleMedium
-
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                onCloseClick()
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = stringResource(id = R.string.close),
-                )
+            if (showBack) {
+                IconButton(onClick = {
+                    onCloseClick()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBackIosNew,
+                        contentDescription = stringResource(id = R.string.close),
+                    )
+                }
             }
-        }
+        },
+        actions = actions
+
     )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun MmaTopBarPreview() {
+    MmasTheme {
+        MmaTopBar()
+    }
 }

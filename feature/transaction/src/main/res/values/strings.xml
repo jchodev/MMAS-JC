@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_transaction_title">All Transaction</string>
+    <string name="feature_transaction_search">Search Transaction</string>
+    <string name="feature_transaction_clear">Clear Search</string>
+</resources>

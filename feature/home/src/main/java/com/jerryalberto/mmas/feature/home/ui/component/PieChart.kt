@@ -77,7 +77,7 @@ fun PieChart(
     )
 
     // to play the animation only once when the function is Created or Recomposed
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         animationPlayed = true
     }
 
@@ -119,7 +119,7 @@ private fun PieChartPreview(){
     PieChart(
         data = listOf(
             Pair(ColorConstant.ExpensesRed, 150.0),
-            Pair(ColorConstant.IncomeGreen, 120.0),
+            Pair(ColorConstant.IncomeGreen,0.0),
         )
     )
 }

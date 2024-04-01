@@ -2,6 +2,8 @@ package com.jerryalberto.mmas.core.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
+import com.jerryalberto.mmas.core.ext.convertToDateMillis
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
@@ -13,25 +15,46 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 )
 data class TransactionEntity (
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,//last so that we don't have to pass an ID value or named arguments
+    var id: Long = 0,//last so that we don't have to pass an ID value or named arguments
     val type : String,
     val amount: Double,
     val category : String,
     val description  : String,
     val uri: String,
-    val date: Long,
+    val year: Int,
+    val month: Int,
+    val day: Int,
     val hour: Int,
     val minute: Int,
 )
 
-fun TransactionEntity.asExternalModel() = Transaction (
-    id = id,
-    type = TransactionType.valueOf(type),
-    amount = amount,
-    category = Category(type = CategoryType.valueOf(category)),
-    description = description,
-    uri = uri,
-    date = date,
-    hour = hour,
-    minute = minute,
-)
+fun TransactionEntity.toTransaction(): Transaction {
+   return Transaction (
+       id = id,
+       type = TransactionType.valueOf(type),
+       amount = amount,
+       category = Category(type = CategoryType.valueOf(category)),
+       description = description,
+       uri = uri,
+       date =  Triple(year, month, day).convertToDateMillis(),
+       hour = hour,
+       minute = minute,
+   )
+}
+
+fun Transaction.toTransactionEntity(): TransactionEntity {
+    val date = date.convertMillisToYearMonthDay()
+    return TransactionEntity (
+        id = id,
+        type = type?.value ?: "",
+        amount = amount,
+        category = category?.type?.value ?: "",
+        description = description,
+        uri = uri,
+        year =  date.first,
+        month = date.second,
+        day = date.third,
+        hour = hour,
+        minute = minute,
+    )
+}

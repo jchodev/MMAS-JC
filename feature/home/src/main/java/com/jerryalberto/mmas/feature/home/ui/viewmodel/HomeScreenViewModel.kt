@@ -5,13 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
+import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val uiHelper: UiHelper,
+    private val uiHelper: com.jerryalberto.mmas.core.ui.helper.UiHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUIDataState())
@@ -28,6 +29,11 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+
+            transactionUseCase.deleteAllTransaction()
+
+            insertTestDate()
+
             transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL)) { transactions, summaries ->
                 Pair(transactions, summaries)
             }.asResult().collect {
@@ -44,9 +50,11 @@ class HomeScreenViewModel @Inject constructor(
                             uiState = uiState.value.copy(
                                 loading = false,
                                 latestTransaction = it.data.first,
-                                totalIncome = uiHelper.formatAmount(it.data.second.income),
-                                totalExpenses = uiHelper.formatAmount(it.data.second.expenses),
-                                totalAmount = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
+                                totalIncome = it.data.second.income,
+                                totalIncomeStr = uiHelper.formatAmount(it.data.second.income),
+                                totalExpenses = it.data.second.expenses,
+                                totalExpensesStr = uiHelper.formatAmount(it.data.second.expenses),
+                                totalAmountStr = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
                             )
                         )
                     }
@@ -79,9 +87,11 @@ class HomeScreenViewModel @Inject constructor(
                             uiState = uiState.value.copy(
                                 type = type,
                                 loading = false,
-                                totalIncome = uiHelper.formatAmount(it.data.income),
-                                totalExpenses = uiHelper.formatAmount(it.data.expenses),
-                                totalAmount = uiHelper.formatAmount(it.data.income - it.data.expenses)
+                                totalIncomeStr = uiHelper.formatAmount(it.data.income),
+                                totalIncome = it.data.income,
+                                totalExpensesStr = uiHelper.formatAmount(it.data.expenses),
+                                totalExpenses = it.data.expenses,
+                                totalAmountStr = uiHelper.formatAmount(it.data.income - it.data.expenses)
                             )
                         )
                     }
@@ -163,4 +173,17 @@ class HomeScreenViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    private suspend fun insertTestDate(){
+        TransactionsDataTestTubs.mockTodayTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+
+        TransactionsDataTestTubs.lastWeekTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+
+        TransactionsDataTestTubs.lastMonthTransactions.forEach {
+            transactionUseCase.insertTransaction(it.toTransaction())
+        }
+    }
 }

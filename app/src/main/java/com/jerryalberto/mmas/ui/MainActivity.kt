@@ -3,28 +3,24 @@ package com.jerryalberto.mmas.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
+import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
-import com.jerryalberto.mmas.ui.navigation.MainActivityScreen
 import com.jerryalberto.mmas.ui.screen.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
 
-    private val homeScreenViewModel by viewModels<HomeScreenViewModel>()
 
     private val bottomBar = @Composable {
         BottomBar(
@@ -43,35 +38,23 @@ class MainActivity : ComponentActivity() {
                     selectedIcon = Icons.Filled.Home,
                     unselectedIcon = Icons.Outlined.Home,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.HomeScreen.route)
+                        navController?.navigate(MmasScreen.HomeScreen.route)
                     }
                 ),
-//                BottomBarItem(
-//                    title = "Add",
-//                    selectedIcon = Icons.Filled.Add,
-//                    unselectedIcon = Icons.Outlined.Add,
-//                    onClick = {
-//                        //navController?.navigate(MainActivityScreen.InputScreen.route)
-//
-//                        val intent = Intent(this, InputActivity::class.java)
-//                        startActivity(intent)
-//                    }
-//                ),
                 BottomBarItem(
-                    title = "Analysis",
-                    selectedIcon = Icons.Filled.Face,
-                    unselectedIcon = Icons.Outlined.Face,
+                    title = "Transaction",
+                    selectedIcon = Icons.Filled.Analytics,
+                    unselectedIcon = Icons.Outlined.Analytics,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.AnalysisScreen.route)
+                        navController?.navigate(MmasScreen.TransactionScreen.route)
                     }
                 ),
-
                 BottomBarItem(
                     title = "Setting",
                     selectedIcon = Icons.Filled.Settings,
                     unselectedIcon = Icons.Outlined.Settings,
                     onClick = {
-                        navController?.navigate(MainActivityScreen.SettingScreen.route)
+                        navController?.navigate(MmasScreen.SettingScreen.route)
                     }
                 )
             )
@@ -92,7 +75,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     navController?.let {
                         MainScreen(
-                            homeScreenViewModel = homeScreenViewModel,
                             navController = it,
                             bottomBar = bottomBar
                         )
@@ -100,21 +82,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MmasTheme {
-        Greeting("Android")
     }
 }

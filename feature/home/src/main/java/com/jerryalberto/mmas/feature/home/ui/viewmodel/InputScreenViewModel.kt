@@ -12,9 +12,7 @@ import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.ui.helper.UiHelper
-import com.jerryalberto.mmas.feature.home.model.CategoryDisplay
-import com.jerryalberto.mmas.feature.home.model.toCategoryDisplay
+import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +27,7 @@ class InputScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val uiHelper: UiHelper,
+    private val uiHelper: com.jerryalberto.mmas.core.ui.helper.UiHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -42,8 +40,14 @@ class InputScreenViewModel @Inject constructor(
     private val _onSaved = MutableStateFlow<Boolean?>(null)
     val onSaved = _onSaved.asStateFlow()
 
-    fun getCategories(): List<CategoryDisplay> {
-        return categoriesUseCase.getExpenseCategory().map {
+    fun getExpenseCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
+        return categoriesUseCase.getExpenseCategories().map {
+            it.toCategoryDisplay()
+        }
+    }
+
+    fun getIncomeCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
+        return categoriesUseCase.getIncomeCategories().map {
             it.toCategoryDisplay()
         }
     }
@@ -75,7 +79,7 @@ class InputScreenViewModel @Inject constructor(
         )
     }
 
-    fun onCategorySelected(category: CategoryDisplay){
+    fun onCategorySelected(category: com.jerryalberto.mmas.core.ui.model.CategoryGroup){
         saveData(
             uiState = uiState.value.copy(
                 category = category
@@ -144,15 +148,6 @@ class InputScreenViewModel @Inject constructor(
             )
             return
         }
-        if (uiState.value.description.isBlank()){
-            saveData(
-                uiState = uiState.value.copy(
-                    descriptionError = context.getString(R.string.feature_home_error_field_require)
-                )
-            )
-            return
-        }
-
         if (uiState.value.dateString.isBlank()){
             saveData(
                 uiState = uiState.value.copy(

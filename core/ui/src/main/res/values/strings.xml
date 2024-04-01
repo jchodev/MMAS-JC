@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="core_ui_food_and_beverages">Food &amp; beverages</string>
+    <string name="core_ui_food">Food</string>
+    <string name="core_ui_beverages">Beverages</string>
+    <string name="core_ui_groceries">Groceries</string>
+
+    <string name="core_ui_transport">Transport</string>
+    <string name="core_ui_fuel">Fuel</string>
+    <string name="core_ui_parking">Parking</string>
+    <string name="core_ui_service_and_maintenance">Service &amp; Maintenance</string>
+    <string name="core_ui_taxi">Taxi</string>
+
+    <string name="core_ui_personal_development">Personal Development</string>
+    <string name="core_ui_business">Business</string>
+    <string name="core_ui_personal_education">Education</string>
+    <string name="core_ui_investment">Investment</string>
+
+    <string name="core_ui_shopping">Shopping</string>
+    <string name="core_ui_cloths">Cloths</string>
+    <string name="core_ui_accessories">Accessories</string>
+    <string name="core_ui_electronics">Electronics</string>
+
+    <string name="core_ui_others">Others</string>
+    <string name="core_ui_salary">Salary</string>
+    <string name="core_ui_bonus">Bonus</string>
+    <string name="core_ui_side_job">Side Job</string>
+    <string name="core_ui_gifts">Gifts</string>
+</resources>

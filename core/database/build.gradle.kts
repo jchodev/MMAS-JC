@@ -9,6 +9,10 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
+    }
     namespace = "com.jerryalberto.mmas.core.database"
 }
 
@@ -25,6 +29,12 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    //junit 4
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(project(":core:testing"))
 
     //timber
     implementation(libs.timber)

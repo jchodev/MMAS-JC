@@ -10,5 +10,5 @@ import com.jerryalberto.mmas.core.database.model.TransactionEntity
     version = 1
 )
 internal abstract class MmasDatabase : RoomDatabase() {
-    abstract fun moneyDao(): TransactionDao
+    abstract fun transactionDao(): TransactionDao
 }

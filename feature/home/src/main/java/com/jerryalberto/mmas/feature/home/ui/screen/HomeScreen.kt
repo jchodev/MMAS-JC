@@ -2,10 +2,11 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -28,27 +30,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
-import com.jerryalberto.mmas.feature.home.ui.component.SpendFrequencyButton
-import com.jerryalberto.mmas.feature.home.ui.component.TransactionBox
+import com.jerryalberto.mmas.core.ui.component.TransactionBox
+import com.jerryalberto.mmas.core.ui.component.TransactionHeader
+
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel
+    homeScreenViewModel: HomeScreenViewModel,
+    navController: NavHostController,
 ) {
     val uiState = homeScreenViewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -56,7 +61,7 @@ fun HomeScreen(
     val floatingActionButton = @Composable {
         MultiFloatingActionButton (
             fabIcon = Icons.Rounded.Add,
-            contentDescription = "Add Transaction",
+            contentDescription = stringResource(id = R.string.feature_home_add_transaction),
             items = listOf(
                 FabItem(
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
@@ -116,17 +121,24 @@ private fun HomeScreenContent(
     ) {
         //account balance
         item {
-            Text(
-                text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.labelLarge,
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            Text(
-                text = "$${uiState.totalAmount}",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.displayMedium,
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.feature_home_title) + " (${accountBalanceDataTypeDesc})",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
+                Text(
+                    text = uiState.totalAmountStr,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.displayMedium,
+                )
+            }
         }
         //income and expense box
         item {
@@ -139,14 +151,14 @@ private fun HomeScreenContent(
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = "$${uiState.totalIncome}"
+                    content = uiState.totalIncomeStr
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    content = "$${uiState.totalExpenses}"
+                    content = uiState.totalExpensesStr
                 )
             }
         }
@@ -156,10 +168,32 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             PieChart(
                 data = listOf(
-                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toDouble()),
-                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toDouble()),
+                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses),
+                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
                 )
             )
+//            PieChartWithText(
+//                chartDataList = listOf(
+//                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toFloat()),
+//                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toFloat()),
+//                )
+//            )
+
+//            DonutChart(data = DonutChartDataCollection(
+//                    listOf(
+//                        DonutChartData(
+//                            amount = uiState.totalExpenses.toFloat(),
+//                            color = ColorConstant.ExpensesRed,
+//                            title = "title1"
+//                        ),
+//                        DonutChartData(
+//                            amount = uiState.totalIncome.toFloat(),
+//                            color = ColorConstant.IncomeGreen,
+//                            title = "title2"
+//                        ),
+//                    )
+//                )
+//            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
 
@@ -216,26 +250,13 @@ private fun HomeScreenContent(
         //list of transaction
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ){
-                Text(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = stringResource(id = R.string.feature_home_recent_transaction),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    modifier = Modifier.clickable {
+            TransactionHeader(
+                leftText = stringResource(id = R.string.feature_home_recent_transaction),
+                rightText = stringResource(id = R.string.feature_home_sell_all),
+                rightTextOnClick = {
 
-                    },
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = stringResource(id = R.string.feature_home_sell_all),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+                }
+            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             TransactionBox(
                 transactions = uiState.latestTransaction

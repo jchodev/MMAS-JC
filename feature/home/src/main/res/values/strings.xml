@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    error_field_require
-
     <string name="feature_home_title">Account Balance</string>
     <string name="feature_home_income">Income</string>
     <string name="feature_home_expenses">Expenses</string>
     <string name="feature_home_spend_frequency">Spend Frequency</string>
-
+    <string name="feature_home_add_transaction">Add Transaction</string>
     <string name="feature_home_save">Save</string>
 
     <string name="feature_home_total">Total</string>
@@ -17,6 +15,15 @@
 
     <string name="feature_home_recent_transaction">Recent Transaction</string>
     <string name="feature_home_sell_all">Sell All ></string>
+
+    <string name="feature_home_how_much">How Much?</string>
+    <string name="feature_home_category">Category</string>
+    <string name="feature_home_select_category">Select Category</string>
+    <string name="feature_home_description">Description</string>
+    <string name="feature_home_date">Date</string>
+    <string name="feature_home_time">Time</string>
+    <string name="feature_home_amount">Amount</string>
+    <string name="feature_home_add_attachment">Add Attachment</string>
 
     <string name="feature_home_food_and_beverages">Food &amp; beverages</string>
     <string name="feature_home_food">Food</string>
@@ -38,4 +45,10 @@
     <string name="feature_home_cloths">Cloths</string>
     <string name="feature_home_accessories">Accessories</string>
     <string name="feature_home_electronics">Electronics</string>
+
+    <string name="feature_home_others">Others</string>
+    <string name="feature_home_salary">Salary</string>
+    <string name="feature_home_bonus">Bonus</string>
+    <string name="feature_home_side_job">Side Job</string>
+    <string name="feature_home_gifts">Gifts</string>
 </resources>
