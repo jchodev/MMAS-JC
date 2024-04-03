@@ -3,4 +3,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
+
+    <string name="core_designsystem_search">Search ...</string>
 </resources>

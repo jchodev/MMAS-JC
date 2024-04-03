@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.core.domain.di
 
 import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
+import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import dagger.Module
 import dagger.Provides
@@ -18,6 +19,13 @@ internal object UseCaseModule {
     fun provideGetCategoriesUseCase(): CategoriesUseCase {
         return CategoriesUseCase()
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingUseCase(): SettingUseCase {
+        return SettingUseCase()
+    }
+
 
     @Provides
     @Singleton

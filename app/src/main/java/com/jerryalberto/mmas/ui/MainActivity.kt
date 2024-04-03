@@ -23,6 +23,9 @@ import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 import com.jerryalberto.mmas.ui.screen.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import java.text.NumberFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -64,6 +67,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //test get currency
+        val isoCountryCodes: Array<String> = Locale.getISOCountries()
+        for (countryCode in isoCountryCodes) {
+            val locale = Locale("", countryCode)
+            val countryName = locale.getDisplayCountry(Locale.getDefault())
+            val numberFormat = NumberFormat.getCurrencyInstance(locale)
+            val currency = numberFormat.currency
+            val symbol = currency?.symbol
+            Timber.d("numberFormat.currency${numberFormat.currency} symbol: ${symbol} : countryName is ${countryName}")
+        }
+
         setContent {
             MmasTheme {
                 navController = rememberNavController()

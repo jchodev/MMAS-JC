@@ -91,7 +91,6 @@ private fun TransactionScreenContent(
         }
     ) { paddingValues ->
 
-        //data select lazyRow
         Column (modifier = Modifier
             .padding(paddingValues)
             .padding(MaterialTheme.dimens.dimen16)){
