@@ -32,6 +32,7 @@ fun TopBarSearchTextField(
         placeholder = {
             Text(
                 text = stringResource(id = R.string.core_designsystem_search),
+                color = MaterialTheme.colorScheme.outline,
                 style = MaterialTheme.typography.titleMedium,
             )
         },

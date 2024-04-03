@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
@@ -72,29 +73,12 @@ private fun SearchScreenContent(
             TopAppBar(
                 modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
                 title = {
-                    TextField(
-                        modifier = Modifier.focusRequester(focusRequester),
-                        value = searchValue,
+                    TopBarSearchTextField(
+                        searchValue = searchValue,
                         onValueChange = { searchStr ->
                             searchValue = searchStr
                             filteredItems = transactionList.searchForAnItem(searchStr)
                         },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.feature_transaction_search),
-                                color = MaterialTheme.colorScheme.outline,
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                        },
-                        colors = TextFieldDefaults.colors(
-                            disabledContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                        ),
-                        textStyle = MaterialTheme.typography.labelLarge,
                     )
                 },
                 navigationIcon = {
