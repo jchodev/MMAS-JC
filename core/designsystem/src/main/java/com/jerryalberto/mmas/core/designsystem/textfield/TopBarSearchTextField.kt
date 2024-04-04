@@ -19,7 +19,6 @@ fun TopBarSearchTextField(
     searchValue: String = "",
     onValueChange: (String) -> Unit,
 ) {
-
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()

@@ -1,12 +1,18 @@
 package com.jerryalberto.mmas.core.domain.usecase
 
+import com.jerryalberto.mmas.core.domain.repository.SettingRepository
 import com.jerryalberto.mmas.core.model.data.CountryData
+import com.jerryalberto.mmas.core.model.data.Setting
+import kotlinx.coroutines.flow.first
 import java.text.NumberFormat
-import java.util.ArrayList
 import java.util.Locale
+import javax.inject.Inject
 
-class SettingUseCase {
+class SettingUseCase @Inject constructor(
+    private val settingRepository: SettingRepository
+) {
 
+    //Country / Currency -----------
     fun getCountryList() : List<CountryData> {
         return Locale.getISOCountries().map {
             getCountryDataByCountryCode(
@@ -39,5 +45,32 @@ class SettingUseCase {
 
     fun getDefaultCountry(countryCode: String = Locale.getDefault().country): CountryData {
         return getCountryDataByCountryCode(countryCode = countryCode)
+    }
+
+    //Date format ----------------------
+    fun getDateFormatList() : List<String> {
+        return listOf(
+            "dd-MM-yyyy",
+            "dd MMM yyyy",
+            "dd/MM/yyyy",
+            "yyyy-MM-dd"
+        )
+    }
+
+    suspend fun getSetting(): Setting {
+        var setting = settingRepository.getSetting().first() ?: getDefaultSetting()
+        setting = setting.copy(
+            countryData = getDefaultCountry(countryCode = setting.countryCode)
+        )
+        return setting
+    }
+
+    private fun getDefaultSetting(): Setting {
+        return Setting(
+            countryCode = Locale.getDefault().country,
+            theme = "Dark",
+            dateFormat = "yyyy-mm-dd",
+            use24HourFormat = true,
+        )
     }
 }

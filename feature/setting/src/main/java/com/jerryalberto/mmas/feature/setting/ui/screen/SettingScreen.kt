@@ -27,6 +27,7 @@ import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.component.SettingItem
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.CurrencySelectDialog
+import com.jerryalberto.mmas.feature.setting.ui.component.dialog.DateFormatDialog
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import timber.log.Timber
@@ -40,6 +41,10 @@ fun SettingScreen(
         countryList = viewModel.getCountryList(),
         onCountrySelected = {
             viewModel.onCountryDataSelected(it)
+        },
+        dateFormatList = viewModel.getDateFormatList(),
+        onDateFormatSelected = {
+            viewModel.onDateFormatSelected(it)
         }
     )
 }
@@ -49,7 +54,9 @@ fun SettingScreen(
 private fun SettingScreenContent(
     uiState: SettingUIDataState = SettingUIDataState(),
     countryList: List<CountryData> = emptyList(),
+    dateFormatList: List<String> = emptyList(),
     onCountrySelected: (CountryData) -> Unit = {},
+    onDateFormatSelected: (String) -> Unit = {},
 ) {
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
@@ -63,7 +70,7 @@ private fun SettingScreenContent(
     ){
         paddingValues ->
 
-        //Nationality
+        //Currency
         var openCountrySelectDialog by remember { mutableStateOf(false) }
         if (openCountrySelectDialog) {
             CurrencySelectDialog(
@@ -78,13 +85,27 @@ private fun SettingScreenContent(
             )
         }
 
+        //date format
+        var openDateFormatSelectDialog by remember { mutableStateOf(false) }
+        if (openDateFormatSelectDialog) {
+            DateFormatDialog(
+                dateFormatList = dateFormatList,
+                onDismissRequest = { openDateFormatSelectDialog = false },
+                onSelected = {
+                    openDateFormatSelectDialog = false
+                    Timber.d("selected data format is ${it}")
+                    onDateFormatSelected.invoke(it)
+                },
+            )
+        }
+
         LazyColumn (modifier = Modifier
             .padding(paddingValues) ){
             //Currency
             item {
                 SettingItem(
                     title = "Currency",
-                    selectedValue = uiState.countryData?.currency?.symbol ?: "$",
+                    selectedValue = uiState.setting.countryData?.currency?.symbol ?: "$",
                     onClick = {
                         openCountrySelectDialog = true
                     }
@@ -93,8 +114,11 @@ private fun SettingScreenContent(
             //Language
             item {
                 SettingItem(
-                    title = "Language",
-                    selectedValue = "English"
+                    title = "Data Format",
+                    selectedValue = uiState.setting.dateFormat,
+                    onClick = {
+                        openDateFormatSelectDialog = true
+                    }
                 )
             }
         }
@@ -105,10 +129,6 @@ private fun SettingScreenContent(
 @Composable
 private fun SettingScreenContentPreview(){
     MmasTheme {
-        SettingScreenContent(
-            uiState = SettingUIDataState(
-                countryData = SettingUseCase().getDefaultCountry()
-            )
-        )
+        SettingScreenContent()
     }
 }

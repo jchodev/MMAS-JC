@@ -22,11 +22,26 @@ class SettingViewModel @Inject constructor(
         return settingUseCase.getCountryList()
     }
 
+    fun getDateFormatList() : List<String> {
+        return settingUseCase.getDateFormatList()
+    }
+
     fun onCountryDataSelected(countryData: CountryData){
         updateUI(
             uiState = uiState.value.copy(
-                loading = false,
-                countryData = countryData
+                setting = uiState.value.setting.copy(
+                    countryData = countryData
+                )
+            )
+        )
+    }
+
+    fun onDateFormatSelected(dateFormat: String){
+        updateUI(
+            uiState = uiState.value.copy(
+                setting = uiState.value.setting.copy(
+                    dateFormat = dateFormat
+                )
             )
         )
     }

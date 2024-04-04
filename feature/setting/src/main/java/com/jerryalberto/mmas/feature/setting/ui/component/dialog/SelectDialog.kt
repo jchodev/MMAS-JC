@@ -35,11 +35,12 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 fun <T> SelectDialog(
     modifier: Modifier = Modifier,
     title: String = "Select",
+    supportSearch: Boolean = true,
     searchValue: String ="",
     fullList: List<T> = listOf(),
     filteredItems: List<T> = listOf(),
     onDismissRequest: () -> Unit = {},
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
     properties: DialogProperties = DialogProperties().let {
         DialogProperties(
             dismissOnBackPress = it.dismissOnBackPress,
@@ -90,13 +91,15 @@ fun <T> SelectDialog(
                                 }
                             },
                             actions = {
-                                IconButton(onClick = {
-                                    isSearch = !isSearch
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        contentDescription = null,
-                                    )
+                                if (supportSearch) {
+                                    IconButton(onClick = {
+                                        isSearch = !isSearch
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = null,
+                                        )
+                                    }
                                 }
                             },
                         )

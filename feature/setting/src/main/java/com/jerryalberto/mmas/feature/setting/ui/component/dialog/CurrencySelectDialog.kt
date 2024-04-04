@@ -35,6 +35,8 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun CurrencySelectDialog(
@@ -121,137 +123,20 @@ private fun List<CountryData>.searchForAnItem(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CurrencySelectDialog2(
-    modifier: Modifier = Modifier,
-    countryList: List<CountryData> = listOf(),
-    onDismissRequest: () -> Unit = {},
-    onSelected: (item: CountryData) -> Unit = {},
-    properties: DialogProperties = DialogProperties().let {
-        DialogProperties(
-            dismissOnBackPress = it.dismissOnBackPress,
-            dismissOnClickOutside = it.dismissOnClickOutside,
-            securePolicy = it.securePolicy,
-            usePlatformDefaultWidth = false,
-        )
-    },
-) {
-    var searchValue by remember { mutableStateOf("") }
-    var isSearch by remember { mutableStateOf(false) }
-    var filteredItems by remember { mutableStateOf(countryList) }
-
-    BasicAlertDialog(
-        modifier = modifier.fillMaxSize(),
-        onDismissRequest = onDismissRequest,
-        properties = properties,
-        content = {
-            Surface(
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Scaffold(
-                    topBar = {
-                        CenterAlignedTopAppBar(
-                            title = {
-                                if (isSearch) {
-                                    TopBarSearchTextField(
-                                        searchValue = searchValue,
-                                        onValueChange = { searchStr ->
-                                            searchValue = searchStr
-                                            filteredItems = countryList.searchForAnItem(searchStr)
-                                        }
-                                    )
-                                } else {
-                                    Text(
-                                        text = stringResource(id = R.string.feature_setting_select_currency),
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                }
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = {
-                                    onDismissRequest()
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                            actions = {
-                                IconButton(onClick = {
-                                    isSearch = !isSearch
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        contentDescription = null,
-                                    )
-                                }
-                            },
-                        )
-                    },
-                ) { paddingValues ->
-                    LazyColumn(
-                        Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize(),
-                    ) {
-                        val countriesData =
-                            if (searchValue.isEmpty()) {
-                                countryList
-                            } else {
-                                filteredItems
-                            }
-                        items(countriesData) { countryItem->
-                            ListItem(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onSelected(countryItem)
-                                    },
-                                leadingContent = {
-                                    Text (
-                                        text = countryItem.countryFlag,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                },
-                                headlineContent = {
-                                    Column{
-                                        Text(
-                                            text =  "${countryItem.currency.currencyCode} ( ${countryItem.currency.displayName})",
-                                            style = MaterialTheme.typography.titleMedium,
-                                        )
-                                        Text(
-                                            //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
-                                            text =   "${countryItem.countryName} ( ${countryItem.countryNameEng})",
-                                            style = MaterialTheme.typography.titleSmall,
-                                        )
-                                    }
-                                },
-                                trailingContent = {
-                                    Text(
-                                        //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
-                                        text =  countryItem.currency.symbol,
-                                        style = MaterialTheme.typography.titleMedium,
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    )
-}
-
-
 @DevicePreviews
 @Composable
 private fun CurrencySelectDialogPreview(){
     MmasTheme {
         CurrencySelectDialog(
-            countryList = SettingUseCase().getCountryList()
+            countryList = Locale.getISOCountries().map {
+                CountryData(
+                    countryCode = it,
+                    countryName = "countryName",
+                    countryNameEng = "countryNameEng",
+                    countryFlag = "f",
+                    currency = NumberFormat.getCurrencyInstance(Locale("", it)).currency
+                )
+            }
         )
     }
 }
