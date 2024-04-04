@@ -40,6 +40,9 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
 
+    //splashscreen
+    implementation (libs.androidx.splash)
+
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.androidx.compose)
 

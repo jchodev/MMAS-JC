@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.setting.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
@@ -8,6 +9,7 @@ import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +49,9 @@ class SettingViewModel @Inject constructor(
     }
 
     private fun updateUI(uiState: SettingUIDataState){
-        _uiState.value = uiState
+        viewModelScope.launch {
+            _uiState.value = uiState
+            settingUseCase.saveSetting(uiState.setting)
+        }
     }
 }

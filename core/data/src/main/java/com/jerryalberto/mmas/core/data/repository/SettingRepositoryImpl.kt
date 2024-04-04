@@ -18,9 +18,9 @@ class SettingRepositoryImpl @Inject constructor(
     @Dispatcher(MmasDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ): SettingRepository {
 
-    override suspend fun insertSetting(setting: Setting) {
+    override suspend fun saveSetting(setting: Setting) {
         withContext(ioDispatcher) {
-            dao.insertSetting(setting.asEntity())
+            dao.saveSetting(setting.asEntity())
         }
     }
 

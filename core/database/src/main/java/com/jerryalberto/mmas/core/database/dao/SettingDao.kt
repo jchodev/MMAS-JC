@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface SettingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSetting(settingEntity: SettingEntity): Long
+    suspend fun saveSetting(settingEntity: SettingEntity): Long
 
     @Query(
         value = """

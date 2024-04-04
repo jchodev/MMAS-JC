@@ -3,6 +3,7 @@ package com.jerryalberto.mmas.core.domain.usecase
 import com.jerryalberto.mmas.core.domain.repository.SettingRepository
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.Transaction
 import kotlinx.coroutines.flow.first
 import java.text.NumberFormat
 import java.util.Locale
@@ -11,6 +12,10 @@ import javax.inject.Inject
 class SettingUseCase @Inject constructor(
     private val settingRepository: SettingRepository
 ) {
+
+    suspend fun saveSetting(setting: Setting){
+        settingRepository.saveSetting(setting = setting)
+    }
 
     //Country / Currency -----------
     fun getCountryList() : List<CountryData> {
