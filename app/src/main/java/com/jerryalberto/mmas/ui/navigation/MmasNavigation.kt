@@ -21,7 +21,6 @@ import com.jerryalberto.mmas.feature.calendar.ui.screen.CalendarScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 import com.jerryalberto.mmas.feature.transaction.ui.screen.TransactionScreen
 import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
@@ -32,9 +31,8 @@ import com.jerryalberto.mmas.feature.transaction.ui.screen.SearchScreen
 fun MmasNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
-
-    val settingViewModel: SettingViewModel = hiltViewModel()
     val setting = settingViewModel.settingState.collectAsState().value
 
     NavHost(

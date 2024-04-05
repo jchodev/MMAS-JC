@@ -97,6 +97,17 @@ class SettingViewModel @Inject constructor(
         saveTransaction()
     }
 
+    fun onThemeSelected(theme: String){
+        updateUI(
+            uiState = uiState.value.copy(
+                setting = uiState.value.setting.copy(
+                    theme = theme
+                )
+            )
+        )
+        saveTransaction()
+    }
+
     private fun updateUI(uiState: SettingUIDataState){
         _uiState.value = uiState
         _settingState.value = uiState.setting

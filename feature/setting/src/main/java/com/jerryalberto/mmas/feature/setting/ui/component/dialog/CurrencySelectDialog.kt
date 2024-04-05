@@ -21,6 +21,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.jerryalberto.mmas.core.model.data.CountryData
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 
 import androidx.compose.ui.res.stringResource
 
@@ -46,39 +48,45 @@ fun CurrencySelectDialog(
     onSelected: (item: CountryData) -> Unit = {},
 ){
     val itemContent = @Composable { countryItem: CountryData  -> // Specify type and default
-        ListItem(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onSelected(countryItem)
-                },
-            leadingContent = {
-                Text (
-                    text = countryItem.countryFlag,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            },
-            headlineContent = {
-                Column{
-                    Text(
-                        text =  "${countryItem.currency.currencyCode} ( ${countryItem.currency.displayName})",
-                        style = MaterialTheme.typography.titleMedium,
+        Column(modifier = Modifier
+            .fillMaxWidth()
+        ) {
+            ListItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onSelected(countryItem)
+                    },
+                leadingContent = {
+                    Text (
+                        text = countryItem.countryFlag,
+                        style = MaterialTheme.typography.titleMedium
                     )
+                },
+                headlineContent = {
+                    Column{
+                        Text(
+                            text =  "${countryItem.currency.currencyCode} ( ${countryItem.currency.displayName})",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
+                            text =   "${countryItem.countryName} ( ${countryItem.countryNameEng})",
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                },
+                trailingContent = {
                     Text(
                         //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
-                        text =   "${countryItem.countryName} ( ${countryItem.countryNameEng})",
-                        style = MaterialTheme.typography.titleSmall,
+                        text =  countryItem.currency.symbol,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
-            },
-            trailingContent = {
-                Text(
-                    //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
-                    text =  countryItem.currency.symbol,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-        )
+            )
+            VerticalDivider()
+        }
+
     }
 
     var searchValue by remember { mutableStateOf("") }
