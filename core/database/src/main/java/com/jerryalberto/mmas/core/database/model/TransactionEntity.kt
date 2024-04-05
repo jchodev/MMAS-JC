@@ -41,20 +41,3 @@ fun TransactionEntity.toTransaction(): Transaction {
        minute = minute,
    )
 }
-
-fun Transaction.toTransactionEntity(): TransactionEntity {
-    val date = date.convertMillisToYearMonthDay()
-    return TransactionEntity (
-        id = id,
-        type = type?.value ?: "",
-        amount = amount,
-        category = category?.type?.value ?: "",
-        description = description,
-        uri = uri,
-        year =  date.first,
-        month = date.second,
-        day = date.third,
-        hour = hour,
-        minute = minute,
-    )
-}

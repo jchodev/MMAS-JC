@@ -11,9 +11,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,13 +22,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
+
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
@@ -39,19 +39,22 @@ import com.jerryalberto.mmas.feature.transaction.model.TransactionData
 @Composable
 fun SearchScreen(
     navController: NavController = rememberNavController(),
+    setting: Setting = Setting(),
     bundle: Bundle?,
 ) {
     SearchScreenContent(
         onTopBarLeftClick = {
             navController.popBackStack()
         },
-        transactionList = bundle?.getParcelableArrayList("list") ?: emptyList()
+        transactionList = bundle?.getParcelableArrayList(BundleParamKey.PARAM_LIST) ?: emptyList(),
+        setting = setting,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchScreenContent(
+    setting: Setting = Setting(),
     onTopBarLeftClick : () -> Unit = {},
     transactionList: (List<TransactionData>) = emptyList()
 ) {
@@ -72,29 +75,12 @@ private fun SearchScreenContent(
             TopAppBar(
                 modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
                 title = {
-                    TextField(
-                        modifier = Modifier.focusRequester(focusRequester),
-                        value = searchValue,
+                    TopBarSearchTextField(
+                        searchValue = searchValue,
                         onValueChange = { searchStr ->
                             searchValue = searchStr
                             filteredItems = transactionList.searchForAnItem(searchStr)
                         },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.feature_transaction_search),
-                                color = MaterialTheme.colorScheme.outline,
-                                style = MaterialTheme.typography.titleMedium,
-                            )
-                        },
-                        colors = TextFieldDefaults.colors(
-                            disabledContainerColor = Color.Transparent,
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                        ),
-                        textStyle = MaterialTheme.typography.labelLarge,
                     )
                 },
                 navigationIcon = {
@@ -128,7 +114,8 @@ private fun SearchScreenContent(
                     transactionList
                 } else {
                     filteredItems
-                }
+                },
+                setting = setting,
             )
         }
     }

@@ -26,7 +26,9 @@ class TransactionRepositoryImpl @Inject constructor(
 ): TransactionRepository {
 
     override suspend fun deleteAllTransaction() {
-        dao.deleteAllTransaction()
+        withContext(ioDispatcher) {
+            dao.deleteAllTransaction()
+        }
     }
 
     override suspend fun getTransactionByDate(date: Long): Flow<List<Transaction>> {
@@ -87,7 +89,9 @@ class TransactionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {
-        dao.insertTransaction(transaction.asEntity())
+        withContext(ioDispatcher) {
+            dao.insertTransaction(transaction.asEntity())
+        }
     }
 
     override suspend fun getListOfYearMonth(): Flow<List<TransactionYearMonthQueryResult>> {

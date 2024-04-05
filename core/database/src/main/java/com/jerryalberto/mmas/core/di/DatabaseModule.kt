@@ -26,7 +26,7 @@ internal object DatabaseModule {
     }
 
     @Provides
-    fun providesMoneyDao(
+    fun providesTransactionDao(
         database: MmasDatabase,
     ): TransactionDao = database.transactionDao()
 

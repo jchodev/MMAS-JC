@@ -22,30 +22,33 @@ import androidx.compose.ui.unit.dp
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Category
 
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.core.ui.model.CategoryGroup
+import com.jerryalberto.mmas.core.ui.ext.getImageVector
+import com.jerryalberto.mmas.core.ui.ext.getString
 
 @Composable
 fun CategoryItem(
     bgColor: Color = ColorConstant.ExpensesRedBg,
     iconColor: Color = ColorConstant.ExpensesRed,
     textColor: Color = Color.Black,
-    category: CategoryGroup,
-    onCategorySelected: (CategoryGroup) -> Unit = {}
+    category: Category,
+    onCategorySelected: (Category) -> Unit = {}
 ) {
     Column(
         modifier =
-            Modifier.width(100.dp)
-                .clickable {
-                    onCategorySelected.invoke(category)
-                }
+        Modifier
+            .width(100.dp)
+            .clickable {
+                onCategorySelected.invoke(category)
+            }
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategoryIcon(
-            icon =  ImageVector.vectorResource(category.imageResId),
-            contentDescription = stringResource(id = category.stringResId),
+            icon =  category.type.getImageVector(),
+            contentDescription = category.type.getString(),
             bgColor = bgColor,
             iconColor = iconColor
         )
@@ -53,7 +56,7 @@ fun CategoryItem(
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
 
         Text(
-            text = stringResource(id = category.stringResId),
+            text = category.type.getString(),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             color = textColor
@@ -67,10 +70,8 @@ fun CategoryItem(
 private fun CategoryItemPreview(){
 
     CategoryItem(
-        category = CategoryGroup(
-            type = CategoryType.FOOD,
-            imageResId = com.jerryalberto.mmas.core.ui.R.drawable.ic_taxi,
-            stringResId = R.string.copy
+        category = Category(
+            type = CategoryType.FOOD
         ),
     )
 }

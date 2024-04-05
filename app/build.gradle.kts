@@ -30,6 +30,8 @@ dependencies {
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":feature:home"))
     implementation(project(":feature:input"))
     implementation(project(":feature:analysis"))
@@ -39,6 +41,9 @@ dependencies {
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle)
+
+    //splashscreen
+    implementation (libs.androidx.splash)
 
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.androidx.compose)

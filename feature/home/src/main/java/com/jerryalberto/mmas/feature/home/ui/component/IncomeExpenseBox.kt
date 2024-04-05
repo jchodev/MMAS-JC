@@ -14,18 +14,26 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isUnspecified
 
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.ui.component.CategoryIcon
+import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 
 
@@ -65,7 +73,7 @@ fun IncomeExpenseBox2(
                 style = MaterialTheme.typography.titleSmall,
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen4))
-            Text(
+            AutoResizedText(
                 text = content,
                 color = textColor,
                 style = MaterialTheme.typography.titleLarge,
@@ -74,7 +82,7 @@ fun IncomeExpenseBox2(
     }
 }
 
-@Preview(showBackground = false)
+@DevicePreviews
 @Composable
 private fun IncomeExpenseBoxPreview(){
     MmasTheme {
@@ -82,7 +90,7 @@ private fun IncomeExpenseBoxPreview(){
     }
 }
 
-@Preview(showBackground = false)
+@DevicePreviews
 @Composable
 private fun TwoBoxPreview(){
     MmasTheme {
@@ -97,4 +105,47 @@ private fun TwoBoxPreview(){
             )
         }
     }
+}
+
+@Composable
+fun AutoResizedText(
+    text: String,
+    style: TextStyle = MaterialTheme.typography.titleLarge,
+    modifier: Modifier = Modifier,
+    color: Color = Color.White
+) {
+    var resizedTextStyle by remember {
+        mutableStateOf(style)
+    }
+    var shouldDraw by remember {
+        mutableStateOf(false)
+    }
+
+    val defaultFontSize = style.fontSize
+
+    Text(
+        text = text,
+        color = color,
+        modifier = modifier.drawWithContent {
+            if (shouldDraw) {
+                drawContent()
+            }
+        },
+        softWrap = false,
+        style = resizedTextStyle,
+        onTextLayout = { result ->
+            if (result.didOverflowWidth) {
+                if (style.fontSize.isUnspecified) {
+                    resizedTextStyle = resizedTextStyle.copy(
+                        fontSize = defaultFontSize
+                    )
+                }
+                resizedTextStyle = resizedTextStyle.copy(
+                    fontSize = resizedTextStyle.fontSize * 0.95
+                )
+            } else {
+                shouldDraw = true
+            }
+        }
+    )
 }

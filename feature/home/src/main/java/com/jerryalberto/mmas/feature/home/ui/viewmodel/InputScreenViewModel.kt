@@ -5,14 +5,14 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
+import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,16 +40,12 @@ class InputScreenViewModel @Inject constructor(
     private val _onSaved = MutableStateFlow<Boolean?>(null)
     val onSaved = _onSaved.asStateFlow()
 
-    fun getExpenseCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
-        return categoriesUseCase.getExpenseCategories().map {
-            it.toCategoryDisplay()
-        }
+    fun getExpenseCategories(): List<Category> {
+        return categoriesUseCase.getExpenseCategories()
     }
 
-    fun getIncomeCategories(): List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> {
-        return categoriesUseCase.getIncomeCategories().map {
-            it.toCategoryDisplay()
-        }
+    fun getIncomeCategories(): List<Category> {
+        return categoriesUseCase.getIncomeCategories()
     }
 
     fun onDescriptionChange(description: String){
@@ -79,7 +75,7 @@ class InputScreenViewModel @Inject constructor(
         )
     }
 
-    fun onCategorySelected(category: com.jerryalberto.mmas.core.ui.model.CategoryGroup){
+    fun onCategorySelected(category: Category){
         saveData(
             uiState = uiState.value.copy(
                 category = category
@@ -98,7 +94,6 @@ class InputScreenViewModel @Inject constructor(
             uiState = uiState.value.copy(
                 amount = amount,
                 amountString = amountString,
-                amountFormatted = uiHelper.formatAmount(amount)
             )
         )
     }
@@ -165,14 +160,6 @@ class InputScreenViewModel @Inject constructor(
             return
         }
 
-        if (uiState.value.amountFormatted.isBlank()){
-            saveData(
-                uiState = uiState.value.copy(
-                    amountError = context.getString(R.string.feature_home_error_field_require)
-                )
-            )
-            return
-        }
         if (uiState.value.amount!! <= 0.0){
             saveData(
                 uiState = uiState.value.copy(

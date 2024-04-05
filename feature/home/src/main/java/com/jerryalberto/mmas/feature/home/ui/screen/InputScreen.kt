@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +49,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
@@ -57,23 +61,53 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
+import com.jerryalberto.mmas.core.model.data.Category
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
+import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.getImageVector
+import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
+import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InputScreen(
+    navController: NavController = rememberNavController(),
     viewModel: InputScreenViewModel = hiltViewModel(),
-    onTopBarLeftClick: () -> Unit = {},
+    setting: Setting = Setting(),
+    bundle: Bundle?,
 ) {
+    bundle?.getString(BundleParamKey.PARAM_TYPE).let { type->
+        val transactionType = TransactionType.entries.find { it.value == type}
+        transactionType?.let {
+            viewModel.setTransactionType(it)
+        } ?: viewModel.setTransactionType(TransactionType.INCOME)
+    }
+
+    val onTopBarLeftClick: () -> Unit = {
+        navController.popBackStack()
+    }
+
+
+    val onSavedState by viewModel.onSaved.collectAsState(null)
+    // Handle navigation on successful save (optional):
+    if (onSavedState != null) {
+        LaunchedEffect(onSavedState) {
+            onTopBarLeftClick.invoke()
+        }
+    }
 
     InputScreenContent(
         state = viewModel.uiState.collectAsState().value,
+        setting = setting,
         onTopBarLeftClick = onTopBarLeftClick,
         expensesCategories = viewModel.getExpenseCategories(),
         incomeCategories = viewModel.getIncomeCategories(),
@@ -106,15 +140,16 @@ fun InputScreen(
 @Composable
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
+    setting: Setting = Setting(),
     onTopBarLeftClick: () -> Unit = {},
-    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
-    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
+    incomeCategories: List<Category> = listOf(),
+    expensesCategories: List<Category> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
             hour, minute ->
     },
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {},
+    onCategorySelected: (Category) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
@@ -219,7 +254,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 Text(
-                    text =  "$" + state.amountFormatted,
+                    text = state.amount?.formatAmount(setting = setting) ?: 0.0.formatAmount(setting = setting),
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -240,7 +275,7 @@ private fun InputScreenContent(
 
                 MmasTextEdit(
                     value = if (state.category != null) {
-                        stringResource(id = state.category.stringResId)
+                        state.category.type.getString()
                     } else {
                         ""
                     },
@@ -250,8 +285,8 @@ private fun InputScreenContent(
                     leadingIcon = {
                         if (state.category != null) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(state.category.imageResId),
-                                contentDescription = stringResource(id = state.category.stringResId),
+                                imageVector = state.category.type.getImageVector(),
+                                contentDescription = state.category.type.getString(),
                                 modifier = Modifier.size(
                                     MaterialTheme.dimens.dimen24
                                 ),
@@ -299,7 +334,7 @@ private fun InputScreenContent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
-                        value = state.dateString,
+                        value = state.date?.convertMillisToDate(setting.dateFormat) ?: "",
                         error = state.dateError,
                         placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,

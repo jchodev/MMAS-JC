@@ -1,6 +1,6 @@
 package com.jerryalberto.mmas.core.ui.component
 
-import android.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,23 +18,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
-import com.jerryalberto.mmas.core.ui.model.CategoryGroup
+import com.jerryalberto.mmas.core.ui.ext.getImageVector
+import com.jerryalberto.mmas.core.ui.ext.getString
 
 @Composable
 fun CategoryGroupBox(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: com.jerryalberto.mmas.core.ui.model.CategoryGroup,
+    category: Category,
     isExpenses: Boolean = true,
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {}
+    onCategorySelected: (Category) -> Unit = {}
 ){
     Column(
         modifier = modifier
@@ -74,8 +74,8 @@ fun CategoryGroupBox(
 
                     CategoryIcon(
                         size = MaterialTheme.dimens.dimen56,
-                        icon = ImageVector.vectorResource(category.imageResId),
-                        contentDescription = stringResource(id = category.stringResId),
+                        icon = category.type.getImageVector(),
+                        contentDescription = category.type.getString(),
                         bgColor = if (isExpenses) ColorConstant.ExpensesRedBg else ColorConstant.IncomeGreenBg,
                         iconColor = if (isExpenses) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
                     )
@@ -83,7 +83,7 @@ fun CategoryGroupBox(
                     Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
 
                     Text(
-                        text = stringResource(id = category.stringResId),
+                        text = category.type.getString(),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             color = MaterialTheme.colorScheme.onSecondary
                         ),
@@ -136,25 +136,17 @@ fun CategoryGroupBox(
 private fun CategoryGroupBoxPreview(){
     MmasTheme {
         CategoryGroupBox(
-            category = CategoryGroup(
+            category = Category(
                 type = CategoryType.FOOD_AND_BEVERAGES,
-                imageResId = R.mipmap.sym_def_app_icon,
-                stringResId = R.string.copy,
                 items = listOf(
-                    CategoryGroup(
+                    Category(
                         type = CategoryType.FOOD,
-                        imageResId = R.mipmap.sym_def_app_icon,
-                        stringResId = R.string.copy
                     ),
-                    CategoryGroup(
+                    Category(
                         type = CategoryType.BEVERAGES,
-                        imageResId = R.mipmap.sym_def_app_icon,
-                        stringResId = R.string.copy
                     ),
-                    CategoryGroup(
+                    Category(
                         type = CategoryType.GROCERIES,
-                        imageResId = R.mipmap.sym_def_app_icon,
-                        stringResId = R.string.copy
                     )
                 )
             ),
@@ -167,10 +159,8 @@ private fun CategoryGroupBoxPreview(){
 private fun CategoryGroupSinglePreview(){
     MmasTheme {
         CategoryGroupBox(
-            category = CategoryGroup(
+            category = Category(
                 type = CategoryType.FOOD_AND_BEVERAGES,
-                imageResId = R.mipmap.sym_def_app_icon,
-                stringResId = R.string.copy,
             ),
         )
     }
@@ -180,8 +170,8 @@ private fun CategoryGroupSinglePreview(){
 @Composable
 private fun CategorySingleGroup(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    category: CategoryGroup,
-    onCategorySelected: (CategoryGroup) -> Unit = {},
+    category: Category,
+    onCategorySelected: (Category) -> Unit = {},
     bgColor: Color = ColorConstant.ExpensesRedBg,
     iconColor: Color = ColorConstant.ExpensesRed
 ){
@@ -206,8 +196,8 @@ private fun CategorySingleGroup(
 
             CategoryIcon(
                 size = MaterialTheme.dimens.dimen56,
-                icon = ImageVector.vectorResource(category.imageResId),
-                contentDescription = stringResource(id = category.stringResId),
+                icon = category.type.getImageVector(),
+                contentDescription = category.type.getString(),
                 bgColor = bgColor,
                 iconColor = iconColor
             )
@@ -215,7 +205,7 @@ private fun CategorySingleGroup(
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.dimen8))
 
             Text(
-                text = stringResource(id = category.stringResId),
+                text = category.type.getString(),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     color = MaterialTheme.colorScheme.onSecondary
                 ),

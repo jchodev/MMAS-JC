@@ -27,6 +27,8 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:ui"))
     implementation(project(":core:testing"))
+    implementation(project(":feature:setting"))
+
 
 
     implementation(libs.androidx.core)

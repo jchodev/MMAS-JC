@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Transaction(
-    var id: Long = 0,
+    val id: Long = 0,
     val type : TransactionType? = null,
     val amount: Double,
     val category : Category?= null,
@@ -15,3 +15,4 @@ data class Transaction(
     val hour: Int,
     val minute: Int,
 ) : Parcelable
+

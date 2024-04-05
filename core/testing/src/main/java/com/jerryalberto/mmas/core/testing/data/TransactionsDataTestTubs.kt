@@ -1,8 +1,6 @@
 package com.jerryalberto.mmas.core.testing.data
 
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
-import com.jerryalberto.mmas.core.database.model.toTransaction
-import com.jerryalberto.mmas.core.database.model.toTransactionEntity
 import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
 import java.util.Calendar
 

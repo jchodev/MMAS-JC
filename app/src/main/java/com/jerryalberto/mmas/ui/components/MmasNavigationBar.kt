@@ -21,8 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 
 data class BottomBarItem(
+    val route: String,
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
@@ -31,19 +33,16 @@ data class BottomBarItem(
 
 @Composable
 fun BottomBar(
-    items : List<BottomBarItem>
+    items : List<BottomBarItem>,
+    currentSelectedScreen: MmasScreen
 ){
-
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
 
     NavigationBar {
         items.forEachIndexed { index, item ->
+            val selected = currentSelectedScreen.route == item.route
             NavigationBarItem(
-                selected = selectedItemIndex == index,
+                selected = selected,
                 onClick = {
-                    selectedItemIndex = index
                     item.onClick.invoke()
                 },
                 label = {
@@ -52,7 +51,7 @@ fun BottomBar(
                 alwaysShowLabel = true,
                 icon = {
                     Icon(
-                        imageVector = if (index == selectedItemIndex) {
+                        imageVector = if (selected) {
                             item.selectedIcon
                         } else item.unselectedIcon,
                         contentDescription = item.title
@@ -69,23 +68,23 @@ fun BottomBar(
 private fun BottomBarPreview() {
     MmasTheme {
         BottomBar(
+            currentSelectedScreen = MmasScreen.HomeScreen,
             items = listOf(
                 BottomBarItem(
+                    route = MmasScreen.HomeScreen.route,
                     title = "Add",
                     selectedIcon = Icons.Filled.Add,
                     unselectedIcon = Icons.Outlined.Add
                 ),
                 BottomBarItem(
-                    title = "Analysis",
+                    route = MmasScreen.TransactionScreen.route,
+                    title = "Transaction",
                     selectedIcon = Icons.Filled.Face,
                     unselectedIcon = Icons.Outlined.Face
                 ),
+
                 BottomBarItem(
-                    title = "Calendar",
-                    selectedIcon = Icons.Filled.DateRange,
-                    unselectedIcon = Icons.Outlined.DateRange
-                ),
-                BottomBarItem(
+                    route = MmasScreen.SettingScreen.route,
                     title = "Setting",
                     selectedIcon = Icons.Filled.Settings,
                     unselectedIcon = Icons.Outlined.Settings
