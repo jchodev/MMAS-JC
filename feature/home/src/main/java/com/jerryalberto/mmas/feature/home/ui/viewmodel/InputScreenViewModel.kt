@@ -94,7 +94,6 @@ class InputScreenViewModel @Inject constructor(
             uiState = uiState.value.copy(
                 amount = amount,
                 amountString = amountString,
-                amountFormatted = uiHelper.formatAmount(amount)
             )
         )
     }
@@ -161,14 +160,6 @@ class InputScreenViewModel @Inject constructor(
             return
         }
 
-        if (uiState.value.amountFormatted.isBlank()){
-            saveData(
-                uiState = uiState.value.copy(
-                    amountError = context.getString(R.string.feature_home_error_field_require)
-                )
-            )
-            return
-        }
         if (uiState.value.amount!! <= 0.0){
             saveData(
                 uiState = uiState.value.copy(

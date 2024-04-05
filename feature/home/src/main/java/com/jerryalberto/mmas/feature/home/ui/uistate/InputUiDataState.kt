@@ -15,7 +15,6 @@ data class InputUiDataState(
 
     val amount: Double? = null,
     val amountString: String = "",
-    val amountFormatted: String = "",
     val amountError: String? = null,
 
     val date: Long? = null,

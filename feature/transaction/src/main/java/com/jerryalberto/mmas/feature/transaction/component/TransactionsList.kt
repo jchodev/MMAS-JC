@@ -17,6 +17,7 @@ import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
@@ -31,7 +32,7 @@ import java.util.Calendar
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsList(
-    uiHelper: UiHelper = UiHelper(),
+    setting: Setting = Setting(),
     modifier:Modifier = Modifier,
     transactionData: List<TransactionData> = listOf()
 ) {
@@ -49,7 +50,7 @@ fun TransactionsList(
                         }
                         TransactionHeader(
                             bgColor = MaterialTheme.colorScheme.surfaceVariant,
-                            leftText = group.date.convertMillisToDate("dd/MM/yyyy"),
+                            leftText = group.date.convertMillisToDate(setting.dateFormat),
                             rightText = group.totalAmount.formatAmount(withPlus = true),
                             rightTextColor =  if (group.totalAmount < 0.0) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
                         )
@@ -62,6 +63,7 @@ fun TransactionsList(
                     items = group.transactions
                 ) {
                     TransactionItem(
+                        setting = setting,
                         transaction = it
                     )
                 }

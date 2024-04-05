@@ -29,6 +29,8 @@ import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
@@ -37,19 +39,22 @@ import com.jerryalberto.mmas.feature.transaction.model.TransactionData
 @Composable
 fun SearchScreen(
     navController: NavController = rememberNavController(),
+    setting: Setting = Setting(),
     bundle: Bundle?,
 ) {
     SearchScreenContent(
         onTopBarLeftClick = {
             navController.popBackStack()
         },
-        transactionList = bundle?.getParcelableArrayList("list") ?: emptyList()
+        transactionList = bundle?.getParcelableArrayList(BundleParamKey.PARAM_LIST) ?: emptyList(),
+        setting = setting,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchScreenContent(
+    setting: Setting = Setting(),
     onTopBarLeftClick : () -> Unit = {},
     transactionList: (List<TransactionData>) = emptyList()
 ) {
@@ -109,7 +114,8 @@ private fun SearchScreenContent(
                     transactionList
                 } else {
                     filteredItems
-                }
+                },
+                setting = setting,
             )
         }
     }

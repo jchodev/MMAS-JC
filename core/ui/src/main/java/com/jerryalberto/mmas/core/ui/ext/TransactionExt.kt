@@ -3,6 +3,7 @@ package com.jerryalberto.mmas.core.ui.ext
 import androidx.compose.ui.graphics.Color
 
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 
 import com.jerryalberto.mmas.core.model.data.TransactionType
@@ -13,13 +14,13 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 //    return stringResource(stringResId)
 //}
 
-fun Transaction.formatAmount(currencySymbol: String = "$"): String {
+fun Transaction.formatAmount(setting: Setting = Setting()): String {
     return when (this.type) {
         TransactionType.INCOME -> this.amount.formatAmount(
-            currencySymbol = currencySymbol, withPlus = true
+            setting = setting, withPlus = true
         )
         else -> (this.amount * -1).formatAmount(
-            currencySymbol = currencySymbol
+            setting = setting
         )
     }
 }

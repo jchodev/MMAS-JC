@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.ui.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,12 +30,12 @@ import com.jerryalberto.mmas.feature.transaction.ui.screen.SearchScreen
 
 @Composable
 fun MmasNavigation(
-    homeScreenViewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
 
     val settingViewModel: SettingViewModel = hiltViewModel()
+    val setting = settingViewModel.settingState.collectAsState().value
 
     NavHost(
         modifier = modifier,
@@ -43,11 +44,15 @@ fun MmasNavigation(
     ) {
 
         composable(MmasScreen.HomeScreen.route) {
-            HomeScreen(homeScreenViewModel = homeScreenViewModel, navController = navController)
+            HomeScreen(navController = navController, setting = setting)
         }
 
         composable(MmasScreen.InputScreen.route) {
-            InputScreen()
+            InputScreen(
+                navController = navController,
+                bundle = it.arguments,
+                setting = setting,
+            )
         }
 
         composable(MmasScreen.AnalysisScreen.route) {
@@ -74,7 +79,8 @@ fun MmasNavigation(
 
         composable(MmasScreen.TransactionScreen.route) {
             TransactionScreen(
-                navController = navController
+                settingViewModel = settingViewModel,
+                navController = navController,
             )
         }
 

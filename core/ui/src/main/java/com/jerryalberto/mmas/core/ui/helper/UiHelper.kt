@@ -51,13 +51,6 @@ class UiHelper {
         }
     }
 
-    fun formatAmount(amount: Double, type: TransactionType): String {
-        val amountStr = formatAmount(amount)
-        return if (type == TransactionType.EXPENSES)
-            "- ".plus(amountStr)
-        else
-            "+ ".plus(amountStr)
-    }
 
     fun displayDateTime(date: Long, hour: Int, minute:Int): String {
         val timeStr = displayHourMinute(hour = hour, minute = minute);

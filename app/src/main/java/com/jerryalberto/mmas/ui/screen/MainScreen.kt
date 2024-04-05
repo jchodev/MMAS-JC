@@ -15,7 +15,6 @@ import com.jerryalberto.mmas.ui.navigation.MmasNavigation
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     bottomBar: @Composable () -> Unit = {}
 ) {
     Scaffold (
@@ -24,7 +23,6 @@ fun MainScreen(
     ) { paddingValues ->
 
         MmasNavigation(
-            homeScreenViewModel = homeScreenViewModel,
             modifier = Modifier.padding(paddingValues),
             navController = navController
         )

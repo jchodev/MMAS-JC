@@ -29,12 +29,15 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
+import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.navigate
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.core.ui.screen.MmasScreen
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
@@ -46,18 +49,21 @@ import java.util.Calendar
 
 @Composable
 fun TransactionScreen(
+    settingViewModel: SettingViewModel = hiltViewModel(),
     viewModel: TransactionViewModel = hiltViewModel(),
     navController: NavController = rememberNavController(),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+
     TransactionScreenContent(
         uiState = uiState,
+        setting = settingViewModel.settingState.collectAsState().value,
         onYearMonthItemClick = {
             viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
         },
         onSearchClick = {
             val bundle = Bundle()
-            bundle.putParcelableArrayList("list", ArrayList(uiState.transactionList))
+            bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
             navController.navigate(
                 route = MmasScreen.SearchScreen.route,
                 args = bundle
@@ -70,6 +76,7 @@ fun TransactionScreen(
 @Composable
 private fun TransactionScreenContent(
     uiState: TransactionUIDataState = TransactionUIDataState(),
+    setting: Setting = Setting(),
     onYearMonthItemClick : (YearMonthItem) -> Unit = {},
     onSearchClick: () -> Unit = {}
 ){
@@ -93,7 +100,8 @@ private fun TransactionScreenContent(
 
         Column (modifier = Modifier
             .padding(paddingValues)
-            .padding(MaterialTheme.dimens.dimen16)){
+            .padding(MaterialTheme.dimens.dimen16))
+        {
             LazyRow {
                 uiState.listOfYearMonth.forEach {
                     item {
@@ -112,6 +120,7 @@ private fun TransactionScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
 
             TransactionsList(
+                setting = setting,
                 transactionData = uiState.transactionList
             )
         }

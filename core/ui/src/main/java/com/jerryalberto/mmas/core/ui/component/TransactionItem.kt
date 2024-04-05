@@ -21,6 +21,7 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
@@ -34,6 +35,7 @@ import java.util.Calendar
 
 @Composable
 fun TransactionItem(
+    setting: Setting = Setting(),
     uiHelper: UiHelper = UiHelper(),
     modifier: Modifier = Modifier,
     transaction: Transaction,
@@ -76,11 +78,7 @@ fun TransactionItem(
             verticalArrangement = Arrangement.Center,
         ){
             Text(
-//                text = uiHelper.formatAmount(
-//                    amount = transaction.amount,
-//                    type = transaction.type ?: TransactionType.EXPENSES
-//                ),
-                text = transaction.formatAmount(),
+                text = transaction.formatAmount(setting = setting),
                 color = colors.first,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.align(Alignment.End)

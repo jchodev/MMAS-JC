@@ -1,9 +1,11 @@
 package com.jerryalberto.mmas.core.ui.ext
 
+import com.jerryalberto.mmas.core.model.data.Setting
 import java.text.NumberFormat
+import java.util.Locale
 
 
-fun Double.formatAmount(currencySymbol: String = "$", withPlus: Boolean = false): String {
+fun Double.formatAmount( setting: Setting = Setting(), withCurrencySymbol:Boolean = true, withPlus: Boolean = false): String {
     //negative
     val isNegative = this < 0.0
     val amountForCalc = if (isNegative){
@@ -12,11 +14,15 @@ fun Double.formatAmount(currencySymbol: String = "$", withPlus: Boolean = false)
         this
     }
 
-    val numberFormat = NumberFormat.getNumberInstance()
-    numberFormat.minimumFractionDigits = 2
-    numberFormat.maximumFractionDigits = 2
+    val format: NumberFormat = if (withCurrencySymbol) {
+        NumberFormat.getCurrencyInstance(Locale("", setting.countryCode ))
+    } else {
+        NumberFormat.getInstance()
+    }
+    format.setMinimumFractionDigits(2)
+    format.setMaximumFractionDigits(2)
 
-    val formattedStr = currencySymbol+ numberFormat.format(amountForCalc / 100)
+    val formattedStr = format.format(amountForCalc / 100)
 
     return if (isNegative) {
         "- ".plus(formattedStr)

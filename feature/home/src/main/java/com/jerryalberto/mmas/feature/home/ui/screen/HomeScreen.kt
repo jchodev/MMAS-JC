@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,22 +32,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.ui.InputActivity
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
+import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.navigate
+import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
@@ -53,11 +60,11 @@ import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel,
-    navController: NavHostController,
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    setting: Setting = Setting(),
+    navController: NavHostController = rememberNavController()
 ) {
     val uiState = homeScreenViewModel.uiState.collectAsState().value
-    val context = LocalContext.current
 
     val floatingActionButton = @Composable {
         MultiFloatingActionButton (
@@ -70,9 +77,12 @@ fun HomeScreen(
                     bgColor = ColorConstant.IncomeGreen,
                     iconColor = Color.White,
                     onFabItemClicked = {
-                        val intent = Intent(context, InputActivity::class.java)
-                        intent.putExtra(InputActivity.PARAM_TYPE, TransactionType.INCOME.value)
-                        context.startActivity(intent)
+                        val bundle = Bundle()
+                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.INCOME.value)
+                        navController.navigate(
+                            route = MmasScreen.InputScreen.route,
+                            args = bundle
+                        )
                     }
                 ),
                 FabItem(
@@ -81,9 +91,12 @@ fun HomeScreen(
                     bgColor = ColorConstant.ExpensesRed,
                     iconColor = Color.White,
                     onFabItemClicked = {
-                        val intent = Intent(context, InputActivity::class.java)
-                        intent.putExtra(InputActivity.PARAM_TYPE, TransactionType.EXPENSES.value)
-                        context.startActivity(intent)
+                        val bundle = Bundle()
+                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.EXPENSES.value)
+                        navController.navigate(
+                            route = MmasScreen.InputScreen.route,
+                            args = bundle
+                        )
                     }
                 )
             )
@@ -94,10 +107,14 @@ fun HomeScreen(
     ) { paddingValues ->
         HomeScreenContent(
             uiState = uiState,
+            setting = setting,
             onTypeClicked = {
                 homeScreenViewModel.getAmountByType(
                     it
                 )
+            },
+            onSeeAllClick = {
+                navController.navigate(MmasScreen.SearchScreen.route)
             }
         )
     }
@@ -106,8 +123,10 @@ fun HomeScreen(
 
 @Composable
 private fun HomeScreenContent(
+    setting: Setting = Setting(),
     uiState : HomeUIDataState,
-    onTypeClicked: (AccountBalanceDataType) -> Unit = {}
+    onTypeClicked: (AccountBalanceDataType) -> Unit = {},
+    onSeeAllClick: () -> Unit = {},
 ) {
     val accountBalanceDataTypeDesc = when (uiState.type) {
         AccountBalanceDataType.TOTAL -> stringResource(id = R.string.feature_home_total)
@@ -135,7 +154,7 @@ private fun HomeScreenContent(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                 Text(
-                    text = uiState.getTotalAmount().formatAmount(),
+                    text = uiState.getTotalAmount().formatAmount(setting = setting),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.displayMedium,
                 )
@@ -152,14 +171,14 @@ private fun HomeScreenContent(
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = uiState.totalIncome.formatAmount()
+                    content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    content = uiState.totalExpenses.formatAmount()
+                    content = uiState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
             }
         }
@@ -253,13 +272,12 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             TransactionHeader(
                 leftText = stringResource(id = R.string.feature_home_recent_transaction),
-                rightText = stringResource(id = R.string.feature_home_sell_all),
-                rightTextOnClick = {
-
-                }
+                rightText = stringResource(id = R.string.feature_home_see_all),
+                rightTextOnClick = onSeeAllClick
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             TransactionBox(
+                setting = setting,
                 transactions = uiState.latestTransaction
             )
         }

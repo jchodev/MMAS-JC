@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import java.util.Calendar
@@ -17,6 +18,7 @@ import java.util.Calendar
 @Composable
 fun TransactionBox(
     modifier: Modifier = Modifier,
+    setting: Setting = Setting(),
     transactions: List<Transaction> = listOf(),
 ) {
     Column (
@@ -30,6 +32,7 @@ fun TransactionBox(
         //items
         transactions.forEach {
             TransactionItem(
+                setting = setting,
                 transaction = it
             )
         }
