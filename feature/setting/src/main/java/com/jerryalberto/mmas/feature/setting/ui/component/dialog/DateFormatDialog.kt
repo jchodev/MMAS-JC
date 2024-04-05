@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
 

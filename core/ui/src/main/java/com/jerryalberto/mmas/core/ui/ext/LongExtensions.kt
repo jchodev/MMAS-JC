@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.core.designsystem.utils
+package com.jerryalberto.mmas.core.ui.ext
 
 import java.text.SimpleDateFormat
 import java.util.Date

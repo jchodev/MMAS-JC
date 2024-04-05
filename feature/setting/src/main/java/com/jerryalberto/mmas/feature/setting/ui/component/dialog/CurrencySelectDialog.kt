@@ -30,9 +30,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 
 import androidx.compose.ui.res.stringResource
-import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
+
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
+
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
 import java.text.NumberFormat

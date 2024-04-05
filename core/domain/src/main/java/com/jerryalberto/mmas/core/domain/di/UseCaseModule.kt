@@ -1,6 +1,6 @@
 package com.jerryalberto.mmas.core.domain.di
 
-import com.jerryalberto.mmas.core.domain.repository.SettingRepository
+import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
 import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
@@ -23,8 +23,10 @@ internal object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideSettingUseCase(settingRepository: SettingRepository): SettingUseCase {
-        return SettingUseCase(settingRepository = settingRepository)
+    fun provideSettingUseCase(settingPreferenceRepository: SettingPreferenceRepository): SettingUseCase {
+        return SettingUseCase(
+            settingPreferenceRepository = settingPreferenceRepository
+        )
     }
 
 

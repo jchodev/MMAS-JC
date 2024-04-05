@@ -16,15 +16,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.getColors
+import com.jerryalberto.mmas.core.ui.ext.getImageVector
+import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.helper.UiHelper
-import com.jerryalberto.mmas.core.ui.model.CategoryGroup
-import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
+
 
 import java.util.Calendar
 
@@ -34,11 +38,11 @@ fun TransactionItem(
     modifier: Modifier = Modifier,
     transaction: Transaction,
 ) {
-    val category = transaction.category?.toCategoryDisplay() ?: CategoryGroup(
+    val category = transaction.category ?: Category(
         CategoryType.ACCESSORIES
     )
     
-    val colors = uiHelper.getColorByTransactionType(transaction.type)
+    val colors = transaction.type.getColors()
 
     Row (
        modifier = modifier.padding(MaterialTheme.dimens.dimen16),
@@ -46,8 +50,8 @@ fun TransactionItem(
     ) {
         CategoryIcon(
             size = MaterialTheme.dimens.dimen56,
-            icon = ImageVector.vectorResource(category.imageResId),
-            contentDescription = stringResource(id = category.stringResId),
+            icon = category.type.getImageVector(),
+            contentDescription = category.type.getString(),
             iconColor = colors.first,
             bgColor = colors.second
         )
@@ -57,7 +61,7 @@ fun TransactionItem(
             verticalArrangement = Arrangement.Center,
         ){
             Text(
-                text = stringResource(id = category.stringResId),
+                text = category.type.getString(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -72,10 +76,11 @@ fun TransactionItem(
             verticalArrangement = Arrangement.Center,
         ){
             Text(
-                text = uiHelper.formatAmount(
-                    amount = transaction.amount,
-                    type = transaction.type ?: TransactionType.EXPENSES
-                ),
+//                text = uiHelper.formatAmount(
+//                    amount = transaction.amount,
+//                    type = transaction.type ?: TransactionType.EXPENSES
+//                ),
+                text = transaction.formatAmount(),
                 color = colors.first,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.align(Alignment.End)

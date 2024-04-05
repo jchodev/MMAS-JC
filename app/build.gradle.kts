@@ -30,6 +30,7 @@ dependencies {
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
+    implementation(project(":core:domain"))
     implementation(project(":feature:home"))
     implementation(project(":feature:input"))
     implementation(project(":feature:analysis"))

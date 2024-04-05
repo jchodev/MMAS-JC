@@ -51,10 +51,7 @@ class HomeScreenViewModel @Inject constructor(
                                 loading = false,
                                 latestTransaction = it.data.first,
                                 totalIncome = it.data.second.income,
-                                totalIncomeStr = uiHelper.formatAmount(it.data.second.income),
                                 totalExpenses = it.data.second.expenses,
-                                totalExpensesStr = uiHelper.formatAmount(it.data.second.expenses),
-                                totalAmountStr = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
                             )
                         )
                     }
@@ -87,11 +84,8 @@ class HomeScreenViewModel @Inject constructor(
                             uiState = uiState.value.copy(
                                 type = type,
                                 loading = false,
-                                totalIncomeStr = uiHelper.formatAmount(it.data.income),
                                 totalIncome = it.data.income,
-                                totalExpensesStr = uiHelper.formatAmount(it.data.expenses),
                                 totalExpenses = it.data.expenses,
-                                totalAmountStr = uiHelper.formatAmount(it.data.income - it.data.expenses)
                             )
                         )
                     }

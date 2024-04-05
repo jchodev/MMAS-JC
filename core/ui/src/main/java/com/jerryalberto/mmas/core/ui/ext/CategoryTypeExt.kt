@@ -1,32 +1,25 @@
-package com.jerryalberto.mmas.core.ui.model
+package com.jerryalberto.mmas.core.ui.ext
 
-import android.os.Parcelable
-import com.jerryalberto.mmas.core.model.data.Category
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.ui.R
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class CategoryGroup (
-    val type: CategoryType,
-    val imageResId: Int = 0,
-    val stringResId: Int = 0,
-    val items: List<CategoryGroup> = listOf(),
-): Parcelable
 
-fun CategoryGroup.toCategory(): Category = Category(
-    type = type,
-    items = items.map {
-        it.toCategory()
-    }
-)
+@Composable
+fun CategoryType.getString(): String {
+    val stringResId = getStringResId(this)
+    return stringResource(stringResId)
+}
 
-fun Category.toCategoryDisplay(): CategoryGroup = CategoryGroup(
-    type = type,
-    imageResId = getImageResId(type),
-    stringResId = getStringResId(type),
-    items = items.map { it.toCategoryDisplay() }
-)
+@Composable
+fun CategoryType.getImageVector(): ImageVector {
+    val imageResId = getImageResId(this)
+    return ImageVector.vectorResource(imageResId)
+}
+
 
 private fun getImageResId(categoryType: CategoryType): Int {
     return when (categoryType){

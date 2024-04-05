@@ -85,6 +85,8 @@ private fun basicApply(project: Project, withJetpack: Boolean = true){
                 }
             }
 
+            buildFeatures.buildConfig = true
+
             if (withJetpack) {
                 buildFeatures.compose = true
             }

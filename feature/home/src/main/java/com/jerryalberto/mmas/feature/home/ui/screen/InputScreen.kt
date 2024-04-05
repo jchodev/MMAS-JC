@@ -57,7 +57,11 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTransformation
+import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.getImageVector
+import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
@@ -107,14 +111,14 @@ fun InputScreen(
 private fun InputScreenContent(
     state: InputUiDataState = InputUiDataState(),
     onTopBarLeftClick: () -> Unit = {},
-    incomeCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
-    expensesCategories: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
+    incomeCategories: List<Category> = listOf(),
+    expensesCategories: List<Category> = listOf(),
     onDescriptionChange: (String)-> Unit = {},
     onDateSelected: (Long) -> Unit = {},
     onTimeSelected: (Int, Int) -> Unit = {
             hour, minute ->
     },
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {},
+    onCategorySelected: (Category) -> Unit = {},
     onAmountChange: (String) -> Unit = {},
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
@@ -219,7 +223,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 Text(
-                    text =  "$" + state.amountFormatted,
+                    text = state.amount?.formatAmount() ?: "$",
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -240,7 +244,7 @@ private fun InputScreenContent(
 
                 MmasTextEdit(
                     value = if (state.category != null) {
-                        stringResource(id = state.category.stringResId)
+                        state.category.type.getString()
                     } else {
                         ""
                     },
@@ -250,8 +254,8 @@ private fun InputScreenContent(
                     leadingIcon = {
                         if (state.category != null) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(state.category.imageResId),
-                                contentDescription = stringResource(id = state.category.stringResId),
+                                imageVector = state.category.type.getImageVector(),
+                                contentDescription = state.category.type.getString(),
                                 modifier = Modifier.size(
                                     MaterialTheme.dimens.dimen24
                                 ),

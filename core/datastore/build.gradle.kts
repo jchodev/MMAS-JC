@@ -4,38 +4,33 @@ plugins {
     id ("org.jetbrains.kotlin.android")
 
     id("module-without-jetpack-plugin")
+
+    id("kotlin-parcelize")
+
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt)
+
+    alias(libs.plugins.kotlin.serialization)
 }
 
-
 android {
-    namespace = "com.jerryalberto.mmas.core.data"
+    namespace = "com.jerryalberto.mmas.core.datastore"
 }
 
 dependencies {
-    implementation(project(":core:database"))
-    implementation(project(":core:datastore"))
     implementation(project(":core:common"))
-    implementation(project(":core:domain"))
     implementation(project(":core:model"))
-
 
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
 
-    //room
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
-
-    //timber
     implementation(libs.timber)
 
-    //junit5
-    testImplementation(libs.bundles.junit5.test.implementation)
-    testRuntimeOnly(libs.bundles.junit5.test.runtime.only)
-    testImplementation(project(":core:testing"))
+    //datastore
+    implementation (libs.androidx.datastore.core)
+    implementation (libs.androidx.datastore)
+
+    implementation( libs.kotlinx.serialization.json)
 }

@@ -3,7 +3,6 @@ package com.jerryalberto.mmas.core.di
 import android.content.Context
 import androidx.room.Room
 import com.jerryalberto.mmas.core.database.MmasDatabase
-import com.jerryalberto.mmas.core.database.dao.SettingDao
 import com.jerryalberto.mmas.core.database.dao.TransactionDao
 import dagger.Module
 import dagger.Provides
@@ -31,8 +30,4 @@ internal object DatabaseModule {
         database: MmasDatabase,
     ): TransactionDao = database.transactionDao()
 
-    @Provides
-    fun providesSettingDao(
-        database: MmasDatabase,
-    ): SettingDao = database.settingDao()
 }

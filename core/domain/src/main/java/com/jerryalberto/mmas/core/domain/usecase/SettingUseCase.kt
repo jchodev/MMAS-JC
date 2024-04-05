@@ -1,29 +1,45 @@
 package com.jerryalberto.mmas.core.domain.usecase
 
-import com.jerryalberto.mmas.core.domain.repository.SettingRepository
+import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
+
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
-import com.jerryalberto.mmas.core.model.data.Transaction
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import timber.log.Timber
 import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
 
 class SettingUseCase @Inject constructor(
-    private val settingRepository: SettingRepository
+    private val settingPreferenceRepository: SettingPreferenceRepository
 ) {
 
     suspend fun saveSetting(setting: Setting){
-        settingRepository.saveSetting(setting = setting)
+        Timber.d("SettingUseCase::saveSetting!!${setting}")
+        return settingPreferenceRepository.saveSetting(setting = setting)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun getSetting(): Flow<Setting> {
+
+        return settingPreferenceRepository.getSetting().flatMapLatest { setting->
+            Timber.d("SettingUseCase::getSetting():${setting}")
+            if (setting.countryCode.isEmpty()){
+                val defaultSetting = getDefaultSetting()
+                saveSetting(defaultSetting)
+                flowOf(defaultSetting)
+            } else {
+                flowOf(setting)
+            }
+        }
     }
 
     //Country / Currency -----------
-    fun getCountryList() : List<CountryData> {
-        return Locale.getISOCountries().map {
-            getCountryDataByCountryCode(
-                countryCode = it
-            )
-        }
+    fun getCountryList() : List<String> {
+        return Locale.getISOCountries().toList()
     }
 
     private fun getCountryDataByCountryCode(countryCode: String): CountryData {
@@ -62,19 +78,11 @@ class SettingUseCase @Inject constructor(
         )
     }
 
-    suspend fun getSetting(): Setting {
-        var setting = settingRepository.getSetting().first() ?: getDefaultSetting()
-        setting = setting.copy(
-            countryData = getDefaultCountry(countryCode = setting.countryCode)
-        )
-        return setting
-    }
-
     private fun getDefaultSetting(): Setting {
         return Setting(
             countryCode = Locale.getDefault().country,
             theme = "Dark",
-            dateFormat = "yyyy-mm-dd",
+            dateFormat = "yyyy-MM-dd",
             use24HourFormat = true,
         )
     }

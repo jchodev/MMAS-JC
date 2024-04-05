@@ -1,8 +1,6 @@
 package com.jerryalberto.mmas.core.ui.helper
 
-import androidx.compose.ui.graphics.Color
-import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
-import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import java.text.NumberFormat
 import java.util.Calendar
@@ -79,12 +77,4 @@ class UiHelper {
         return calendar.timeInMillis
     }
 
-    fun getColorByTransactionType(transactionType: TransactionType?): Pair<Color, Color> {
-        var bgColor = Pair(ColorConstant.ExpensesRed, ColorConstant.ExpensesRedBg)
-        if (transactionType == TransactionType.INCOME){
-            bgColor = Pair(ColorConstant.IncomeGreen, ColorConstant.IncomeGreenBg)
-        }
-        //bgColor = Pair(ColorConstant.IncomeGreen, Color.White)
-        return bgColor
-    }
 }

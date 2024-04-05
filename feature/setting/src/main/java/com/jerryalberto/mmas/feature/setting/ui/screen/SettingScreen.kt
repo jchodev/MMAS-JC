@@ -15,15 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
-import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.model.data.CountryData
+import com.jerryalberto.mmas.core.ui.ext.toCountryData
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
-import com.jerryalberto.mmas.core.ui.screen.MmasScreen
 import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.component.SettingItem
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.CurrencySelectDialog
@@ -40,7 +37,7 @@ fun SettingScreen(
         uiState = viewModel.uiState.collectAsState().value,
         countryList = viewModel.getCountryList(),
         onCountrySelected = {
-            viewModel.onCountryDataSelected(it)
+            viewModel.onCountryDataSelected(it.countryCode)
         },
         dateFormatList = viewModel.getDateFormatList(),
         onDateFormatSelected = {
@@ -105,7 +102,7 @@ private fun SettingScreenContent(
             item {
                 SettingItem(
                     title = "Currency",
-                    selectedValue = uiState.setting.countryData?.currency?.symbol ?: "$",
+                    selectedValue = uiState.setting.countryCode.toCountryData().currency.symbol,
                     onClick = {
                         openCountrySelectDialog = true
                     }

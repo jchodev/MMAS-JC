@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.database.model.toTransaction
+import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
@@ -13,12 +14,14 @@ import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataSta
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionViewModel  @Inject constructor(
     private val transactionUseCase: TransactionUseCase,
+    private val settingUseCase: SettingUseCase
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow<TransactionUIDataState>(TransactionUIDataState())
@@ -26,19 +29,19 @@ class TransactionViewModel  @Inject constructor(
 
     init {
         viewModelScope.launch {
-            showLoading(true)
-            showLoading(true)
             var latestYear = 0
             var latestMonth = 0
 
-            transactionUseCase.getListOfYearMonth().asResult().collect{
-                when (it){
+            settingUseCase.getSetting().combine(transactionUseCase.getListOfYearMonth()) { setting, transactionYearMonthQueryResults ->
+                Pair(setting, transactionYearMonthQueryResults)
+            }.asResult().collect {
+                when (it) {
                     is Result.Loading -> {
                         showLoading(true)
                     }
                     is Result.Success -> {
-                        val listOfYearMonth = it.data.mapIndexed  {index, yearMonth ->
-                            val selected = (index == it.data.lastIndex)
+                        val listOfYearMonth =  it.data.second.mapIndexed  {index, yearMonth ->
+                            val selected = (index == it.data.second.lastIndex)
                             if (selected) {
                                 latestYear = yearMonth.year
                                 latestMonth = yearMonth.month
@@ -52,6 +55,8 @@ class TransactionViewModel  @Inject constructor(
 
                         updateUI (
                             uiState = uiState.value.copy(
+                                loading = false,
+                                setting = it.data.first,
                                 listOfYearMonth = listOfYearMonth
                             )
                         )
@@ -59,7 +64,6 @@ class TransactionViewModel  @Inject constructor(
                         if (latestYear > 0){
                             getTransactionsByYearMonth(year = latestYear, month = latestMonth)
                         }
-
                     }
                     else -> {
                         //TODO
@@ -67,8 +71,6 @@ class TransactionViewModel  @Inject constructor(
                     }
                 }
             }
-
-
         }
     }
 

@@ -17,11 +17,12 @@ import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
-import com.jerryalberto.mmas.core.designsystem.utils.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.component.TransactionItem
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
@@ -49,7 +50,7 @@ fun TransactionsList(
                         TransactionHeader(
                             bgColor = MaterialTheme.colorScheme.surfaceVariant,
                             leftText = group.date.convertMillisToDate("dd/MM/yyyy"),
-                            rightText = uiHelper.formatAmount(group.totalAmount, withPlus = true),
+                            rightText = group.totalAmount.formatAmount(withPlus = true),
                             rightTextColor =  if (group.totalAmount < 0.0) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))

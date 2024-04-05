@@ -24,14 +24,14 @@ import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.ui.component.CategoryGroupBox
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.core.ui.model.toCategoryDisplay
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategorySelectDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
-    list: List<com.jerryalberto.mmas.core.ui.model.CategoryGroup> = listOf(),
+    list: List<Category> = listOf(),
     properties: DialogProperties = DialogProperties().let {
         DialogProperties(
             dismissOnBackPress = it.dismissOnBackPress,
@@ -40,7 +40,7 @@ fun CategorySelectDialog(
             usePlatformDefaultWidth = false,
         )
     },
-    onCategorySelected: (com.jerryalberto.mmas.core.ui.model.CategoryGroup) -> Unit = {}
+    onCategorySelected: (Category) -> Unit = {}
 ) {
 
     BasicAlertDialog(
@@ -98,9 +98,7 @@ private fun CategorySelectDialogPreview(){
                     )
                 ),
                 Category(CategoryType.OTHER)
-            ).map {
-                it.toCategoryDisplay()
-            }
+            )
 
         )
     }

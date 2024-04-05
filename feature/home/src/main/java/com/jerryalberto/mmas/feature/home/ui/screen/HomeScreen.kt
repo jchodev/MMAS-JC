@@ -45,6 +45,7 @@ import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
 
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
@@ -134,7 +135,7 @@ private fun HomeScreenContent(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                 Text(
-                    text = uiState.totalAmountStr,
+                    text = uiState.getTotalAmount().formatAmount(),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.displayMedium,
                 )
@@ -151,14 +152,14 @@ private fun HomeScreenContent(
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = uiState.totalIncomeStr
+                    content = uiState.totalIncome.formatAmount()
                 )
                 IncomeExpenseBox2(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    content = uiState.totalExpensesStr
+                    content = uiState.totalExpenses.formatAmount()
                 )
             }
         }

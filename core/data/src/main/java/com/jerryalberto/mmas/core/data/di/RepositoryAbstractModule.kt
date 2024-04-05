@@ -1,8 +1,8 @@
 package com.jerryalberto.mmas.core.data.di
 
-import com.jerryalberto.mmas.core.data.repository.SettingRepositoryImpl
+import com.jerryalberto.mmas.core.data.repository.SettingPreferenceRepositoryImpl
 import com.jerryalberto.mmas.core.data.repository.TransactionRepositoryImpl
-import com.jerryalberto.mmas.core.domain.repository.SettingRepository
+import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
 import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import dagger.Binds
 import dagger.Module
@@ -17,7 +17,8 @@ abstract class RepositoryAbstractModule {
     @Singleton
     abstract fun bindTransactionRepository(transactionRepository: TransactionRepositoryImpl): TransactionRepository
 
-    @Binds
+  @Binds
     @Singleton
-    abstract fun bindSettingRepository(settingRepository: SettingRepositoryImpl): SettingRepository
+    abstract fun bindSettingPreferenceRepository(settingPreferenceRepository: SettingPreferenceRepositoryImpl): SettingPreferenceRepository
+
 }
