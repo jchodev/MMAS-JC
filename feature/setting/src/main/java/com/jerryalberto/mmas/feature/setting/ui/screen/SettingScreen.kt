@@ -25,6 +25,7 @@ import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.component.SettingItem
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.CurrencySelectDialog
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.DateFormatDialog
+import com.jerryalberto.mmas.feature.setting.ui.component.dialog.ThemeDialog
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import timber.log.Timber
@@ -42,6 +43,9 @@ fun SettingScreen(
         dateFormatList = viewModel.getDateFormatList(),
         onDateFormatSelected = {
             viewModel.onDateFormatSelected(it)
+        },
+        onThemeSelected = {
+            viewModel.onThemeSelected(it)
         }
     )
 }
@@ -54,6 +58,7 @@ private fun SettingScreenContent(
     dateFormatList: List<String> = emptyList(),
     onCountrySelected: (CountryData) -> Unit = {},
     onDateFormatSelected: (String) -> Unit = {},
+    onThemeSelected:(String) -> Unit = {}
 ) {
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
@@ -96,6 +101,24 @@ private fun SettingScreenContent(
             )
         }
 
+        //theme
+        var openThemeSelectDialog by remember { mutableStateOf(false) }
+        if (openThemeSelectDialog) {
+            ThemeDialog(
+                dataList = listOf(
+                    "System",
+                    "Light",
+                    "Dark"
+                ),
+                onDismissRequest = { openThemeSelectDialog = false },
+                onSelected = {
+                    openThemeSelectDialog = false
+                    Timber.d("selected theme is ${it}")
+                    onThemeSelected.invoke(it)
+                },
+            )
+        }
+
         LazyColumn (modifier = Modifier
             .padding(paddingValues) ){
             //Currency
@@ -115,6 +138,17 @@ private fun SettingScreenContent(
                     selectedValue = uiState.setting.dateFormat,
                     onClick = {
                         openDateFormatSelectDialog = true
+                    }
+                )
+            }
+
+            //Theme
+            item {
+                SettingItem(
+                    title = "Theme",
+                    selectedValue = uiState.setting.theme,
+                    onClick = {
+                        openThemeSelectDialog = true
                     }
                 )
             }

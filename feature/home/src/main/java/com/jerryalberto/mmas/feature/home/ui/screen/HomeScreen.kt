@@ -1,7 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,12 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +41,7 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
-import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
+import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
@@ -114,7 +111,7 @@ fun HomeScreen(
                 )
             },
             onSeeAllClick = {
-                navController.navigate(MmasScreen.SearchScreen.route)
+                navController.navigate(MmasScreen.TransactionScreen.route)
             }
         )
     }
@@ -164,20 +161,22 @@ private fun HomeScreenContent(
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             Row {
-                IncomeExpenseBox2(
+                IncomeExpenseBox(
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
                     bgColor = ColorConstant.IncomeGreen,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
+                    textColor = Color.White,
                     content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
-                IncomeExpenseBox2(
+                IncomeExpenseBox(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
+                    textColor = Color.White,
                     content = uiState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
             }
@@ -192,28 +191,6 @@ private fun HomeScreenContent(
                     Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
                 )
             )
-//            PieChartWithText(
-//                chartDataList = listOf(
-//                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toFloat()),
-//                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toFloat()),
-//                )
-//            )
-
-//            DonutChart(data = DonutChartDataCollection(
-//                    listOf(
-//                        DonutChartData(
-//                            amount = uiState.totalExpenses.toFloat(),
-//                            color = ColorConstant.ExpensesRed,
-//                            title = "title1"
-//                        ),
-//                        DonutChartData(
-//                            amount = uiState.totalIncome.toFloat(),
-//                            color = ColorConstant.IncomeGreen,
-//                            title = "title2"
-//                        ),
-//                    )
-//                )
-//            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
 

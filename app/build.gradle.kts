@@ -33,9 +33,6 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
     implementation(project(":feature:home"))
-    implementation(project(":feature:input"))
-    implementation(project(":feature:analysis"))
-    implementation(project(":feature:calendar"))
     implementation(project(":feature:setting"))
     implementation(project(":feature:transaction"))
 

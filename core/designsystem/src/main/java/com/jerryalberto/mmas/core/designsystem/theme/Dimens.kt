@@ -12,6 +12,8 @@ data class Dimens(
     val dimen40:Dp = 40.dp,
     val dimen48:Dp = 48.dp,
     val dimen56:Dp = 56.dp,
+    val dimen64:Dp = 64.dp,
+    val dimen72:Dp = 72.dp,
     val dimen160:Dp = 160.dp,
     val iconSize:Dp = dimen32,
 )

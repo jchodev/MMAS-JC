@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
+import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 
 @Composable

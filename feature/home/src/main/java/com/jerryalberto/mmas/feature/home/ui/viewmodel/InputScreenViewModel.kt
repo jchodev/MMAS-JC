@@ -12,6 +12,7 @@ import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.ext.formatTime
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.uistate.asTransaction
@@ -27,7 +28,6 @@ class InputScreenViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val uiHelper: com.jerryalberto.mmas.core.ui.helper.UiHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -68,7 +68,6 @@ class InputScreenViewModel @Inject constructor(
     fun onTimeSelected(hour: Int, minute: Int){
         saveData(
             uiState = uiState.value.copy(
-                timeString = uiHelper.displayHourMinute(hour = hour, minute = minute),
                 hour = hour,
                 minute = minute,
             )
@@ -151,7 +150,7 @@ class InputScreenViewModel @Inject constructor(
             )
             return
         }
-        if (uiState.value.timeString.isBlank()){
+        if (uiState.value.hour == null){
             saveData(
                 uiState = uiState.value.copy(
                     timeError = context.getString(R.string.feature_home_error_field_require)

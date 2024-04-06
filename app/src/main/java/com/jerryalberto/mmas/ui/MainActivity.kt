@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.ui.screen.MmasScreen
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 import com.jerryalberto.mmas.ui.screen.MainScreen
@@ -43,7 +46,7 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
-
+    private val settingViewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +63,28 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            MmasTheme {
+
+            val setting = settingViewModel.settingState.collectAsState().value
+
+            var darkTheme = false
+            var dynamicColor = false
+            if (setting.theme == "Dark") {
+                darkTheme = true
+                dynamicColor = false
+            } else if (setting.theme == "Light") {
+                darkTheme = false
+                dynamicColor = false
+            } else {
+                dynamicColor = true
+                darkTheme = false
+            }
+
+            MmasTheme(
+                dynamicColor = dynamicColor,
+                darkTheme = darkTheme
+
+            ) {
                 navController = rememberNavController()
-                val currentRoute by navController!!.currentRouteAsState()
                 val currentSelectedScreen by navController!!.currentScreenAsState()
 
                 // A surface container using the 'background' color from the theme
@@ -72,6 +94,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     navController?.let {
                         MainScreen(
+                            settingViewModel = settingViewModel,
                             navController = it,
                             bottomBar = {
                                 BottomBar(
