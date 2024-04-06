@@ -2,11 +2,9 @@ package com.jerryalberto.mmas.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
@@ -14,14 +12,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.core.ui.screen.MmasScreen
+import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 
 data class BottomBarItem(
     val route: String,
@@ -34,7 +28,7 @@ data class BottomBarItem(
 @Composable
 fun BottomBar(
     items : List<BottomBarItem>,
-    currentSelectedScreen: MmasScreen
+    currentSelectedScreen: MainRoute
 ){
 
     NavigationBar {
@@ -68,23 +62,23 @@ fun BottomBar(
 private fun BottomBarPreview() {
     MmasTheme {
         BottomBar(
-            currentSelectedScreen = MmasScreen.HomeScreen,
+            currentSelectedScreen = MainRoute.HomeScreen,
             items = listOf(
                 BottomBarItem(
-                    route = MmasScreen.HomeScreen.route,
+                    route = MainRoute.HomeScreen.route,
                     title = "Add",
                     selectedIcon = Icons.Filled.Add,
                     unselectedIcon = Icons.Outlined.Add
                 ),
                 BottomBarItem(
-                    route = MmasScreen.TransactionScreen.route,
+                    route = MainRoute.TransactionScreen.route,
                     title = "Transaction",
                     selectedIcon = Icons.Filled.Face,
                     unselectedIcon = Icons.Outlined.Face
                 ),
 
                 BottomBarItem(
-                    route = MmasScreen.SettingScreen.route,
+                    route = MainRoute.SettingScreen.route,
                     title = "Setting",
                     selectedIcon = Icons.Filled.Settings,
                     unselectedIcon = Icons.Outlined.Settings

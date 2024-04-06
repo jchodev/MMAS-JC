@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
@@ -80,9 +81,9 @@ import java.util.Calendar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InputScreen(
-    navController: NavController = rememberNavController(),
+    appNavController: NavHostController = rememberNavController(),
     viewModel: InputScreenViewModel = hiltViewModel(),
-    setting: Setting = Setting(),
+    setting: Setting,
     bundle: Bundle?,
 ) {
     bundle?.getString(BundleParamKey.PARAM_TYPE).let { type->
@@ -93,7 +94,7 @@ fun InputScreen(
     }
 
     val onTopBarLeftClick: () -> Unit = {
-        navController.popBackStack()
+        appNavController.popBackStack()
     }
 
 

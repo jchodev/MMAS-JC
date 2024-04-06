@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -35,9 +36,8 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.navigate
+import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
-import com.jerryalberto.mmas.core.ui.screen.MmasScreen
-import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
@@ -49,23 +49,23 @@ import java.util.Calendar
 
 @Composable
 fun TransactionScreen(
-    settingViewModel: SettingViewModel = hiltViewModel(),
     viewModel: TransactionViewModel = hiltViewModel(),
-    navController: NavController = rememberNavController(),
+    setting: Setting,
+    appNavController: NavHostController,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
     TransactionScreenContent(
         uiState = uiState,
-        setting = settingViewModel.settingState.collectAsState().value,
+        setting = setting,
         onYearMonthItemClick = {
             viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
         },
         onSearchClick = {
             val bundle = Bundle()
             bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
-            navController.navigate(
-                route = MmasScreen.SearchScreen.route,
+            appNavController.navigate(
+                route = AppRoute.SearchScreen.route,
                 args = bundle
             )
         }
