@@ -67,6 +67,7 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.formatTime
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
 import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.feature.home.R
@@ -350,7 +351,11 @@ private fun InputScreenContent(
                         }
                     )
                     MmasTextEdit(
-                        value = state.timeString,
+                        value = if (state.hour != null && state.minute != null){
+                            Pair(first = state.hour, second = state.minute).formatTime(setting = setting)
+                        } else {
+                            ""
+                        },
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
                         placeHolder = stringResource(id = R.string.feature_home_time),

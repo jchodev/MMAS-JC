@@ -21,7 +21,6 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val uiHelper: com.jerryalberto.mmas.core.ui.helper.UiHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUIDataState())

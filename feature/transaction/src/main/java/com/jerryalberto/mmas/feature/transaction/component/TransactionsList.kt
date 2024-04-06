@@ -24,7 +24,6 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.component.TransactionItem
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
-import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
 import java.util.Calendar
@@ -51,7 +50,7 @@ fun TransactionsList(
                         TransactionHeader(
                             bgColor = MaterialTheme.colorScheme.surfaceVariant,
                             leftText = group.date.convertMillisToDate(setting.dateFormat),
-                            rightText = group.totalAmount.formatAmount(withPlus = true),
+                            rightText = group.totalAmount.formatAmount(setting = setting, withPlus = true),
                             rightTextColor =  if (group.totalAmount < 0.0) ColorConstant.ExpensesRed else ColorConstant.IncomeGreen,
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))

@@ -49,7 +49,7 @@ import java.util.Calendar
 
 @Composable
 fun TransactionScreen(
-    settingViewModel: SettingViewModel = hiltViewModel(),
+    setting: Setting,
     viewModel: TransactionViewModel = hiltViewModel(),
     navController: NavController = rememberNavController(),
 ) {
@@ -57,7 +57,7 @@ fun TransactionScreen(
 
     TransactionScreenContent(
         uiState = uiState,
-        setting = settingViewModel.settingState.collectAsState().value,
+        setting = setting,
         onYearMonthItemClick = {
             viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
         },
@@ -83,7 +83,6 @@ private fun TransactionScreenContent(
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-
             MmaTopBar(
                 modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
                 title = stringResource(id = R.string.feature_transaction_title),
@@ -107,7 +106,7 @@ private fun TransactionScreenContent(
                     item {
                         SpendFrequencyButton(
                             modifier = Modifier.wrapContentSize(),
-                            text = it.month.toString() + " " + it.year.toString(),
+                            text = it.month.toString() + "/" + it.year.toString(),
                             selected = it.selected,
                             onClick = {
                                 onYearMonthItemClick.invoke(it)

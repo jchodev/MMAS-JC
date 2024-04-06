@@ -23,7 +23,6 @@ data class InputUiDataState(
 
     val hour: Int? = null,
     val minute: Int? = null,
-    val timeString: String = "",
     val timeError: String? = null,
 
     val uri: String = "",

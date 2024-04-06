@@ -4,20 +4,16 @@ package com.jerryalberto.mmas.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 
-import androidx.compose.runtime.remember
+
 import androidx.compose.ui.Modifier
 
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
+
 import androidx.navigation.NavHostController
 
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
-import com.jerryalberto.mmas.feature.analysis.ui.screen.AnalysisScreen
-import com.jerryalberto.mmas.feature.calendar.ui.screen.CalendarScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.InputScreen
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
@@ -53,13 +49,6 @@ fun MmasNavigation(
             )
         }
 
-        composable(MmasScreen.AnalysisScreen.route) {
-            AnalysisScreen()
-        }
-
-        composable(MmasScreen.CalendarScreen.route) {
-            CalendarScreen()
-        }
 
         composable(MmasScreen.SettingScreen.route) {
             SettingScreen(
@@ -67,17 +56,9 @@ fun MmasNavigation(
             )
         }
 
-//        composable(MmasScreen.SettingScreen.route) {entry ->
-//           val viewModel = entry.sharedViewModel<SettingViewModel>(navController)
-//           val viewModel2 = entry.sharedViewModel2<SharedSettingViewModel>(navController)
-//           Text(
-//              "this is new setting"
-//           )
-//        }
-
         composable(MmasScreen.TransactionScreen.route) {
             TransactionScreen(
-                settingViewModel = settingViewModel,
+                setting = setting,
                 navController = navController,
             )
         }
@@ -86,6 +67,7 @@ fun MmasNavigation(
             route = MmasScreen.SearchScreen.route
         ) {
             SearchScreen(
+                setting = setting,
                 bundle = it.arguments,
                 navController = navController
             )
