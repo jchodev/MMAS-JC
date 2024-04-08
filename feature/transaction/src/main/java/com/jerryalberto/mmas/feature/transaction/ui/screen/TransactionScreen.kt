@@ -107,7 +107,7 @@ private fun TransactionScreenContent(
                     item {
                         SpendFrequencyButton(
                             modifier = Modifier.wrapContentSize(),
-                            text = it.month.toString() + " " + it.year.toString(),
+                            text = it.month.toString() + "/" + it.year.toString(),
                             selected = it.selected,
                             onClick = {
                                 onYearMonthItemClick.invoke(it)

@@ -7,6 +7,7 @@ import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import com.jerryalberto.mmas.core.ui.ext.toCountryData
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 
@@ -75,6 +76,10 @@ class SettingViewModel @Inject constructor(
         return settingUseCase.getDateFormatList()
     }
 
+    fun getTimeFormatList() : List<TimeFormatType> {
+        return settingUseCase.getTimeFormatList()
+    }
+
     fun onCountryDataSelected(countryCode: String){
         updateUI(
             uiState = uiState.value.copy(
@@ -91,6 +96,16 @@ class SettingViewModel @Inject constructor(
             uiState = uiState.value.copy(
                 setting = uiState.value.setting.copy(
                     dateFormat = dateFormat
+                )
+            )
+        )
+        saveTransaction()
+    }
+    fun onTimeFormatSelected(timeFormatType: TimeFormatType){
+        updateUI(
+            uiState = uiState.value.copy(
+                setting = uiState.value.setting.copy(
+                    timeFormatType = timeFormatType
                 )
             )
         )

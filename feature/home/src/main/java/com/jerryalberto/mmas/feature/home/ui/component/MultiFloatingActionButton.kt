@@ -123,7 +123,7 @@ fun MultiFloatingActionButton(
                         scale(5f) {}
                         drawCircle(
                             brush = Brush.linearGradient(
-                                colors = listOf(Color.White, Color.DarkGray),
+                                colors = listOf( bgColor, iconColor),
                                 start = Offset(0f, 0f),
                                 end = Offset(0f, size.height)
                             ),

@@ -55,7 +55,6 @@ import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
-import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
@@ -66,10 +65,13 @@ import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
+import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.getColors
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
 import com.jerryalberto.mmas.core.ui.ext.getString
+import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
@@ -155,21 +157,7 @@ private fun InputScreenContent(
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
 ){
-    var bgColor = ColorConstant.ExpensesRed
-    var isExpenses = true
-
-    state.type?.let {
-        if (it == TransactionType.INCOME){
-            bgColor = ColorConstant.IncomeGreen
-            isExpenses = false
-        }
-    }
-
-    state.type?.let {
-        if (it == TransactionType.INCOME){
-            bgColor = ColorConstant.IncomeGreen
-        }
-    }
+    val transactionType = state.type ?: TransactionType.EXPENSES
 
     //DatePickerPromptDialog
     var datePickerDialogVisible by remember { mutableStateOf(false) }
@@ -198,7 +186,8 @@ private fun InputScreenContent(
     var categorySelectDialogVisible by remember { mutableStateOf(false) }
     if (categorySelectDialogVisible) {
         CategorySelectDialog(
-            list = if (isExpenses) expensesCategories else incomeCategories,
+            transactionType = transactionType,
+            list = if (transactionType == TransactionType.EXPENSES) expensesCategories else incomeCategories,
             onDismissRequest = { categorySelectDialogVisible = false },
             onCategorySelected = {
                 onCategorySelected.invoke(it)
@@ -208,15 +197,15 @@ private fun InputScreenContent(
     }
 
     Scaffold (
-        containerColor = bgColor,
+        containerColor = transactionType.getColors().first,
         topBar = {
             MmaTopBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = bgColor,
+                    containerColor = transactionType.getColors().first,
                     navigationIconContentColor = Color.White,
                     titleContentColor= Color.White,
                 ),
-                title = if (state.type == TransactionType.INCOME){
+                title = if (transactionType == TransactionType.INCOME){
                     stringResource(id = R.string.feature_home_income)
                 } else {
                     stringResource(id = R.string.feature_home_expenses)
@@ -411,7 +400,7 @@ private fun InputScreenContent(
     }
 }
 
-@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@DevicePreviews
 @Composable
 private fun InputScreenPreview(){
     MmasTheme {

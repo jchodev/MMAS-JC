@@ -22,6 +22,7 @@ import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
+import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.CategoryGroupBox
 import com.jerryalberto.mmas.feature.home.R
 
@@ -30,6 +31,7 @@ import com.jerryalberto.mmas.feature.home.R
 @Composable
 fun CategorySelectDialog(
     modifier: Modifier = Modifier,
+    transactionType: TransactionType = TransactionType.INCOME,
     onDismissRequest: () -> Unit = {},
     list: List<Category> = listOf(),
     properties: DialogProperties = DialogProperties().let {
@@ -66,7 +68,8 @@ fun CategorySelectDialog(
                     items(list) {
                         CategoryGroupBox(
                             category = it,
-                            onCategorySelected = onCategorySelected
+                            onCategorySelected = onCategorySelected,
+                            transactionType = transactionType
                         )
                     }
                 }

@@ -9,6 +9,6 @@ data class Setting(
     val countryCode : String = "US",
     val theme: String = "",
     val dateFormat: String = "",
-    val use24HourFormat: Boolean = true,
+    val timeFormatType: TimeFormatType = TimeFormatType.HOUR_24,
 ) : Parcelable
 

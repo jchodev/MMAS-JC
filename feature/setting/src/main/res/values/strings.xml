@@ -4,6 +4,7 @@
 
     <string name="feature_setting_select_currency">Select Currency</string>
     <string name="feature_setting_select_date_format">Select Date Format</string>
+    <string name="feature_setting_select_time_format">Select Time Format</string>
     <string name="feature_setting_search">Search …</string>
 
 </resources>

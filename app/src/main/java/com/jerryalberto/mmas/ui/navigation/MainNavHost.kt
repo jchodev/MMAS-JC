@@ -1,7 +1,6 @@
-package com.jerryalberto.mmas.ui.screen
+package com.jerryalberto.mmas.ui.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,10 +10,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
@@ -24,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 
@@ -33,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
@@ -41,36 +39,19 @@ import com.jerryalberto.mmas.ui.components.BottomBar
 import com.jerryalberto.mmas.ui.components.BottomBarItem
 
 
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-//@Composable
-//fun MainScreen(
-//    navController: NavHostController,
-//    bottomBar: @Composable () -> Unit = {}
-//) {
-//    Scaffold (
-//        //containerColor = Color.Transparent,
-//        bottomBar = bottomBar
-//    ) { paddingValues ->
-//
-//        MmasNavigation(
-//            modifier = Modifier.padding(paddingValues),
-//            navController = navController
-//        )
-//    }
-//}
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(
+fun MainNavHost(
     appNavController: NavHostController = rememberNavController(),
     settingViewModel: SettingViewModel,
 ) {
 
     val mainNavController = rememberNavController()
     val currentSelectedScreen by mainNavController.currentScreenAsState()
-    val currentRoute by mainNavController.currentRouteAsState()
 
     val setting = settingViewModel.settingState.collectAsState().value
+
+    val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
     Scaffold(
         bottomBar = {
@@ -117,7 +98,8 @@ fun MainScreen(
                 HomeScreen(
                     mainNavController = mainNavController,
                     appNavController = appNavController,
-                    setting = setting
+                    setting = setting,
+                    homeScreenViewModel = homeScreenViewModel,
                 )
             }
 

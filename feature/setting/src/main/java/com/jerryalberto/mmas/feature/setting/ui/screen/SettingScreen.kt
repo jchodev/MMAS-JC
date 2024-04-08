@@ -19,12 +19,15 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.model.data.CountryData
+import com.jerryalberto.mmas.core.model.data.TimeFormatType
+import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.ext.toCountryData
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.component.SettingItem
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.CurrencySelectDialog
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.DateFormatDialog
+import com.jerryalberto.mmas.feature.setting.ui.component.dialog.TimeFormatDialog
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import timber.log.Timber
@@ -42,6 +45,10 @@ fun SettingScreen(
         dateFormatList = viewModel.getDateFormatList(),
         onDateFormatSelected = {
             viewModel.onDateFormatSelected(it)
+        },
+        timeFormatList = viewModel.getTimeFormatList(),
+        onTimeFormatSelected = {
+            viewModel.onTimeFormatSelected(it)
         }
     )
 }
@@ -52,8 +59,10 @@ private fun SettingScreenContent(
     uiState: SettingUIDataState = SettingUIDataState(),
     countryList: List<CountryData> = emptyList(),
     dateFormatList: List<String> = emptyList(),
+    timeFormatList: List<TimeFormatType> = emptyList(),
     onCountrySelected: (CountryData) -> Unit = {},
     onDateFormatSelected: (String) -> Unit = {},
+    onTimeFormatSelected: (TimeFormatType) -> Unit = {},
 ) {
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
@@ -78,7 +87,7 @@ private fun SettingScreenContent(
                     Timber.d("selected Country is ${it}")
                     onCountrySelected.invoke(it)
                 },
-
+                defaultCountryCode = uiState.setting.countryCode,
             )
         }
 
@@ -86,15 +95,50 @@ private fun SettingScreenContent(
         var openDateFormatSelectDialog by remember { mutableStateOf(false) }
         if (openDateFormatSelectDialog) {
             DateFormatDialog(
-                dateFormatList = dateFormatList,
+                itemList = dateFormatList,
                 onDismissRequest = { openDateFormatSelectDialog = false },
-                onSelected = {
+                onItemSelected = {
                     openDateFormatSelectDialog = false
                     Timber.d("selected data format is ${it}")
                     onDateFormatSelected.invoke(it)
                 },
+                defaultItem = uiState.setting.dateFormat,
             )
         }
+
+        //time format
+        var openTimeFormatSelectDialog by remember { mutableStateOf(false) }
+        if (openTimeFormatSelectDialog) {
+            TimeFormatDialog(
+                itemList = timeFormatList,
+                onDismissRequest = { openTimeFormatSelectDialog = false },
+                onItemSelected = {
+                    openTimeFormatSelectDialog = false
+                    Timber.d("selected time format is ${it}")
+                    onTimeFormatSelected.invoke(it)
+                },
+                defaultItem = uiState.setting.timeFormatType
+            )
+        }
+
+        //theme
+//        var openThemeSelectDialog by remember { mutableStateOf(false) }
+//        if (openThemeSelectDialog) {
+//            ThemeDialog(
+//                dateFormatList = listOf(
+//                    "Default",
+//                    "Light",
+//                    "Dark"
+//                ),
+//                onDismissRequest = { openThemeSelectDialog = false },
+//                onSelected = {
+//                    openThemeSelectDialog = false
+//                    Timber.d("selected theme is ${it}")
+//                    onDateFormatSelected.invoke(it)
+//                },
+//            )
+//        }
+
 
         LazyColumn (modifier = Modifier
             .padding(paddingValues) ){
@@ -108,13 +152,23 @@ private fun SettingScreenContent(
                     }
                 )
             }
-            //Language
+            //Date format
             item {
                 SettingItem(
                     title = "Data Format",
                     selectedValue = uiState.setting.dateFormat,
                     onClick = {
                         openDateFormatSelectDialog = true
+                    }
+                )
+            }
+            //Time format
+            item {
+                SettingItem(
+                    title = "Time Format",
+                    selectedValue = uiState.setting.timeFormatType.getString(),
+                    onClick = {
+                        openTimeFormatSelectDialog = true
                     }
                 )
             }
