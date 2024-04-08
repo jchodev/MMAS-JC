@@ -14,14 +14,15 @@ import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataSta
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class TransactionViewModel  @Inject constructor(
-    private val transactionUseCase: TransactionUseCase,
-    private val settingUseCase: SettingUseCase
+class TransactionViewModel @Inject constructor(
+    private val transactionUseCase: TransactionUseCase
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow<TransactionUIDataState>(TransactionUIDataState())
@@ -31,17 +32,15 @@ class TransactionViewModel  @Inject constructor(
         viewModelScope.launch {
             var latestYear = 0
             var latestMonth = 0
-
-            settingUseCase.getSetting().combine(transactionUseCase.getListOfYearMonth()) { setting, transactionYearMonthQueryResults ->
-                Pair(setting, transactionYearMonthQueryResults)
-            }.asResult().collect {
+            transactionUseCase.getListOfYearMonth().asResult().collectLatest{
                 when (it) {
                     is Result.Loading -> {
                         showLoading(true)
                     }
                     is Result.Success -> {
-                        val listOfYearMonth =  it.data.second.mapIndexed  {index, yearMonth ->
-                            val selected = (index == it.data.second.lastIndex)
+                        Timber.d("TransactionViewModel:init:"+ it.data)
+                        val listOfYearMonth =  it.data.mapIndexed  {index, yearMonth ->
+                            val selected = (index == it.data.lastIndex)
                             if (selected) {
                                 latestYear = yearMonth.year
                                 latestMonth = yearMonth.month
@@ -56,10 +55,10 @@ class TransactionViewModel  @Inject constructor(
                         updateUI (
                             uiState = uiState.value.copy(
                                 loading = false,
-                                setting = it.data.first,
                                 listOfYearMonth = listOfYearMonth
                             )
                         )
+
                         // get transaction by year and month
                         if (latestYear > 0){
                             getTransactionsByYearMonth(year = latestYear, month = latestMonth)
@@ -122,18 +121,5 @@ class TransactionViewModel  @Inject constructor(
         _uiState.value = uiState
     }
 
-    private suspend fun insertTestDate(){
-        TransactionsDataTestTubs.mockTodayTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-
-        TransactionsDataTestTubs.lastWeekTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-
-        TransactionsDataTestTubs.lastMonthTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-    }
 
 }

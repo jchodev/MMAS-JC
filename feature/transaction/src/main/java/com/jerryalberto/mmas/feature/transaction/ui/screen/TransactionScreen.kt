@@ -55,6 +55,7 @@ fun TransactionScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
+
     TransactionScreenContent(
         uiState = uiState,
         setting = setting,

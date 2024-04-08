@@ -20,6 +20,7 @@ import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.ext.displayDateTime
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.ext.getColors
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
@@ -81,11 +82,7 @@ fun TransactionItem(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen4))
             Text(
-                text = uiHelper.displayDateTime(
-                    date = transaction.date,
-                    hour = transaction.hour,
-                    minute = transaction.minute
-                ),
+                text = transaction.displayDateTime(setting = setting),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.End)

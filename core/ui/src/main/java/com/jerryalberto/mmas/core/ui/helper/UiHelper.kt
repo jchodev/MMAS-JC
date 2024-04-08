@@ -1,7 +1,6 @@
 package com.jerryalberto.mmas.core.ui.helper
 
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
-import com.jerryalberto.mmas.core.model.data.TransactionType
 import java.text.NumberFormat
 import java.util.Calendar
 

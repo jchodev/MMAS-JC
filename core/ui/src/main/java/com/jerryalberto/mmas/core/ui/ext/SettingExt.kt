@@ -2,13 +2,13 @@ package com.jerryalberto.mmas.core.ui.ext
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.jerryalberto.mmas.core.model.data.CategoryType
 
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import com.jerryalberto.mmas.core.ui.R
 
 import java.text.NumberFormat
+
 import java.util.Locale
 
 
@@ -33,6 +33,7 @@ fun String.toCountryData(): CountryData {
         currency = currency
     )
 }
+
 
 @Composable
 fun TimeFormatType.getString() : String{

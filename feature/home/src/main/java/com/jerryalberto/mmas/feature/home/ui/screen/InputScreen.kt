@@ -67,6 +67,7 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.displayHourMinute
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.ext.getColors
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
@@ -157,7 +158,7 @@ private fun InputScreenContent(
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
 ){
-    val transactionType = state.type ?: TransactionType.EXPENSES
+    val transactionType = state.transaction.type ?: TransactionType.EXPENSES
 
     //DatePickerPromptDialog
     var datePickerDialogVisible by remember { mutableStateOf(false) }
@@ -173,8 +174,8 @@ private fun InputScreenContent(
     var timePickerDialogVisible by remember { mutableStateOf(false) }
     if (timePickerDialogVisible){
         TimePickerPromptDialog(
-            defaultHour = state.hour ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-            defaultMin = state.minute ?: Calendar.getInstance().get(Calendar.MINUTE),
+            defaultHour = state.transaction.hour ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+            defaultMin = state.transaction.minute ?: Calendar.getInstance().get(Calendar.MINUTE),
             onSelected = { hour, minute ->
                 onTimeSelected.invoke(hour, minute)
             },
@@ -244,7 +245,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 Text(
-                    text = state.amount?.formatAmount(setting = setting) ?: 0.0.formatAmount(setting = setting),
+                    text = state.amountString,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -264,8 +265,8 @@ private fun InputScreenContent(
             ){
 
                 MmasTextEdit(
-                    value = if (state.category != null) {
-                        state.category.type.getString()
+                    value = if (state.transaction.category != null) {
+                        state.transaction.category!!.type.getString()
                     } else {
                         ""
                     },
@@ -273,10 +274,10 @@ private fun InputScreenContent(
                     placeHolder = stringResource(id = R.string.feature_home_category),
                     readOnly = true,
                     leadingIcon = {
-                        if (state.category != null) {
+                        if (state.transaction.category != null) {
                             Icon(
-                                imageVector = state.category.type.getImageVector(),
-                                contentDescription = state.category.type.getString(),
+                                imageVector = state.transaction.category!!.type.getImageVector(),
+                                contentDescription = state.transaction.category!!.type.getString(),
                                 modifier = Modifier.size(
                                     MaterialTheme.dimens.dimen24
                                 ),
@@ -312,7 +313,7 @@ private fun InputScreenContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    value = state.description,
+                    value = state.transaction.description,
                     error = state.descriptionError,
                     placeHolder = stringResource(id = R.string.feature_home_description),
                     onValueChange = onDescriptionChange
@@ -324,7 +325,7 @@ private fun InputScreenContent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
-                        value = state.date?.convertMillisToDate(setting.dateFormat) ?: "",
+                        value = state.transaction.date?.convertMillisToDate(setting.dateFormat) ?: "",
                         error = state.dateError,
                         placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,
@@ -340,7 +341,7 @@ private fun InputScreenContent(
                         }
                     )
                     MmasTextEdit(
-                        value = state.timeString,
+                        value = state.transaction.displayHourMinute(),
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
                         placeHolder = stringResource(id = R.string.feature_home_time),
@@ -359,7 +360,7 @@ private fun InputScreenContent(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
-                    value = state.amountString,
+                    value = state.transaction.formatAmount(setting = setting, withPlus = false),
                     error = state.amountError,
                     placeHolder = stringResource(id = R.string.feature_home_amount),
                     leadingIcon = {
@@ -384,10 +385,10 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 
                 AddAttachmentRow(
-                    uri = if (state.uri.isEmpty()){
+                    uri = if (state.transaction.uri.isEmpty()){
                         Uri.EMPTY
                     } else {
-                        state.uri.toUri()
+                        state.transaction.uri.toUri()
                     },
                     onSelectedUri = onSelectedUri,
                     onDelete = {

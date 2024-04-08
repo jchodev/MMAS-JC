@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.collections.groupBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @org.jetbrains.annotations.VisibleForTesting
@@ -96,6 +97,8 @@ class TransactionRepositoryImpl @Inject constructor(
 
     override suspend fun getListOfYearMonth(): Flow<List<TransactionYearMonthQueryResult>> {
         return withContext(ioDispatcher) {
+            val aaa = dao.getListOfYearMonth()
+            Timber.d(aaa.toString())
             dao.getListOfYearMonth()
         }
     }

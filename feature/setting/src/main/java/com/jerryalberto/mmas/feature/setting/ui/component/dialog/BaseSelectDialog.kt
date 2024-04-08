@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,7 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import com.jerryalberto.mmas.core.designsystem.R
 import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
@@ -114,8 +117,8 @@ fun <T> BaseSelectDialog(
                                     onDismissRequest()
                                 }) {
                                     Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = null,
+                                        imageVector = Icons.Default.ArrowBackIosNew,
+                                        contentDescription = stringResource(id = R.string.close),
                                     )
                                 }
                             },
