@@ -2,7 +2,6 @@ package com.jerryalberto.mmas.core.domain.usecase
 
 import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
 
-import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.ThemeType
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import timber.log.Timber
-import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
 
