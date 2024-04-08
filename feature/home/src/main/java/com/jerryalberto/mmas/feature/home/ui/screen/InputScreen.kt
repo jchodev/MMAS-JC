@@ -50,13 +50,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
-import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
 
 import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
+import com.jerryalberto.mmas.core.designsystem.text.AutoResizedText
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
@@ -65,25 +66,27 @@ import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
+import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
+import com.jerryalberto.mmas.core.ui.ext.displayHourMinute
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
-import com.jerryalberto.mmas.core.ui.ext.formatTime
+import com.jerryalberto.mmas.core.ui.ext.getColors
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
 import com.jerryalberto.mmas.core.ui.ext.getString
+import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
-import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InputScreen(
-    navController: NavController = rememberNavController(),
+    appNavController: NavHostController = rememberNavController(),
     viewModel: InputScreenViewModel = hiltViewModel(),
-    setting: Setting = Setting(),
+    setting: Setting,
     bundle: Bundle?,
 ) {
     bundle?.getString(BundleParamKey.PARAM_TYPE).let { type->
@@ -94,7 +97,7 @@ fun InputScreen(
     }
 
     val onTopBarLeftClick: () -> Unit = {
-        navController.popBackStack()
+        appNavController.popBackStack()
     }
 
 
@@ -155,21 +158,7 @@ private fun InputScreenContent(
     onSaveClick: () -> Unit ={},
     onSelectedUri: (Uri) -> Unit = {},
 ){
-    var bgColor = ColorConstant.ExpensesRed
-    var isExpenses = true
-
-    state.type?.let {
-        if (it == TransactionType.INCOME){
-            bgColor = ColorConstant.IncomeGreen
-            isExpenses = false
-        }
-    }
-
-    state.type?.let {
-        if (it == TransactionType.INCOME){
-            bgColor = ColorConstant.IncomeGreen
-        }
-    }
+    val transactionType = state.transaction.type ?: TransactionType.EXPENSES
 
     //DatePickerPromptDialog
     var datePickerDialogVisible by remember { mutableStateOf(false) }
@@ -185,8 +174,8 @@ private fun InputScreenContent(
     var timePickerDialogVisible by remember { mutableStateOf(false) }
     if (timePickerDialogVisible){
         TimePickerPromptDialog(
-            defaultHour = state.hour ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-            defaultMin = state.minute ?: Calendar.getInstance().get(Calendar.MINUTE),
+            defaultHour = state.transaction.hour ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+            defaultMin = state.transaction.minute ?: Calendar.getInstance().get(Calendar.MINUTE),
             onSelected = { hour, minute ->
                 onTimeSelected.invoke(hour, minute)
             },
@@ -198,7 +187,8 @@ private fun InputScreenContent(
     var categorySelectDialogVisible by remember { mutableStateOf(false) }
     if (categorySelectDialogVisible) {
         CategorySelectDialog(
-            list = if (isExpenses) expensesCategories else incomeCategories,
+            transactionType = transactionType,
+            list = if (transactionType == TransactionType.EXPENSES) expensesCategories else incomeCategories,
             onDismissRequest = { categorySelectDialogVisible = false },
             onCategorySelected = {
                 onCategorySelected.invoke(it)
@@ -208,15 +198,15 @@ private fun InputScreenContent(
     }
 
     Scaffold (
-        containerColor = bgColor,
+        containerColor = transactionType.getColors().first,
         topBar = {
             MmaTopBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = bgColor,
+                    containerColor = transactionType.getColors().first,
                     navigationIconContentColor = Color.White,
                     titleContentColor= Color.White,
                 ),
-                title = if (state.type == TransactionType.INCOME){
+                title = if (transactionType == TransactionType.INCOME){
                     stringResource(id = R.string.feature_home_income)
                 } else {
                     stringResource(id = R.string.feature_home_expenses)
@@ -254,8 +244,9 @@ private fun InputScreenContent(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
-                Text(
-                    text = state.amount?.formatAmount(setting = setting) ?: 0.0.formatAmount(setting = setting),
+                AutoResizedText(
+                    text =  state.transaction.formatAmount(setting = setting, withPlus = false),
+                    //text = state.amountString,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -275,8 +266,8 @@ private fun InputScreenContent(
             ){
 
                 MmasTextEdit(
-                    value = if (state.category != null) {
-                        state.category.type.getString()
+                    value = if (state.transaction.category != null) {
+                        state.transaction.category!!.type.getString()
                     } else {
                         ""
                     },
@@ -284,10 +275,10 @@ private fun InputScreenContent(
                     placeHolder = stringResource(id = R.string.feature_home_category),
                     readOnly = true,
                     leadingIcon = {
-                        if (state.category != null) {
+                        if (state.transaction.category != null) {
                             Icon(
-                                imageVector = state.category.type.getImageVector(),
-                                contentDescription = state.category.type.getString(),
+                                imageVector = state.transaction.category!!.type.getImageVector(),
+                                contentDescription = state.transaction.category!!.type.getString(),
                                 modifier = Modifier.size(
                                     MaterialTheme.dimens.dimen24
                                 ),
@@ -323,7 +314,7 @@ private fun InputScreenContent(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    value = state.description,
+                    value = state.transaction.description,
                     error = state.descriptionError,
                     placeHolder = stringResource(id = R.string.feature_home_description),
                     onValueChange = onDescriptionChange
@@ -335,7 +326,7 @@ private fun InputScreenContent(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
-                        value = state.date?.convertMillisToDate(setting.dateFormat) ?: "",
+                        value = state.transaction.date?.convertMillisToDate(setting.dateFormat) ?: "",
                         error = state.dateError,
                         placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,
@@ -351,11 +342,7 @@ private fun InputScreenContent(
                         }
                     )
                     MmasTextEdit(
-                        value = if (state.hour != null && state.minute != null){
-                            Pair(first = state.hour, second = state.minute).formatTime(setting = setting)
-                        } else {
-                            ""
-                        },
+                        value = state.transaction.displayHourMinute(setting = setting),
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
                         placeHolder = stringResource(id = R.string.feature_home_time),
@@ -399,10 +386,10 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 
                 AddAttachmentRow(
-                    uri = if (state.uri.isEmpty()){
+                    uri = if (state.transaction.uri.isEmpty()){
                         Uri.EMPTY
                     } else {
-                        state.uri.toUri()
+                        state.transaction.uri.toUri()
                     },
                     onSelectedUri = onSelectedUri,
                     onDelete = {
@@ -415,7 +402,7 @@ private fun InputScreenContent(
     }
 }
 
-@Preview(apiLevel = 33, device = "spec:width=411dp,height=891dp", showBackground = true, showSystemUi = true)
+@DevicePreviews
 @Composable
 private fun InputScreenPreview(){
     MmasTheme {

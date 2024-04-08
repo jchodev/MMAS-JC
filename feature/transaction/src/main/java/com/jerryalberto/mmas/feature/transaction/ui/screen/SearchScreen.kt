@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.FocusRequester
 
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
@@ -38,13 +39,13 @@ import com.jerryalberto.mmas.feature.transaction.model.TransactionData
 
 @Composable
 fun SearchScreen(
-    navController: NavController = rememberNavController(),
-    setting: Setting = Setting(),
+    appNavController: NavHostController,
+    setting: Setting,
     bundle: Bundle?,
 ) {
     SearchScreenContent(
         onTopBarLeftClick = {
-            navController.popBackStack()
+            appNavController.popBackStack()
         },
         transactionList = bundle?.getParcelableArrayList(BundleParamKey.PARAM_LIST) ?: emptyList(),
         setting = setting,

@@ -1,8 +1,9 @@
 package com.jerryalberto.mmas.core.datastore.model
 
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.ThemeType
+import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class SettingPreference(
@@ -15,8 +16,8 @@ data class SettingPreference(
 fun SettingPreference.toSetting(): Setting {
     return Setting (
         countryCode = countryCode,
-        theme = theme,
+        themeType = ThemeType.fromValue(theme) ?: ThemeType.DEVICE_THEME,
         dateFormat = dateFormat,
-        use24HourFormat = use24HourFormat,
+        timeFormatType = TimeFormatType.entries.first { use24HourFormat }
     )
 }

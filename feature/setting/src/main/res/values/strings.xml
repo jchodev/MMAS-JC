@@ -4,7 +4,14 @@
 
     <string name="feature_setting_select_currency">Select Currency</string>
     <string name="feature_setting_select_date_format">Select Date Format</string>
+    <string name="feature_setting_select_time_format">Select Time Format</string>
     <string name="feature_setting_select_theme">Select Theme</string>
     <string name="feature_setting_search">Search …</string>
 
+    <string name="feature_setting_12_hour">12 Hour</string>
+    <string name="feature_setting_24_hour">24 Hour</string>
+
+    <string name="feature_setting_dark">Dark</string>
+    <string name="feature_setting_light">Light</string>
+    <string name="feature_setting_device_theme">Device Theme</string>
 </resources>

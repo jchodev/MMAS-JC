@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.tooling.preview.Preview
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -26,12 +25,15 @@ import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.ext.getColors
 import com.jerryalberto.mmas.core.ui.ext.getImageVector
 import com.jerryalberto.mmas.core.ui.ext.getString
+import com.jerryalberto.mmas.core.ui.helper.UiHelper
+
 
 import java.util.Calendar
 
 @Composable
 fun TransactionItem(
     setting: Setting = Setting(),
+    showTimeOnly: Boolean = true,
     modifier: Modifier = Modifier,
     transaction: Transaction,
 ) {
@@ -80,7 +82,7 @@ fun TransactionItem(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen4))
             Text(
-                text = transaction.displayDateTime(setting = setting),
+                text = transaction.displayDateTime(setting = setting, showTimeOnly = showTimeOnly),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.End)

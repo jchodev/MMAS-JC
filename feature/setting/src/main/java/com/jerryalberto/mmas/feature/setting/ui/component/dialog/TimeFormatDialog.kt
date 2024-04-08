@@ -1,24 +1,26 @@
 package com.jerryalberto.mmas.feature.setting.ui.component.dialog
 
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.core.model.data.ThemeType
+import com.jerryalberto.mmas.core.model.data.TimeFormatType
+
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.ext.getString
 
 
 @Composable
-fun ThemeDialog(
+fun TimeFormatDialog(
     modifier: Modifier = Modifier,
-    itemList: List<ThemeType> = listOf(),
+    itemList: List<TimeFormatType> = listOf(),
     onDismissRequest: () -> Unit = {},
-    defaultItem: ThemeType,
-    onItemSelected: (item: ThemeType) -> Unit = {},
+    defaultItem: TimeFormatType,
+    onItemSelected: (item: TimeFormatType) -> Unit = {},
 ){
 
     CommonSettingDialog(
@@ -26,7 +28,7 @@ fun ThemeDialog(
         modifier = modifier,
         itemList = itemList,
         onDismissRequest = onDismissRequest,
-        title = stringResource(id = R.string.feature_setting_select_theme),
+        title = stringResource(id = R.string.feature_setting_select_time_format),
         headlineContent = {
             Text(
                 text =  it.getString(),
@@ -39,15 +41,14 @@ fun ThemeDialog(
 
 @DevicePreviews
 @Composable
-private fun ThemeDialogPreview(){
+private fun TimeTypeDialogPreview(){
     MmasTheme {
-        ThemeDialog(
+        TimeFormatDialog(
             itemList = listOf(
-                ThemeType.LIGHT,
-                ThemeType.DARK,
+                TimeFormatType.HOUR_12,
+                TimeFormatType.HOUR_24,
             ),
-            defaultItem = ThemeType.DARK
+            defaultItem = TimeFormatType.HOUR_12
         )
     }
 }
-

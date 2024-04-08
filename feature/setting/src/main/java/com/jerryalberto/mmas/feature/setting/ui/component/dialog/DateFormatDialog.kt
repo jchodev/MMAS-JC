@@ -1,9 +1,6 @@
 package com.jerryalberto.mmas.feature.setting.ui.component.dialog
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,42 +17,30 @@ import java.util.Calendar
 @Composable
 fun DateFormatDialog(
     modifier: Modifier = Modifier,
-    dateFormatList: List<String> = listOf(),
+    itemList: List<String> = listOf(),
+    defaultItem: String = "yyyy-MM-dd",
     onDismissRequest: () -> Unit = {},
-    onSelected: (item: String) -> Unit = {},
+    onItemSelected: (item: String) -> Unit = {},
 ){
-    val itemContent = @Composable { str: String -> // Specify type and default
-        ListItem(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onSelected(str)
-                },
-            headlineContent = {
-                Column{
-                    Text(
-                        text =  str,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Text(
-                        //stringResource(id = getCountryName(countryItem.countryCode.lowercase())),
-                        text =  "e.g " + Calendar.getInstance().timeInMillis.convertMillisToDate(str),
-                        style = MaterialTheme.typography.titleSmall,
-                    )
-                }
-            },
-        )
-    }
-
-    SelectDialog(
+    CommonSettingDialog(
+        onItemSelected = onItemSelected,
         modifier = modifier,
-        fullList = dateFormatList,
+        itemList = itemList,
         onDismissRequest = onDismissRequest,
         title = stringResource(id = R.string.feature_setting_select_date_format),
-        itemContent = {
-            itemContent(it)
+        headlineContent = {
+            Column{
+                Text(
+                    text =  it,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text =  "e.g " + Calendar.getInstance().timeInMillis.convertMillisToDate(it),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+            }
         },
-        supportSearch = false,
+        defaultItem = defaultItem
     )
 }
 
@@ -64,12 +49,13 @@ fun DateFormatDialog(
 private fun DateFormatDialogPreview(){
     MmasTheme {
         DateFormatDialog(
-            dateFormatList = listOf(
+            itemList = listOf(
                 "dd-MM-yyyy",
                 "dd MMM yyyy",
                 "dd/MM/yyyy",
                 "yyyy-MM-dd"
-            )
+            ),
+            defaultItem = "yyyy-MM-dd"
         )
     }
 }

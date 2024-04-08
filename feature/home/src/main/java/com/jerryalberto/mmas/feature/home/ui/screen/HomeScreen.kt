@@ -3,6 +3,7 @@ package com.jerryalberto.mmas.feature.home.ui.screen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,17 +32,16 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.jerryalberto.mmas.core.designsystem.constant.ColorConstant
+import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
+
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
-import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
@@ -49,7 +49,10 @@ import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.ext.navigate
-import com.jerryalberto.mmas.core.ui.screen.MmasScreen
+import com.jerryalberto.mmas.core.ui.navigation.AppRoute
+import com.jerryalberto.mmas.core.ui.navigation.MainRoute
+import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
+
 
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
@@ -58,8 +61,9 @@ import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 @Composable
 fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
-    setting: Setting = Setting(),
-    navController: NavHostController = rememberNavController()
+    setting: Setting,
+    mainNavController: NavHostController,
+    appNavController: NavHostController,
 ) {
     val uiState = homeScreenViewModel.uiState.collectAsState().value
 
@@ -76,8 +80,8 @@ fun HomeScreen(
                     onFabItemClicked = {
                         val bundle = Bundle()
                         bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.INCOME.value)
-                        navController.navigate(
-                            route = MmasScreen.InputScreen.route,
+                        appNavController.navigate(
+                            route = AppRoute.InputScreen.route,
                             args = bundle
                         )
                     }
@@ -90,8 +94,8 @@ fun HomeScreen(
                     onFabItemClicked = {
                         val bundle = Bundle()
                         bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.EXPENSES.value)
-                        navController.navigate(
-                            route = MmasScreen.InputScreen.route,
+                        appNavController.navigate(
+                            route = AppRoute.InputScreen.route,
                             args = bundle
                         )
                     }
@@ -99,22 +103,25 @@ fun HomeScreen(
             )
         )
     }
-    Scaffold (
-        floatingActionButton = floatingActionButton
-    ) { paddingValues ->
-        HomeScreenContent(
-            uiState = uiState,
-            setting = setting,
-            onTypeClicked = {
-                homeScreenViewModel.getAmountByType(
-                    it
-                )
-            },
-            onSeeAllClick = {
-                navController.navigate(MmasScreen.TransactionScreen.route)
-            }
-        )
+    Box(modifier = Modifier.fillMaxSize()){
+        Scaffold (
+            floatingActionButton = floatingActionButton
+        ) { paddingValues ->
+            HomeScreenContent(
+                uiState = uiState,
+                setting = setting,
+                onTypeClicked = {
+                    homeScreenViewModel.getAmountByType(
+                        it
+                    )
+                },
+                onSeeAllClick = {
+                    mainNavController.navigate(MainRoute.TransactionScreen.route)
+                }
+            )
+        }
     }
+
 
 }
 
@@ -166,17 +173,17 @@ private fun HomeScreenContent(
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
                     bgColor = ColorConstant.IncomeGreen,
+                    textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    textColor = Color.White,
                     content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
                 IncomeExpenseBox(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
+                    textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    textColor = Color.White,
                     content = uiState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
             }
@@ -191,6 +198,28 @@ private fun HomeScreenContent(
                     Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
                 )
             )
+//            PieChartWithText(
+//                chartDataList = listOf(
+//                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses.toFloat()),
+//                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome.toFloat()),
+//                )
+//            )
+
+//            DonutChart(data = DonutChartDataCollection(
+//                    listOf(
+//                        DonutChartData(
+//                            amount = uiState.totalExpenses.toFloat(),
+//                            color = ColorConstant.ExpensesRed,
+//                            title = "title1"
+//                        ),
+//                        DonutChartData(
+//                            amount = uiState.totalIncome.toFloat(),
+//                            color = ColorConstant.IncomeGreen,
+//                            title = "title2"
+//                        ),
+//                    )
+//                )
+//            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
         }
 
@@ -254,6 +283,7 @@ private fun HomeScreenContent(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             TransactionBox(
+                showTimeOnly = false,
                 setting = setting,
                 transactions = uiState.latestTransaction
             )
@@ -261,12 +291,47 @@ private fun HomeScreenContent(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 private fun HomeScreenContentPreview() {
-    MmasTheme {
-        HomeScreenContent(
-            uiState = HomeUIDataState()
+    val floatingActionButton = @Composable {
+        MultiFloatingActionButton (
+            fabIcon = Icons.Rounded.Add,
+            contentDescription = stringResource(id = R.string.feature_home_add_transaction),
+            items = listOf(
+                FabItem(
+                    icon = ImageVector.vectorResource(R.drawable.ic_income),
+                    label = stringResource(id = R.string.feature_home_income),
+                    bgColor = ColorConstant.IncomeGreen,
+                    iconColor = Color.White,
+                    onFabItemClicked = {
+
+                    }
+                ),
+                FabItem(
+                    icon = ImageVector.vectorResource(R.drawable.ic_expenses),
+                    label = stringResource(id = R.string.feature_home_expenses),
+                    bgColor = ColorConstant.ExpensesRed,
+                    iconColor = Color.White,
+                    onFabItemClicked = {
+
+                    }
+                )
+            )
         )
+    }
+
+    MmasTheme {
+        Box(modifier = Modifier.fillMaxSize()){
+            Scaffold (
+                floatingActionButton = floatingActionButton
+            ) {
+                HomeScreenContent(
+                    uiState = HomeUIDataState()
+                )
+            }
+        }
+
     }
 }

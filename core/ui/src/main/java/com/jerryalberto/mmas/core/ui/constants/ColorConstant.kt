@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.core.designsystem.constant
+package com.jerryalberto.mmas.core.ui.constants
 
 import androidx.compose.ui.graphics.Color
 
@@ -9,5 +9,9 @@ class ColorConstant {
         val ExpensesRedBg = Color (0xFFFDD5D7)
         val IncomeGreen = Color(0xFF00A86B)
         val IncomeGreenBg = Color(0xFFCFFAEA)
+
+        val ExpensesColors = Pair(ExpensesRed, ExpensesRedBg)
+        val IncomeColors = Pair(IncomeGreen, IncomeGreenBg)
     }
+
 }

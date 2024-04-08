@@ -7,6 +7,8 @@ import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.ThemeType
+import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import com.jerryalberto.mmas.core.ui.ext.toCountryData
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 
@@ -64,7 +66,6 @@ class SettingViewModel @Inject constructor(
         )
     }
 
-
     fun getCountryList() : List<CountryData> {
         return settingUseCase.getCountryList().map{
             it.toCountryData()
@@ -73,6 +74,14 @@ class SettingViewModel @Inject constructor(
 
     fun getDateFormatList() : List<String> {
         return settingUseCase.getDateFormatList()
+    }
+
+    fun getTimeFormatList() : List<TimeFormatType> {
+        return settingUseCase.getTimeFormatList()
+    }
+
+    fun getThemeList(): List<ThemeType> {
+        return settingUseCase.getThemeList()
     }
 
     fun onCountryDataSelected(countryCode: String){
@@ -96,12 +105,22 @@ class SettingViewModel @Inject constructor(
         )
         saveTransaction()
     }
-
-    fun onThemeSelected(theme: String){
+    fun onTimeFormatSelected(timeFormatType: TimeFormatType){
         updateUI(
             uiState = uiState.value.copy(
                 setting = uiState.value.setting.copy(
-                    theme = theme
+                    timeFormatType = timeFormatType
+                )
+            )
+        )
+        saveTransaction()
+    }
+
+    fun onThemeSelected(themeType: ThemeType){
+        updateUI(
+            uiState = uiState.value.copy(
+                setting = uiState.value.setting.copy(
+                    themeType = themeType
                 )
             )
         )

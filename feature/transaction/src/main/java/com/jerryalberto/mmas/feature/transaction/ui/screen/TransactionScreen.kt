@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
@@ -35,9 +36,8 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.navigate
+import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
-import com.jerryalberto.mmas.core.ui.screen.MmasScreen
-import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
@@ -49,11 +49,12 @@ import java.util.Calendar
 
 @Composable
 fun TransactionScreen(
-    setting: Setting,
     viewModel: TransactionViewModel = hiltViewModel(),
-    navController: NavController = rememberNavController(),
+    setting: Setting,
+    appNavController: NavHostController,
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+
 
     TransactionScreenContent(
         uiState = uiState,
@@ -64,8 +65,8 @@ fun TransactionScreen(
         onSearchClick = {
             val bundle = Bundle()
             bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
-            navController.navigate(
-                route = MmasScreen.SearchScreen.route,
+            appNavController.navigate(
+                route = AppRoute.SearchScreen.route,
                 args = bundle
             )
         }
@@ -83,6 +84,7 @@ private fun TransactionScreenContent(
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
+
             MmaTopBar(
                 modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
                 title = stringResource(id = R.string.feature_transaction_title),

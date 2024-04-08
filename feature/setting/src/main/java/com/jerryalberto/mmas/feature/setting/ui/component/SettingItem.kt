@@ -45,7 +45,10 @@ fun SettingItem(
                 )
             },
             trailingContent = {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         text = selectedValue,
