@@ -36,14 +36,12 @@ import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
-import com.jerryalberto.mmas.core.model.data.Category
-import com.jerryalberto.mmas.core.model.data.CategoryType
+
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
-import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox2
 import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
@@ -53,6 +51,7 @@ import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.ext.navigate
 import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
+import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
 
 
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
@@ -169,7 +168,7 @@ private fun HomeScreenContent(
         item {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             Row {
-                IncomeExpenseBox2(
+                IncomeExpenseBox(
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
@@ -178,7 +177,7 @@ private fun HomeScreenContent(
                     title = stringResource(id = R.string.feature_home_income),
                     content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
-                IncomeExpenseBox2(
+                IncomeExpenseBox(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),

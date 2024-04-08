@@ -4,6 +4,7 @@ import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
 
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.ThemeType
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,6 @@ class SettingUseCase @Inject constructor(
     fun getDateFormatList() : List<String> {
         return listOf(
             "dd-MM-yyyy",
-            "dd MMM yyyy",
             "dd/MM/yyyy",
             "yyyy-MM-dd"
         )
@@ -62,10 +62,18 @@ class SettingUseCase @Inject constructor(
         )
     }
 
+    fun getThemeList(): List<ThemeType>{
+        return listOf(
+            ThemeType.DEVICE_THEME,
+            ThemeType.DARK,
+            ThemeType.LIGHT
+        )
+    }
+
     private fun getDefaultSetting(): Setting {
         return Setting(
             countryCode = Locale.getDefault().country,
-            theme = "Dark",
+            themeType = ThemeType.DEVICE_THEME,
             dateFormat = "yyyy-MM-dd",
             timeFormatType = TimeFormatType.HOUR_24,
         )

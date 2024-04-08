@@ -3,12 +3,17 @@ package com.jerryalberto.mmas.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
+import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.ThemeType
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.ui.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -17,6 +22,8 @@ import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +40,24 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            MmasTheme {
+            var dynamicColor = true
+            var darkTheme = false
+            val setting = viewModel.settingState.collectAsState().value
+
+            when (setting.themeType) {
+                ThemeType.DEVICE_THEME -> {
+
+                }
+                ThemeType.DARK -> {
+                    dynamicColor = false
+                    darkTheme = true
+                }
+                else -> {
+                    darkTheme = false
+                }
+            }
+
+            MmasTheme(dynamicColor = dynamicColor, darkTheme = darkTheme) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

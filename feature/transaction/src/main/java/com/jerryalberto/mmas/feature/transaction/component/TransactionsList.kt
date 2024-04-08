@@ -25,7 +25,6 @@ import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.component.TransactionItem
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
-import com.jerryalberto.mmas.core.ui.helper.UiHelper
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.model.TransactionData
 import java.util.Calendar

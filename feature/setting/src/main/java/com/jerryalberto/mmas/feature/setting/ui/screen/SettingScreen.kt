@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.feature.setting.ui.screen
 
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,15 +20,17 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
 import com.jerryalberto.mmas.core.model.data.CountryData
+import com.jerryalberto.mmas.core.model.data.ThemeType
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
-import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.ext.toCountryData
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.setting.R
 import com.jerryalberto.mmas.feature.setting.ui.component.SettingItem
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.CurrencySelectDialog
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.DateFormatDialog
+import com.jerryalberto.mmas.feature.setting.ui.component.dialog.ThemeDialog
 import com.jerryalberto.mmas.feature.setting.ui.component.dialog.TimeFormatDialog
+import com.jerryalberto.mmas.feature.setting.ui.ext.getString
 import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import timber.log.Timber
@@ -49,7 +52,12 @@ fun SettingScreen(
         timeFormatList = viewModel.getTimeFormatList(),
         onTimeFormatSelected = {
             viewModel.onTimeFormatSelected(it)
+        },
+        themeList = viewModel.getThemeList(),
+        onThemeSelected = {
+            viewModel.onThemeSelected(it)
         }
+
     )
 }
 
@@ -60,9 +68,11 @@ private fun SettingScreenContent(
     countryList: List<CountryData> = emptyList(),
     dateFormatList: List<String> = emptyList(),
     timeFormatList: List<TimeFormatType> = emptyList(),
+    themeList: List<ThemeType> = emptyList(),
     onCountrySelected: (CountryData) -> Unit = {},
     onDateFormatSelected: (String) -> Unit = {},
     onTimeFormatSelected: (TimeFormatType) -> Unit = {},
+    onThemeSelected: (ThemeType) -> Unit = {},
 ) {
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
@@ -122,23 +132,19 @@ private fun SettingScreenContent(
         }
 
         //theme
-//        var openThemeSelectDialog by remember { mutableStateOf(false) }
-//        if (openThemeSelectDialog) {
-//            ThemeDialog(
-//                dateFormatList = listOf(
-//                    "Default",
-//                    "Light",
-//                    "Dark"
-//                ),
-//                onDismissRequest = { openThemeSelectDialog = false },
-//                onSelected = {
-//                    openThemeSelectDialog = false
-//                    Timber.d("selected theme is ${it}")
-//                    onDateFormatSelected.invoke(it)
-//                },
-//            )
-//        }
-
+        var openThemeSelectDialog by remember { mutableStateOf(false) }
+        if (openThemeSelectDialog) {
+            ThemeDialog(
+                itemList = themeList,
+                onDismissRequest = { openThemeSelectDialog = false },
+                onItemSelected = {
+                    openTimeFormatSelectDialog = false
+                    Timber.d("selected theme is ${it}")
+                    onThemeSelected.invoke(it)
+                },
+                defaultItem = uiState.setting.themeType
+            )
+        }
 
         LazyColumn (modifier = Modifier
             .padding(paddingValues) ){
@@ -169,6 +175,16 @@ private fun SettingScreenContent(
                     selectedValue = uiState.setting.timeFormatType.getString(),
                     onClick = {
                         openTimeFormatSelectDialog = true
+                    }
+                )
+            }
+            //theme
+            item {
+                SettingItem(
+                    title = "Theme",
+                    selectedValue = uiState.setting.themeType.getString() ,
+                    onClick = {
+                        openThemeSelectDialog = true
                     }
                 )
             }
