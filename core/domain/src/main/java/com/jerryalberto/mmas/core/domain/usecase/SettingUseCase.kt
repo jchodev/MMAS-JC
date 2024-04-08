@@ -2,15 +2,14 @@ package com.jerryalberto.mmas.core.domain.usecase
 
 import com.jerryalberto.mmas.core.domain.repository.SettingPreferenceRepository
 
-import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.ThemeType
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import timber.log.Timber
-import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
 
@@ -65,7 +64,7 @@ class SettingUseCase @Inject constructor(
     private fun getDefaultSetting(): Setting {
         return Setting(
             countryCode = Locale.getDefault().country,
-            theme = "Dark",
+            themeType = ThemeType.DEVICE_THEME,
             dateFormat = "yyyy-MM-dd",
             timeFormatType = TimeFormatType.HOUR_24,
         )
