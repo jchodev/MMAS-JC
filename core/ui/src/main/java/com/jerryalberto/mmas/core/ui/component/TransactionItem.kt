@@ -33,7 +33,7 @@ import java.util.Calendar
 @Composable
 fun TransactionItem(
     setting: Setting = Setting(),
-    uiHelper: UiHelper = UiHelper(),
+    showTimeOnly: Boolean = true,
     modifier: Modifier = Modifier,
     transaction: Transaction,
 ) {
@@ -82,7 +82,7 @@ fun TransactionItem(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen4))
             Text(
-                text = transaction.displayDateTime(setting = setting),
+                text = transaction.displayDateTime(setting = setting, showTimeOnly = showTimeOnly),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.align(Alignment.End)

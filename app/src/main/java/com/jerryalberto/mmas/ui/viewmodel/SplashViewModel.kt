@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(
 
     fun init() {
         viewModelScope.launch {
-            settingUseCase.getSetting().asResult().collect {
+            settingUseCase.getSetting().asResult().collectLatest {
                 when (it) {
                     is Result.Loading -> {
                        // showLoading(true)

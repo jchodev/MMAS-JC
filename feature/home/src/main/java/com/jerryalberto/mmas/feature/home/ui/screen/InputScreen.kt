@@ -57,6 +57,7 @@ import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
 
 import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
+import com.jerryalberto.mmas.core.designsystem.text.AutoResizedText
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
@@ -78,7 +79,6 @@ import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
-import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -244,8 +244,9 @@ private fun InputScreenContent(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
-                Text(
-                    text = state.amountString,
+                AutoResizedText(
+                    text =  state.transaction.formatAmount(setting = setting, withPlus = false),
+                    //text = state.amountString,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
                 )
@@ -341,7 +342,7 @@ private fun InputScreenContent(
                         }
                     )
                     MmasTextEdit(
-                        value = state.transaction.displayHourMinute(),
+                        value = state.transaction.displayHourMinute(setting = setting),
                         error = state.timeError,
                         modifier = Modifier.weight(1f),
                         placeHolder = stringResource(id = R.string.feature_home_time),
@@ -360,7 +361,7 @@ private fun InputScreenContent(
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
-                    value = state.transaction.formatAmount(setting = setting, withPlus = false),
+                    value = state.amountString,
                     error = state.amountError,
                     placeHolder = stringResource(id = R.string.feature_home_amount),
                     leadingIcon = {

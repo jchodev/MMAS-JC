@@ -19,6 +19,7 @@ import java.util.Calendar
 fun TransactionBox(
     modifier: Modifier = Modifier,
     setting: Setting = Setting(),
+    showTimeOnly: Boolean = true,
     transactions: List<Transaction> = listOf(),
 ) {
     Column (
@@ -33,6 +34,7 @@ fun TransactionBox(
         transactions.forEach {
             TransactionItem(
                 setting = setting,
+                showTimeOnly = showTimeOnly,
                 transaction = it
             )
         }

@@ -76,7 +76,7 @@ class TransactionViewModel @Inject constructor(
     fun getTransactionsByYearMonth(year: Int, month: Int) {
         viewModelScope.launch {
             transactionUseCase.getAllTransactionByYearMonth(year = year, month = month).asResult()
-                .collect {
+                .collectLatest {
                     when (it) {
                         is Result.Loading -> {
                             showLoading(true)

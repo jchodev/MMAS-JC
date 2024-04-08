@@ -25,7 +25,6 @@ class SettingUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getSetting(): Flow<Setting> {
-
         return settingPreferenceRepository.getSetting().flatMapLatest { setting->
             Timber.d("SettingUseCase::getSetting():${setting}")
             if (setting.countryCode.isEmpty()){

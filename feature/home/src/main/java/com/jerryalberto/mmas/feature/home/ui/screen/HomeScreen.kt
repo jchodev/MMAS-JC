@@ -173,6 +173,7 @@ private fun HomeScreenContent(
                         .weight(1f)
                         .padding(end = MaterialTheme.dimens.dimen8),
                     bgColor = ColorConstant.IncomeGreen,
+                    textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
                     content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
@@ -180,6 +181,7 @@ private fun HomeScreenContent(
                 IncomeExpenseBox(
                     modifier = Modifier.weight(1f),
                     bgColor = ColorConstant.ExpensesRed,
+                    textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
                     content = uiState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
@@ -281,6 +283,7 @@ private fun HomeScreenContent(
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
             TransactionBox(
+                showTimeOnly = false,
                 setting = setting,
                 transactions = uiState.latestTransaction
             )

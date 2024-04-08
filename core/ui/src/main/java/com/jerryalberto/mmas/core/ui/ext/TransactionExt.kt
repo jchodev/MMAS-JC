@@ -17,9 +17,9 @@ fun Long.convertMillisToDate(dateFormat: String): String {
     return formatter.format(Date(this))
 }
 
-fun Transaction.displayDateTime(setting: Setting = Setting()): String {
+fun Transaction.displayDateTime(setting: Setting = Setting(), showTimeOnly: Boolean = true): String {
     val timeStr = displayHourMinute(setting = setting)
-    return if (date == getCurrentDateDateMillis()){
+    return if (showTimeOnly || date == getCurrentDateDateMillis()){
         timeStr
     } else {
         date?.convertMillisToDate(setting.dateFormat).plus(" ").plus(timeStr)
