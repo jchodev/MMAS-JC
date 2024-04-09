@@ -13,9 +13,8 @@ import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 import com.jerryalberto.mmas.feature.transaction.ui.screen.SearchScreen
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(settingViewModel: SettingViewModel) {
     val navController = rememberNavController()
-    val settingViewModel: SettingViewModel = hiltViewModel()
     val setting = settingViewModel.settingState.collectAsState().value
 
     NavHost(

@@ -46,4 +46,5 @@ class DoubleExtTest {
         Assertions.assertTrue(actual.startsWith("-"))
         Assertions.assertEquals("- HK$ 1.00" , actual)
     }
+
 }

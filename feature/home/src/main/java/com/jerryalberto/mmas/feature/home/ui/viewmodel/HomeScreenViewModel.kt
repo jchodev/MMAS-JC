@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
 ) : ViewModel() {
 

@@ -17,14 +17,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
@@ -40,7 +41,8 @@ import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
-import com.jerryalberto.mmas.feature.transaction.model.TransactionData
+import com.jerryalberto.mmas.feature.transaction.dialog.TransactionSearchDialog
+import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
 import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
 import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
@@ -50,10 +52,21 @@ import java.util.Calendar
 @Composable
 fun TransactionScreen(
     viewModel: TransactionViewModel = hiltViewModel(),
-    setting: Setting,
-    appNavController: NavHostController,
+    setting: Setting
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+
+    var transactionGroupList by remember { mutableStateOf(emptyList<TransactionGroup>()) }
+
+    //searchDialog
+    var openSearchDialog by remember { mutableStateOf(false) }
+    if (openSearchDialog){
+        TransactionSearchDialog(
+            setting = setting,
+            onDismissRequest = { openSearchDialog = false },
+            transactionGroupList = transactionGroupList,
+        )
+    }
 
 
     TransactionScreenContent(
@@ -63,12 +76,14 @@ fun TransactionScreen(
             viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
         },
         onSearchClick = {
-            val bundle = Bundle()
-            bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
-            appNavController.navigate(
-                route = AppRoute.SearchScreen.route,
-                args = bundle
-            )
+            transactionGroupList = uiState.transactionList
+            openSearchDialog = true
+//            val bundle = Bundle()
+//            bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
+//            appNavController.navigate(
+//                route = AppRoute.SearchScreen.route,
+//                args = bundle
+//            )
         }
     )
 }
@@ -84,7 +99,6 @@ private fun TransactionScreenContent(
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-
             MmaTopBar(
                 modifier = Modifier.shadow(elevation = MaterialTheme.dimens.dimen4),
                 title = stringResource(id = R.string.feature_transaction_title),
@@ -157,7 +171,7 @@ private fun TransactionScreenContentPreview() {
 }
 
 val mockTransactionList = listOf(
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = 1.0,
         transactions = listOf(
@@ -185,7 +199,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = -2.0,
         transactions = listOf(
@@ -213,7 +227,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = 3.0,
         transactions = listOf(
@@ -241,7 +255,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = 4.0,
         transactions = listOf(
@@ -269,7 +283,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = 5.0,
         transactions = listOf(
@@ -297,7 +311,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = 6.0,
         transactions = listOf(
@@ -325,7 +339,7 @@ val mockTransactionList = listOf(
             )
         )
     ),
-    TransactionData(
+    TransactionGroup(
         date = Calendar.getInstance().timeInMillis,
         totalAmount = -70.0,
         transactions = listOf(

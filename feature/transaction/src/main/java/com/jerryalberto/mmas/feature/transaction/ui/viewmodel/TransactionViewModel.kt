@@ -4,18 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.result.asResult
-import com.jerryalberto.mmas.core.database.model.toTransaction
-import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
-import com.jerryalberto.mmas.feature.transaction.model.TransactionData
+import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
 import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -84,7 +80,7 @@ class TransactionViewModel @Inject constructor(
                         is Result.Success -> {
                             val transactionList = it.data.map { (date, transactions) ->
                                 val totalAmount = transactions.sumOf { it.amount }
-                                TransactionData(date, totalAmount, transactions)
+                                TransactionGroup(date, totalAmount, transactions)
                             }
                             updateUI (
                                 uiState = uiState.value.copy(

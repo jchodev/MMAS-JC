@@ -23,7 +23,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<SettingViewModel>()
+    private val settingViewModel by viewModels<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             var dynamicColor = true
             var darkTheme = false
-            val setting = viewModel.settingState.collectAsState().value
+            val setting = settingViewModel.settingState.collectAsState().value
 
             when (setting.themeType) {
                 ThemeType.DEVICE_THEME -> {
@@ -63,7 +63,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    AppNavHost()
+                    AppNavHost(
+                        settingViewModel = settingViewModel
+                    )
                 }
             }
         }

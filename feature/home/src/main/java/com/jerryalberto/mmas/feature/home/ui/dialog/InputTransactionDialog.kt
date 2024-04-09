@@ -1,8 +1,6 @@
-package com.jerryalberto.mmas.feature.home.ui.screen
+package com.jerryalberto.mmas.feature.home.ui.dialog
 
-import android.annotation.SuppressLint
 import android.net.Uri
-import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,15 +19,13 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-
 import androidx.compose.material3.Text
-
-
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,21 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
-
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
-
 import com.jerryalberto.mmas.core.designsystem.edittext.MmasTextEdit
 import com.jerryalberto.mmas.core.designsystem.text.AutoResizedText
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
@@ -65,8 +54,6 @@ import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTr
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
-import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
-import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.ui.ext.displayHourMinute
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
@@ -76,59 +63,65 @@ import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
+import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
 import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
-import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
 import java.util.Calendar
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputScreen(
-    appNavController: NavHostController = rememberNavController(),
+fun InputTransactionDialog(
+    modifier: Modifier = Modifier,
     viewModel: InputScreenViewModel = hiltViewModel(),
     setting: Setting,
-    bundle: Bundle?,
+    onDismissRequest: () -> Unit = {},
+    transactionType: TransactionType = TransactionType.INCOME,
+    properties: DialogProperties = DialogProperties().let {
+        DialogProperties(
+            dismissOnBackPress = it.dismissOnBackPress,
+            dismissOnClickOutside = it.dismissOnClickOutside,
+            securePolicy = it.securePolicy,
+            usePlatformDefaultWidth = false,
+        )
+    },
 ) {
-    bundle?.getString(BundleParamKey.PARAM_TYPE).let { type->
-        val transactionType = TransactionType.entries.find { it.value == type}
-        transactionType?.let {
-            viewModel.setTransactionType(it)
-        } ?: viewModel.setTransactionType(TransactionType.INCOME)
-    }
 
-    val onTopBarLeftClick: () -> Unit = {
-        appNavController.popBackStack()
-    }
-
+    viewModel.init()
+    viewModel.setTransactionType(transactionType)
 
     val onSavedState by viewModel.onSaved.collectAsState(null)
     // Handle navigation on successful save (optional):
     if (onSavedState != null) {
         LaunchedEffect(onSavedState) {
-            onTopBarLeftClick.invoke()
+            onDismissRequest.invoke()
         }
     }
 
-    InputScreenContent(
-        state = viewModel.uiState.collectAsState().value,
-        setting = setting,
-        onTopBarLeftClick = onTopBarLeftClick,
-        expensesCategories = viewModel.getExpenseCategories(),
-        incomeCategories = viewModel.getIncomeCategories(),
-        onDescriptionChange = viewModel::onDescriptionChange,
-        onDateSelected = viewModel::onDateSelected,
-        onTimeSelected = viewModel::onTimeSelected,
-        onCategorySelected = viewModel::onCategorySelected,
-        onAmountChange = viewModel::onAmountChange,
-        onSaveClick = viewModel::saveTransaction,
-        onSelectedUri = viewModel::onSelectedUri,
-    )
+    BasicAlertDialog(
+        modifier = modifier.fillMaxSize(),
+        onDismissRequest = onDismissRequest,
+        properties = properties
+    ) {
+        InputTransactionContent(
+            state = viewModel.uiState.collectAsState().value,
+            setting = setting,
+            onTopBarLeftClick = onDismissRequest,
+            expensesCategories = viewModel.getExpenseCategories(),
+            incomeCategories = viewModel.getIncomeCategories(),
+            onDescriptionChange = viewModel::onDescriptionChange,
+            onDateSelected = viewModel::onDateSelected,
+            onTimeSelected = viewModel::onTimeSelected,
+            onCategorySelected = viewModel::onCategorySelected,
+            onAmountChange = viewModel::onAmountChange,
+            onSaveClick = viewModel::saveTransaction,
+            onSelectedUri = viewModel::onSelectedUri,
+        )
+    }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun InputScreenContent(
+private fun InputTransactionContent(
     state: InputUiDataState = InputUiDataState(),
     setting: Setting = Setting(),
     onTopBarLeftClick: () -> Unit = {},
@@ -231,7 +224,7 @@ private fun InputScreenContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 //amount
                 AutoResizedText(
-                    text =  state.transaction.formatAmount(setting = setting, withPlus = false),
+                    text =  state.transaction.amount.formatAmount(setting = setting, withPlus = false),
                     //text = state.amountString,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White,
@@ -390,8 +383,8 @@ private fun InputScreenContent(
 
 @DevicePreviews
 @Composable
-private fun InputScreenPreview(){
+private fun InputTransactionDialogContentPreview(){
     MmasTheme {
-        InputScreenContent()
+        InputTransactionContent()
     }
 }

@@ -195,6 +195,7 @@ fun SmallFloatingActionButtonRow(
         if (showLabel) {
             Text(
                 text = item.label,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(start = 6.dp, end = 6.dp, top = 4.dp, bottom = 4.dp)
                     .clickable(onClick = {
