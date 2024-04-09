@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -28,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jerryalberto.mmas.R
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
@@ -50,7 +52,6 @@ fun MainNavHost(
     val currentSelectedScreen by mainNavController.currentScreenAsState()
 
     val setting = settingViewModel.settingState.collectAsState().value
-
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
     Scaffold(
@@ -60,7 +61,7 @@ fun MainNavHost(
                 items = listOf(
                     BottomBarItem(
                         route = MainRoute.HomeScreen.route,
-                        title = "Home",
+                        title = stringResource(id = R.string.app_main_nav_home),
                         selectedIcon = Icons.Filled.Home,
                         unselectedIcon = Icons.Outlined.Home,
                         onClick = {
@@ -69,7 +70,7 @@ fun MainNavHost(
                     ),
                     BottomBarItem(
                         route = MainRoute.TransactionScreen.route,
-                        title = "Transaction",
+                        title = stringResource(id = R.string.app_main_nav_transaction),
                         selectedIcon = Icons.Filled.Analytics,
                         unselectedIcon = Icons.Outlined.Analytics,
                         onClick = {
@@ -78,7 +79,7 @@ fun MainNavHost(
                     ),
                     BottomBarItem(
                         route = MainRoute.SettingScreen.route,
-                        title = "Setting",
+                        title = stringResource(id = R.string.app_main_nav_setting),
                         selectedIcon = Icons.Filled.Settings,
                         unselectedIcon = Icons.Outlined.Settings,
                         onClick = {
@@ -90,7 +91,9 @@ fun MainNavHost(
         }
     ) {
         NavHost(
-            modifier = Modifier.fillMaxSize().padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             navController = mainNavController,
             startDestination = MainRoute.HomeScreen.route
         ){

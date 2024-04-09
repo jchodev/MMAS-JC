@@ -115,27 +115,13 @@ fun InputScreen(
         onTopBarLeftClick = onTopBarLeftClick,
         expensesCategories = viewModel.getExpenseCategories(),
         incomeCategories = viewModel.getIncomeCategories(),
-        onDescriptionChange = {
-            viewModel.onDescriptionChange(it)
-        },
-        onDateSelected = {
-            viewModel.onDateSelected(it)
-        },
-        onTimeSelected = { hour, minute ->
-            viewModel.onTimeSelected(hour = hour, minute = minute)
-        },
-        onCategorySelected = {
-            viewModel.onCategorySelected(it)
-        },
-        onAmountChange = {
-            viewModel.onAmountChange(it)
-        },
-        onSaveClick = {
-            viewModel.saveTransaction()
-        },
-        onSelectedUri = {
-            viewModel.onSelectedUri(it)
-        }
+        onDescriptionChange = viewModel::onDescriptionChange,
+        onDateSelected = viewModel::onDateSelected,
+        onTimeSelected = viewModel::onTimeSelected,
+        onCategorySelected = viewModel::onCategorySelected,
+        onAmountChange = viewModel::onAmountChange,
+        onSaveClick = viewModel::saveTransaction,
+        onSelectedUri = viewModel::onSelectedUri,
     )
 }
 

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">mmas-jc</string>
+    <string name="app_main_nav_home">Home</string>
+    <string name="app_main_nav_transaction">Transaction</string>
+    <string name="app_main_nav_setting">Setting</string>
+
 </resources>
