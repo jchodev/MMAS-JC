@@ -39,6 +39,11 @@ class InputScreenViewModel @Inject constructor(
     private val _onSaved = MutableStateFlow<Boolean?>(null)
     val onSaved = _onSaved.asStateFlow()
 
+    fun init(){
+        savedStateHandle[INPUT_STATE_KEY] = InputUiDataState()
+        _onSaved.value = null
+    }
+
     fun getExpenseCategories(): List<Category> {
         return categoriesUseCase.getExpenseCategories()
     }
@@ -166,14 +171,6 @@ class InputScreenViewModel @Inject constructor(
             saveData(
                 uiState = uiState.value.copy(
                     timeError = context.getString(R.string.feature_home_error_field_require)
-                )
-            )
-            return
-        }
-        if (uiState.value.transaction.amount == null){
-            saveData(
-                uiState = uiState.value.copy(
-                    amountError = context.getString(R.string.feature_home_error_field_require)
                 )
             )
             return

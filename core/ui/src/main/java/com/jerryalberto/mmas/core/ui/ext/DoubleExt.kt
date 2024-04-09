@@ -19,8 +19,8 @@ fun Double.formatAmount(setting: Setting = Setting(), withCurrencySymbol:Boolean
     } else {
         NumberFormat.getInstance()
     }
-    format.setMinimumFractionDigits(2)
-    format.setMaximumFractionDigits(2)
+    format.minimumFractionDigits = 2
+    format.maximumFractionDigits = 2
 
     val formattedStr = format.format(amountForCalc / 100).replace(" ", " ")
 

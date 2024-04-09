@@ -1,7 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.screen
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,12 +49,10 @@ import com.jerryalberto.mmas.feature.home.ui.component.MultiFloatingActionButton
 import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
-import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
-import com.jerryalberto.mmas.core.ui.ext.navigate
-import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
+import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
 
 
 import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
@@ -67,6 +68,18 @@ fun HomeScreen(
 ) {
     val uiState = homeScreenViewModel.uiState.collectAsState().value
 
+    var selectedTransactionType by remember { mutableStateOf(TransactionType.INCOME) }
+
+    //inputDialog
+    var openInputDialog by remember { mutableStateOf(false) }
+    if (openInputDialog){
+        InputTransactionDialog(
+            setting = setting,
+            onDismissRequest = { openInputDialog = false },
+            transactionType = selectedTransactionType
+        )
+    }
+
     val floatingActionButton = @Composable {
         MultiFloatingActionButton (
             fabIcon = Icons.Rounded.Add,
@@ -78,12 +91,15 @@ fun HomeScreen(
                     bgColor = ColorConstant.IncomeGreen,
                     iconColor = Color.White,
                     onFabItemClicked = {
-                        val bundle = Bundle()
-                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.INCOME.value)
-                        appNavController.navigate(
-                            route = AppRoute.InputScreen.route,
-                            args = bundle
-                        )
+                        selectedTransactionType = TransactionType.INCOME
+                        openInputDialog = true
+
+//                        val bundle = Bundle()
+//                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.INCOME.value)
+//                        appNavController.navigate(
+//                            route = AppRoute.InputScreen.route,
+//                            args = bundle
+//                        )
                     }
                 ),
                 FabItem(
@@ -92,12 +108,14 @@ fun HomeScreen(
                     bgColor = ColorConstant.ExpensesRed,
                     iconColor = Color.White,
                     onFabItemClicked = {
-                        val bundle = Bundle()
-                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.EXPENSES.value)
-                        appNavController.navigate(
-                            route = AppRoute.InputScreen.route,
-                            args = bundle
-                        )
+//                        val bundle = Bundle()
+//                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.EXPENSES.value)
+//                        appNavController.navigate(
+//                            route = AppRoute.InputScreen.route,
+//                            args = bundle
+//                        )
+                        selectedTransactionType = TransactionType.EXPENSES
+                        openInputDialog = true
                     }
                 )
             )

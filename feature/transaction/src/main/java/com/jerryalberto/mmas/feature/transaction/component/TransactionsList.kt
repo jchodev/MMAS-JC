@@ -26,7 +26,7 @@ import com.jerryalberto.mmas.core.ui.component.TransactionItem
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
-import com.jerryalberto.mmas.feature.transaction.model.TransactionData
+import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,7 +34,7 @@ import java.util.Calendar
 fun TransactionsList(
     setting: Setting = Setting(),
     modifier:Modifier = Modifier,
-    transactionData: List<TransactionData> = listOf()
+    transactionData: List<TransactionGroup> = listOf()
 ) {
     Box(
       modifier = modifier.fillMaxSize()
@@ -80,7 +80,7 @@ private fun LazyColumnWithStickyHeaderPreview(){
     MmasTheme {
         TransactionsList(
             transactionData = listOf(
-                TransactionData(
+                TransactionGroup(
                     date = Calendar.getInstance().timeInMillis,
                     totalAmount = 0.0,
                     transactions = listOf(
