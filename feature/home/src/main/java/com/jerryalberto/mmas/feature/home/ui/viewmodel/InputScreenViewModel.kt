@@ -5,7 +5,8 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
+import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.common.result.asResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
@@ -13,11 +14,12 @@ import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
+import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -30,18 +32,18 @@ class InputScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val INPUT_STATE_KEY = "INPUT_STATE_KEY"
+    private val INPUT_DATA_STATE_KEY = "INPUT_DATA_STATE_KEY"
 
-    val uiState = savedStateHandle.getStateFlow(
-        INPUT_STATE_KEY, InputUiDataState()
+    private val _uiState = MutableStateFlow<InputUiIState>(InputUiIState.Initial)
+    val uiState = _uiState.asStateFlow()
+
+    val dataState = savedStateHandle.getStateFlow(
+        INPUT_DATA_STATE_KEY, InputTransactionDataState()
     )
 
-    private val _onSaved = MutableStateFlow<Boolean?>(null)
-    val onSaved = _onSaved.asStateFlow()
-
     fun init(){
-        savedStateHandle[INPUT_STATE_KEY] = InputUiDataState()
-        _onSaved.value = null
+        savedStateHandle[INPUT_DATA_STATE_KEY] = InputTransactionDataState()
+        _uiState.value = InputUiIState.Initial
     }
 
     fun getExpenseCategories(): List<Category> {
@@ -54,8 +56,8 @@ class InputScreenViewModel @Inject constructor(
 
     fun onDescriptionChange(description: String){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     description = description
                 ),
             )
@@ -64,8 +66,8 @@ class InputScreenViewModel @Inject constructor(
 
     fun onDateSelected(date: Long){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     date = date
                 )
             )
@@ -74,8 +76,8 @@ class InputScreenViewModel @Inject constructor(
 
     fun onTimeSelected(hour: Int, minute: Int){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     hour = hour,
                     minute = minute,
                 )
@@ -85,8 +87,8 @@ class InputScreenViewModel @Inject constructor(
 
     fun onCategorySelected(category: Category){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     category = category
                 )
             )
@@ -101,8 +103,8 @@ class InputScreenViewModel @Inject constructor(
 
         }
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     amount = amount,
                 ),
                 amountString = amountString,
@@ -112,8 +114,8 @@ class InputScreenViewModel @Inject constructor(
 
     fun onSelectedUri(uri: Uri){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     uri = if (uri == Uri.EMPTY){
                         ""
                     } else {
@@ -126,22 +128,22 @@ class InputScreenViewModel @Inject constructor(
 
     fun setTransactionType(transactionType: TransactionType){
         saveData(
-            uiState = uiState.value.copy(
-                transaction = uiState.value.transaction.copy(
+            uiState = dataState.value.copy(
+                transaction = dataState.value.transaction.copy(
                     type = transactionType
                 )
             )
         )
     }
 
-    private fun saveData(uiState: InputUiDataState){
-        savedStateHandle[INPUT_STATE_KEY] = uiState
+    private fun saveData(uiState: InputTransactionDataState){
+        savedStateHandle[INPUT_DATA_STATE_KEY] = uiState
     }
 
     fun saveTransaction(){
         //clear error
         saveData(
-            uiState = uiState.value.copy(
+            uiState = dataState.value.copy(
                 descriptionError = null,
                 amountError = null,
                 dateError = null,
@@ -151,33 +153,33 @@ class InputScreenViewModel @Inject constructor(
         )
 
         //basic checking
-        if (uiState.value.transaction.category == null){
+        if (dataState.value.transaction.category == null){
             saveData(
-                uiState = uiState.value.copy(
+                uiState = dataState.value.copy(
                     categoryError = context.getString(R.string.feature_home_error_field_require)
                 )
             )
             return
         }
-        if (uiState.value.transaction.date == null){
+        if (dataState.value.transaction.date == null){
             saveData(
-                uiState = uiState.value.copy(
+                uiState = dataState.value.copy(
                     dateError = context.getString(R.string.feature_home_error_field_require)
                 )
             )
             return
         }
-        if (uiState.value.transaction.hour == null){
+        if (dataState.value.transaction.hour == null){
             saveData(
-                uiState = uiState.value.copy(
+                uiState = dataState.value.copy(
                     timeError = context.getString(R.string.feature_home_error_field_require)
                 )
             )
             return
         }
-        if (uiState.value.transaction.amount!! <= 0.0){
+        if (dataState.value.transaction.amount!! <= 0.0){
             saveData(
-                uiState = uiState.value.copy(
+                uiState = dataState.value.copy(
                     amountError = context.getString(R.string.feature_home_error_amount_greater_than_zero)
                 )
             )
@@ -185,20 +187,21 @@ class InputScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            transactionUseCase.insertTransaction(
-                uiState.value.transaction
-            )
-            val list = transactionUseCase.getLatestTransaction().toList()
-            list.forEach {
-                Timber.d(it.toString())
+            transactionUseCase.insertTransaction(dataState.value.transaction)
+                .asResult().collectLatest {result ->
+                    _uiState.value = when (result) {
+                        is Result.Success -> InputUiIState.Success
+                        is Result.Loading -> InputUiIState.Loading
+                        is Result.Error -> InputUiIState.Error(exception = result.exception)
+                    }
             }
-
-            saveData(
-                uiState = InputUiDataState()
-            )
-            //_onSaved.emit(_onSaved.value?.not() ?: false)
         }
-        _onSaved.value = _onSaved.value?.not() ?: false
     }
+}
 
+sealed interface InputUiIState {
+    data object Initial : InputUiIState
+    data object Loading : InputUiIState
+    data object Success : InputUiIState
+    data class Error(val exception: Throwable) : InputUiIState
 }

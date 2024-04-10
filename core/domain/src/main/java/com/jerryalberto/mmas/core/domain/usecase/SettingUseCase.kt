@@ -27,11 +27,13 @@ class SettingUseCase @Inject constructor(
     suspend fun getSetting(): Flow<Setting> {
         return settingPreferenceRepository.getSetting().flatMapLatest { setting->
             Timber.d("SettingUseCase::getSetting():${setting}")
-            if (setting.countryCode.isEmpty()){
+            if (setting.countryCode.isEmpty()) {
+                Timber.d("SettingUseCase::getSetting()::get default")
                 val defaultSetting = getDefaultSetting()
                 saveSetting(defaultSetting)
                 flowOf(defaultSetting)
             } else {
+                Timber.d("SettingUseCase::getSetting()::have data")
                 flowOf(setting)
             }
         }

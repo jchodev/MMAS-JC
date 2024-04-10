@@ -89,8 +89,8 @@ class TransactionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertTransaction(transaction: Transaction) {
-        withContext(ioDispatcher) {
+    override suspend fun insertTransaction(transaction: Transaction): Long {
+        return withContext(ioDispatcher) {
             dao.insertTransaction(transaction.asEntity())
         }
     }

@@ -130,7 +130,7 @@ private fun AddAttachmentRowPreview(
 ) {
     MmasTheme {
         AddAttachmentRow(
-            uri = "android.resource://${LocalContext.current.packageName}/${R.drawable.ic_parking}".toUri()
+            uri = "android.resource://${LocalContext.current.packageName}/${android.R.drawable.btn_radio}".toUri()
         )
     }
 }

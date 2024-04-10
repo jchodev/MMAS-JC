@@ -4,7 +4,7 @@ gradle = "8.1.0"
 desugaring = "2.0.3"
 # androidx
 androidx-core = "1.10.1"
-androidx-lifecycle = "2.6.1"
+androidx-lifecycle = "2.7.0"
 androidx-multidex = "2.0.1"
 androidx-splash = "1.0.1"
 androidx-appcompat = "1.6.1"
@@ -55,6 +55,9 @@ hilt-navigation-compose = "1.1.0"
 
 kotlinx-serialization-json = "1.5.1"
 
+#turbine
+turbine = "1.1.0"
+
 [libraries]
 # must have libraries
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
@@ -93,6 +96,7 @@ compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose-constraintlayout" }
+compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 # hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-hilt" }
@@ -121,6 +125,8 @@ kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-s
 koltin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine" }
 #mockk
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+#turbine
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -145,7 +151,8 @@ androidx-compose = [
     "compose.foundation.layout",
     "compose.runtime",
     "compose.constraintlayout",
-    "androidx.hilt.navigation.compose"
+    "androidx.hilt.navigation.compose",
+    "compose.lifecycle"
 ]
 
 junit5-test-implementation = [
