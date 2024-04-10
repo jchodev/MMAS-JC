@@ -7,6 +7,8 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionSummary
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
@@ -18,12 +20,13 @@ class TransactionUseCase @Inject constructor(
         return transactionRepository.getLatestTransaction(latest = 4)
     }
 
-    suspend fun insertTransaction(transaction: Transaction){
-        transactionRepository.insertTransaction(transaction = transaction)
+    suspend fun insertTransaction(transaction: Transaction):  Flow<Long> = flow {
+        emit(transactionRepository.insertTransaction(transaction = transaction))
     }
 
-    suspend fun deleteAllTransaction(){
+    suspend fun deleteAllTransaction(): Flow<Unit> = flow {
         transactionRepository.deleteAllTransaction()
+        emit(Unit) // Emit an empty Unit after deletion
     }
 
     suspend fun getSumAmountGroupedByType(

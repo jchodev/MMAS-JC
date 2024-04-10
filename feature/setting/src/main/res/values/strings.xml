@@ -14,4 +14,12 @@
     <string name="feature_setting_dark">Dark</string>
     <string name="feature_setting_light">Light</string>
     <string name="feature_setting_device_theme">Device Theme</string>
+
+    <string name="feature_setting_currency">Currency</string>
+    <string name="feature_setting_date_format">Date Format</string>
+    <string name="feature_setting_time_format">Time Format</string>
+    <string name="feature_setting_theme">theme</string>
+    <string name="feature_setting_delete_all_transaction">Delete all transaction</string>
+    <string name="feature_setting_are_you_sure_delete_all_transaction">Are you sure delete all transaction?</string>
+    <string name="feature_setting_completed">Completed</string>
 </resources>

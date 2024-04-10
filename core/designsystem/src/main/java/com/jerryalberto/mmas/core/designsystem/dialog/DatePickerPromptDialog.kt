@@ -35,14 +35,14 @@ fun DatePickerPromptDialog(
             }
 
             ) {
-                Text(text = stringResource(R.string.ok))
+                Text(text = stringResource(R.string.core_designsystem_ok))
             }
         },
         dismissButton = {
             Button(onClick = {
                 onDismiss()
             }) {
-                Text(text = stringResource(R.string.cancel))
+                Text(text = stringResource(R.string.core_designsystem_cancel))
             }
         }
     ) {

@@ -51,4 +51,7 @@
     <string name="feature_home_bonus">Bonus</string>
     <string name="feature_home_side_job">Side Job</string>
     <string name="feature_home_gifts">Gifts</string>
+
+    <string name="feature_home_transaction_saved">Saved</string>
+    <string name="feature_home_no_transaction">*** No Transaction ***</string>
 </resources>

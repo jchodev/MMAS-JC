@@ -96,7 +96,7 @@ private fun TransactionSearchContent(
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBackIosNew,
-                            contentDescription = stringResource(id = R.string.close),
+                            contentDescription = stringResource(id = R.string.core_designsystem_close),
                         )
                     }
                 },

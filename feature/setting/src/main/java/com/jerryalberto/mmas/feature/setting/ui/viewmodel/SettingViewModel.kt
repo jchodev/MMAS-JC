@@ -5,65 +5,82 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.SettingUseCase
+import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.CountryData
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.ThemeType
 import com.jerryalberto.mmas.core.model.data.TimeFormatType
 import com.jerryalberto.mmas.core.ui.ext.toCountryData
-import com.jerryalberto.mmas.feature.setting.ui.uistate.SettingUIDataState
+
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val settingUseCase: SettingUseCase
+    private val settingUseCase: SettingUseCase,
+    private val transactionUseCase: TransactionUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingUIDataState())
+    private val _uiState = MutableStateFlow<SettingUIState>(SettingUIState.Initial)
     val uiState = _uiState.asStateFlow()
+
+    private val _fetchSettingState = MutableStateFlow<FetchSettingDataState>(FetchSettingDataState.Loading)
+    val fetchSettingState = _fetchSettingState.asStateFlow()
 
     private val _settingState = MutableStateFlow(Setting())
     val settingState = _settingState.asStateFlow()
 
     init {
-        Timber.d("SettingViewModel::init!!")
-        viewModelScope.launch {
-            settingUseCase.getSetting().asResult().collectLatest {
-                when (it) {
-                    is Result.Loading -> {
-                        showLoading(true)
-                    }
-                    is Result.Success -> {
-                        Timber.d("SettingViewModel::success!!")
+        Timber.d("SettingViewModel::init")
+        //fetchSetting()
+    }
 
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                                setting = it.data
-                            )
-                        )
+    fun fetchSetting(){
+        Timber.d("SettingViewModel::fetchSetting")
+        viewModelScope.launch {
+            settingUseCase.getSetting().asResult().collectLatest {result->
+                Timber.d("SettingViewModel::result:${result}")
+                _fetchSettingState.value = when (result) {
+                    is Result.Success -> {
+                        _settingState.value = result.data
+                        FetchSettingDataState.Success
                     }
-                    else -> {
-                        //TODO
-                        showLoading(false)
-                    }
+                    is Result.Loading -> FetchSettingDataState.Loading
+                    is Result.Error -> FetchSettingDataState.Error(exception = result.exception)
                 }
             }
         }
     }
 
-    private fun showLoading(show: Boolean){
-        updateUI (
-            uiState = uiState.value.copy(
-                loading = show
-            )
-        )
+    fun clearData(){
+        Timber.d("SettingViewModel::clearData")
+        viewModelScope.launch {
+            transactionUseCase.deleteAllTransaction().asResult().collectLatest {result->
+                _uiState.value = when (result) {
+                    is Result.Success -> {
+                        resultUiState()
+                        SettingUIState.Success
+                    }
+                    is Result.Loading -> SettingUIState.Loading
+                    is Result.Error -> SettingUIState.Error(exception = result.exception)
+                }
+            }
+        }
+    }
+
+    private fun resultUiState(){
+        viewModelScope.launch {
+            delay(500)
+            _uiState.value = SettingUIState.Initial
+        }
     }
 
     fun getCountryList() : List<CountryData> {
@@ -85,57 +102,50 @@ class SettingViewModel @Inject constructor(
     }
 
     fun onCountryDataSelected(countryCode: String){
-        updateUI(
-            uiState = uiState.value.copy(
-                setting = uiState.value.setting.copy(
-                    countryCode = countryCode
-                )
-            )
+        _settingState.value = settingState.value.copy(
+            countryCode = countryCode
         )
         saveTransaction()
     }
 
     fun onDateFormatSelected(dateFormat: String){
-        updateUI(
-            uiState = uiState.value.copy(
-                setting = uiState.value.setting.copy(
-                    dateFormat = dateFormat
-                )
-            )
+        _settingState.value = settingState.value.copy(
+            dateFormat = dateFormat
         )
         saveTransaction()
     }
     fun onTimeFormatSelected(timeFormatType: TimeFormatType){
-        updateUI(
-            uiState = uiState.value.copy(
-                setting = uiState.value.setting.copy(
-                    timeFormatType = timeFormatType
-                )
-            )
+        _settingState.value = settingState.value.copy(
+            timeFormatType = timeFormatType
         )
         saveTransaction()
     }
 
     fun onThemeSelected(themeType: ThemeType){
-        updateUI(
-            uiState = uiState.value.copy(
-                setting = uiState.value.setting.copy(
-                    themeType = themeType
-                )
-            )
+        _settingState.value = settingState.value.copy(
+            themeType = themeType
         )
         saveTransaction()
     }
 
-    private fun updateUI(uiState: SettingUIDataState){
-        _uiState.value = uiState
-        _settingState.value = uiState.setting
-    }
 
     private fun saveTransaction(){
         viewModelScope.launch {
-            settingUseCase.saveSetting(_uiState.value.setting)
+            settingUseCase.saveSetting(settingState.value)
         }
     }
 
+}
+
+sealed interface FetchSettingDataState {
+    data object Loading : FetchSettingDataState
+    data object Success : FetchSettingDataState
+    data class Error(val exception: Throwable) : FetchSettingDataState
+}
+
+sealed interface SettingUIState {
+    data object Initial : SettingUIState
+    data object Loading : SettingUIState
+    data object Success : SettingUIState
+    data class Error(val exception: Throwable) : SettingUIState
 }

@@ -16,7 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.designsystem.topbar.MmaTopBar
@@ -35,9 +35,6 @@ import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
-import com.jerryalberto.mmas.core.ui.constants.BundleParamKey
-import com.jerryalberto.mmas.core.ui.ext.navigate
-import com.jerryalberto.mmas.core.ui.navigation.AppRoute
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
@@ -54,7 +51,7 @@ fun TransactionScreen(
     viewModel: TransactionViewModel = hiltViewModel(),
     setting: Setting
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     var transactionGroupList by remember { mutableStateOf(emptyList<TransactionGroup>()) }
 

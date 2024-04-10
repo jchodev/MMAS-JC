@@ -12,7 +12,7 @@ interface TransactionRepository {
 
     suspend fun getAllTransaction(): Flow<List<Transaction>>
     suspend fun getAllTransactionGroupByDate(): Flow<Map<Triple<Int, Int, Int>, List<Transaction>>>
-    suspend fun insertTransaction(transaction: Transaction)
+    suspend fun insertTransaction(transaction: Transaction): Long
 
     //main page
     suspend fun getGroupedAmountByDateRange(dateFrom: Long, dataTo: Long): Flow<List<TransactionSummaryQueryResult>>

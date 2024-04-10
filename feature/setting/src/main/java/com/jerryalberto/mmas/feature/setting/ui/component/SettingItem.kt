@@ -24,50 +24,45 @@ import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 
 @Composable
 fun SettingItem(
+    modifier: Modifier = Modifier,
     title: String = "title",
     selectedValue: String = "selected Value",
     onClick : () -> Unit = {}
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-    ) {
-        ListItem(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onClick.invoke()
-                },
-            headlineContent = {
-                Text (
-                    color = MaterialTheme.colorScheme.onBackground,
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+    ListItem(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick.invoke()
             },
-            trailingContent = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        text = selectedValue,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .padding(start = MaterialTheme.dimens.dimen8)
-                            .size(MaterialTheme.dimens.dimen24),
-                        imageVector = Icons.Filled.ArrowForwardIos,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
+        headlineContent = {
+            Text (
+                color = MaterialTheme.colorScheme.onBackground,
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        },
+        trailingContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = selectedValue,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(start = MaterialTheme.dimens.dimen8)
+                        .size(MaterialTheme.dimens.dimen24),
+                    imageVector = Icons.Filled.ArrowForwardIos,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
-        )
-        VerticalDivider()
-    }
-
+        }
+    )
 }
 
 @DevicePreviews

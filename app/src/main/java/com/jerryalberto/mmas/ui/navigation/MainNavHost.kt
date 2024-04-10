@@ -11,17 +11,19 @@ import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 
@@ -44,17 +46,18 @@ import com.jerryalberto.mmas.ui.components.BottomBarItem
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainNavHost(
-    appNavController: NavHostController = rememberNavController(),
+    mainNavController: NavHostController = rememberNavController(),
     settingViewModel: SettingViewModel,
 ) {
 
-    val mainNavController = rememberNavController()
     val currentSelectedScreen by mainNavController.currentScreenAsState()
-
-    val setting = settingViewModel.settingState.collectAsState().value
+    val setting = settingViewModel.settingState.collectAsStateWithLifecycle().value
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             BottomBar(
                 currentSelectedScreen = currentSelectedScreen,
@@ -100,7 +103,6 @@ fun MainNavHost(
             composable(MainRoute.HomeScreen.route) {
                 HomeScreen(
                     mainNavController = mainNavController,
-                    appNavController = appNavController,
                     setting = setting,
                     homeScreenViewModel = homeScreenViewModel,
                 )
@@ -109,7 +111,6 @@ fun MainNavHost(
             composable(MainRoute.TransactionScreen.route) {
                 TransactionScreen(
                     setting = setting,
-                    appNavController = appNavController,
                 )
             }
 

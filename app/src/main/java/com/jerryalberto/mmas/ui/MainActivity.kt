@@ -7,18 +7,19 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
+
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
-import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.ThemeType
-import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
-import com.jerryalberto.mmas.ui.navigation.AppNavHost
+import com.jerryalberto.mmas.ui.navigation.MainNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.text.NumberFormat
 import java.util.Locale
+import com.jerryalberto.mmas.core.ui.component.LoadingCompose
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.FetchSettingDataState
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -42,7 +43,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             var dynamicColor = true
             var darkTheme = false
-            val setting = settingViewModel.settingState.collectAsState().value
+            val setting = settingViewModel.settingState.collectAsStateWithLifecycle().value
+            val fetchSettingState = settingViewModel.fetchSettingState.collectAsStateWithLifecycle().value
 
             when (setting.themeType) {
                 ThemeType.DEVICE_THEME -> {
@@ -58,17 +60,30 @@ class MainActivity : ComponentActivity() {
             }
 
             MmasTheme(dynamicColor = dynamicColor, darkTheme = darkTheme) {
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    AppNavHost(
-                        settingViewModel = settingViewModel
-                    )
+                    Timber.d("MainActivity::fetchSettingState::${fetchSettingState}")
+                    when (fetchSettingState) {
+                        is FetchSettingDataState.Loading -> LoadingCompose()
+                        is FetchSettingDataState.Success -> {
+                            MainNavHost(
+                                settingViewModel = settingViewModel
+                            )
+                        }
+                        else -> {
+                            //TODO
+                        }
+                    }
+
                 }
             }
         }
+
+        settingViewModel.fetchSetting()
     }
 }
 

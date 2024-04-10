@@ -21,7 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
@@ -50,6 +52,7 @@ import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
+import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
 import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
@@ -64,9 +67,8 @@ fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     setting: Setting,
     mainNavController: NavHostController,
-    appNavController: NavHostController,
 ) {
-    val uiState = homeScreenViewModel.uiState.collectAsState().value
+    val uiState = homeScreenViewModel.uiState.collectAsStateWithLifecycle().value
 
     var selectedTransactionType by remember { mutableStateOf(TransactionType.INCOME) }
 
@@ -93,13 +95,6 @@ fun HomeScreen(
                     onFabItemClicked = {
                         selectedTransactionType = TransactionType.INCOME
                         openInputDialog = true
-
-//                        val bundle = Bundle()
-//                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.INCOME.value)
-//                        appNavController.navigate(
-//                            route = AppRoute.InputScreen.route,
-//                            args = bundle
-//                        )
                     }
                 ),
                 FabItem(
@@ -108,12 +103,6 @@ fun HomeScreen(
                     bgColor = ColorConstant.ExpensesRed,
                     iconColor = Color.White,
                     onFabItemClicked = {
-//                        val bundle = Bundle()
-//                        bundle.putString(BundleParamKey.PARAM_TYPE, TransactionType.EXPENSES.value)
-//                        appNavController.navigate(
-//                            route = AppRoute.InputScreen.route,
-//                            args = bundle
-//                        )
                         selectedTransactionType = TransactionType.EXPENSES
                         openInputDialog = true
                     }
@@ -300,11 +289,21 @@ private fun HomeScreenContent(
                 rightTextOnClick = onSeeAllClick
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            TransactionBox(
-                showTimeOnly = false,
-                setting = setting,
-                transactions = uiState.latestTransaction
-            )
+            if (uiState.latestTransaction.isNotEmpty()) {
+                TransactionBox(
+                    showTimeOnly = false,
+                    setting = setting,
+                    transactions = uiState.latestTransaction
+                )
+            }
+            else {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = R.string.feature_home_no_transaction),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }
@@ -350,6 +349,5 @@ private fun HomeScreenContentPreview() {
                 )
             }
         }
-
     }
 }

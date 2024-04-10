@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.home.ui.dialog
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,11 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jerryalberto.mmas.core.designsystem.button.MmasButton
 import com.jerryalberto.mmas.core.designsystem.dialog.DatePickerPromptDialog
 import com.jerryalberto.mmas.core.designsystem.dialog.TimePickerPromptDialog
@@ -54,6 +55,7 @@ import com.jerryalberto.mmas.core.designsystem.utils.CurrencyAmountInputVisualTr
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.LoadingCompose
 import com.jerryalberto.mmas.core.ui.ext.convertMillisToDate
 import com.jerryalberto.mmas.core.ui.ext.displayHourMinute
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
@@ -62,10 +64,10 @@ import com.jerryalberto.mmas.core.ui.ext.getImageVector
 import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.ui.component.AddAttachmentRow
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
-import com.jerryalberto.mmas.feature.home.ui.uistate.InputUiDataState
+import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputUiIState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,40 +91,42 @@ fun InputTransactionDialog(
     viewModel.init()
     viewModel.setTransactionType(transactionType)
 
-    val onSavedState by viewModel.onSaved.collectAsState(null)
-    // Handle navigation on successful save (optional):
-    if (onSavedState != null) {
-        LaunchedEffect(onSavedState) {
-            onDismissRequest.invoke()
-        }
-    }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     BasicAlertDialog(
         modifier = modifier.fillMaxSize(),
         onDismissRequest = onDismissRequest,
         properties = properties
     ) {
-        InputTransactionContent(
-            state = viewModel.uiState.collectAsState().value,
-            setting = setting,
-            onTopBarLeftClick = onDismissRequest,
-            expensesCategories = viewModel.getExpenseCategories(),
-            incomeCategories = viewModel.getIncomeCategories(),
-            onDescriptionChange = viewModel::onDescriptionChange,
-            onDateSelected = viewModel::onDateSelected,
-            onTimeSelected = viewModel::onTimeSelected,
-            onCategorySelected = viewModel::onCategorySelected,
-            onAmountChange = viewModel::onAmountChange,
-            onSaveClick = viewModel::saveTransaction,
-            onSelectedUri = viewModel::onSelectedUri,
-        )
+        when (uiState) {
+            is InputUiIState.Loading -> LoadingCompose()
+            else -> InputTransactionContent(
+                state = viewModel.dataState.collectAsStateWithLifecycle().value,
+                setting = setting,
+                onTopBarLeftClick = onDismissRequest,
+                expensesCategories = viewModel.getExpenseCategories(),
+                incomeCategories = viewModel.getIncomeCategories(),
+                onDescriptionChange = viewModel::onDescriptionChange,
+                onDateSelected = viewModel::onDateSelected,
+                onTimeSelected = viewModel::onTimeSelected,
+                onCategorySelected = viewModel::onCategorySelected,
+                onAmountChange = viewModel::onAmountChange,
+                onSaveClick = viewModel::saveTransaction,
+                onSelectedUri = viewModel::onSelectedUri,
+            )
+        }
+
+        if (uiState is InputUiIState.Success) {
+            Toast.makeText(LocalContext.current, stringResource(id = R.string.feature_home_transaction_saved), Toast.LENGTH_SHORT).show()
+            onDismissRequest.invoke()
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputTransactionContent(
-    state: InputUiDataState = InputUiDataState(),
+    state: InputTransactionDataState = InputTransactionDataState(),
     setting: Setting = Setting(),
     onTopBarLeftClick: () -> Unit = {},
     incomeCategories: List<Category> = listOf(),
@@ -362,19 +366,20 @@ private fun InputTransactionContent(
                     visualTransformation = CurrencyAmountInputVisualTransformation(),
                     keyboardType = KeyboardType.NumberPassword
                 )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
 
-                AddAttachmentRow(
-                    uri = if (state.transaction.uri.isEmpty()){
-                        Uri.EMPTY
-                    } else {
-                        state.transaction.uri.toUri()
-                    },
-                    onSelectedUri = onSelectedUri,
-                    onDelete = {
-                        onSelectedUri.invoke(Uri.EMPTY)
-                    }
-                )
+                //Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
+
+//                AddAttachmentRow(
+//                    uri = if (state.transaction.uri.isEmpty()){
+//                        Uri.EMPTY
+//                    } else {
+//                        state.transaction.uri.toUri()
+//                    },
+//                    onSelectedUri = onSelectedUri,
+//                    onDelete = {
+//                        onSelectedUri.invoke(Uri.EMPTY)
+//                    }
+//                )
 
             }
         }
