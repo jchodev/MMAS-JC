@@ -36,13 +36,13 @@ fun TransactionsList(
     modifier:Modifier = Modifier,
     setting: Setting = Setting(),
     transactionData: List<TransactionGroup> = listOf(),
-    onDelete: (Transaction) -> Unit = {}
+    onDelete: (Transaction) -> Unit = {},
+    supportDelete: Boolean = true
 ) {
     Box(
       modifier = modifier.fillMaxSize()
     ) {
         LazyColumn(modifier = Modifier
-            //.background(Color.White)
             .fillMaxSize()) {
             transactionData.forEachIndexed { index, group->
                 stickyHeader {
@@ -65,11 +65,19 @@ fun TransactionsList(
                 items(
                     items = group.transactions
                 ) {
-                    TransactionItemWithRemove(
-                        setting = setting,
-                        transaction = it,
-                        onDelete = onDelete
-                    )
+                    if (supportDelete) {
+                        TransactionItemWithRemove(
+                            setting = setting,
+                            transaction = it,
+                            onDelete = onDelete
+                        )
+                    }
+                    else {
+                        TransactionItem(
+                            setting = setting,
+                            transaction = it,
+                        )
+                    }
                 }
             }
 

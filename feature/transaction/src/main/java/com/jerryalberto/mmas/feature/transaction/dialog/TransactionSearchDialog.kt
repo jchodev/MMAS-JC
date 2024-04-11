@@ -125,6 +125,7 @@ private fun TransactionSearchContent(
                     filteredItems
                 },
                 setting = setting,
+                supportDelete = false,
             )
         }
     }

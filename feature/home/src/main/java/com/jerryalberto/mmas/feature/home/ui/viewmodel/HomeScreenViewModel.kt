@@ -28,7 +28,6 @@ class HomeScreenViewModel @Inject constructor(
     private val _uiDataState = MutableStateFlow<HomeUiData>(HomeUiData())
     val uiDataState = _uiDataState.asStateFlow()
 
-
     init {
         getDataFromDB()
     }
@@ -59,6 +58,7 @@ class HomeScreenViewModel @Inject constructor(
     fun getAmountByType(type: AccountBalanceDataType = AccountBalanceDataType.TOTAL) {
         viewModelScope.launch {
             transactionUseCase.getSumAmountGroupedByType(type).asResult().collectLatest{ result ->
+                println("getAmountByType::result::${result}")
                 _uiState.value = when (result) {
                     is Result.Loading -> HomeUIState.Loading
                     is Result.Error -> HomeUIState.Error(exception = result.exception)
@@ -73,7 +73,6 @@ class HomeScreenViewModel @Inject constructor(
                 }
             }
         }
-
     }
 
     fun onTractionDelete(transaction: Transaction){

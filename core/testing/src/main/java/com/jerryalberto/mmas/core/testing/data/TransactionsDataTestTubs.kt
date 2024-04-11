@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.core.testing.data
 
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
 import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
+import com.jerryalberto.mmas.core.model.data.TransactionSummary
 import java.util.Calendar
 
 class TransactionsDataTestTubs {
@@ -126,6 +127,11 @@ class TransactionsDataTestTubs {
             calendar.add(Calendar.MONTH, -1)
             return calendar
         }
+
+        val transactionSummary = TransactionSummary(
+                income = 100.0,
+                expenses = 200.0
+        )
 
     }
 

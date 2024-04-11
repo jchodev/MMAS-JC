@@ -37,5 +37,6 @@ dependencies {
 
     //turbine
     testImplementation(libs.turbine)
+    testImplementation(project(":core:testing"))
 
 }
