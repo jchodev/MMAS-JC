@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
 import app.cash.turbine.test
+import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
@@ -14,7 +15,9 @@ import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -81,7 +84,9 @@ class HomeScreenViewModelTest {
     }
 
     private fun initFailed(){
-        coEvery { transactionUseCase.getLatestTransaction() } throws ExceptionTestTubs.NormalException
+        coEvery { transactionUseCase.getLatestTransaction() } returns flow{
+            throw ExceptionTestTubs.NormalException
+        }
         coEvery { transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL) } returns flowOf(
             TransactionsDataTestTubs.transactionSummary
         )
@@ -158,6 +163,22 @@ class HomeScreenViewModelTest {
         }
     }
 
+    @Test
+    fun `test HomeScreenViewModel HomeUIDataState when init(getDataFromDB) collect expected Error`() = runTest {
+        initFailed()
+        viewModel.uiDataState.test {
+            val originalHomeUiData = awaitItem()
+            //verify
+            Assertions.assertEquals(HomeUiData().type, originalHomeUiData.type)
+            Assertions.assertEquals(HomeUiData().totalIncome, originalHomeUiData.totalIncome)
+            Assertions.assertEquals(HomeUiData().totalExpenses, originalHomeUiData.totalExpenses)
+            Assertions.assertEquals(
+                HomeUiData().latestTransaction.size,
+                originalHomeUiData.latestTransaction.size
+            )
+        }
+    }
+
     @TestFactory
     fun `test HomeScreenViewModel HomeUiData getAmountByType with different type collect expected success`() : List<DynamicTest> =
         transactionSummaryMap.map { map->
@@ -166,6 +187,7 @@ class HomeScreenViewModelTest {
             ){
                 runTest {
                     initSuccess()
+
                     viewModel.uiState.test {
 
                         //init{}
@@ -179,6 +201,46 @@ class HomeScreenViewModelTest {
                         //verify
                         Assertions.assertEquals(HomeUIState.Loading, awaitItem())
                         Assertions.assertEquals(HomeUIState.Success, awaitItem())
+                    }
+                }
+            }
+        }
+
+    @TestFactory
+    fun `test HomeScreenViewModel HomeUiData getAmountByType with different type collect expected error`() : List<DynamicTest> =
+        transactionSummaryMap.map { map->
+            DynamicTest.dynamicTest(
+                "test HomeScreenViewModel HomeUiData getAmountByType with ${map.key.value} collect expected error"
+            ){
+                runTest {
+                    initSuccess()
+                    viewModel.uiState.test {
+
+                        //init{}
+                        Assertions.assertEquals(HomeUIState.Initial, awaitItem())
+                        Assertions.assertEquals(HomeUIState.Loading, awaitItem())
+                        Assertions.assertEquals(HomeUIState.Success, awaitItem())
+
+
+                        //assign
+                        coEvery { transactionUseCase.getSumAmountGroupedByType(any()) } returns flow{
+                            throw ExceptionTestTubs.NormalException
+                        }
+
+                        //action
+                        viewModel.getAmountByType(map.key)
+
+                        //verify
+                        Assertions.assertEquals(HomeUIState.Loading, awaitItem())
+                        when (val errorResult = awaitItem()) {
+                            is HomeUIState.Error -> {
+                                Assertions.assertEquals(
+                                    ExceptionTestTubs.exceptionStr,
+                                    errorResult.exception.message,
+                                )
+                            }
+                            else -> {}
+                        }
                     }
                 }
             }
@@ -239,7 +301,6 @@ class HomeScreenViewModelTest {
         }
 
 
-
     @Test
     fun `test onTractionDelete HomeUIState with success`() = runTest {
         initSuccess()
@@ -259,8 +320,37 @@ class HomeScreenViewModelTest {
             //verify
             Assertions.assertEquals(HomeUIState.Loading, awaitItem())
             Assertions.assertEquals(HomeUIState.Success, awaitItem())
+        }
+    }
 
-            //awaitComplete()
+    @Test
+    fun `test onTractionDelete HomeUIState with Error`() = runTest {
+        initSuccess()
+        //assign
+        coEvery { transactionUseCase.deleteTransactionById(any()) } returns flow{
+            throw ExceptionTestTubs.NormalException
+        }
+        viewModel.uiState.test {
+
+            //init{}
+            Assertions.assertEquals(HomeUIState.Initial, awaitItem())
+            Assertions.assertEquals(HomeUIState.Loading, awaitItem())
+            Assertions.assertEquals(HomeUIState.Success, awaitItem())
+
+            //action
+            viewModel.onTractionDelete(mockDeleteTransaction)
+
+            //verify
+            Assertions.assertEquals(HomeUIState.Loading, awaitItem())
+            when (val errorResult = awaitItem()) {
+                is HomeUIState.Error -> {
+                    Assertions.assertEquals(
+                        ExceptionTestTubs.exceptionStr,
+                        errorResult.exception.message,
+                    )
+                }
+                else -> {}
+            }
         }
     }
 
@@ -328,6 +418,44 @@ class HomeScreenViewModelTest {
             Assertions.assertEquals(afterDeleteTransactionList, actualUiState.latestTransaction)
         }
 
+    }
+
+    @Test
+    fun `test onTractionDelete uiDataState with error`() = runTest {
+        initSuccess()
+        //assign
+        coEvery { transactionUseCase.deleteTransactionById(any()) } returns flow{
+            throw ExceptionTestTubs.NormalException
+        }
+
+        //action
+        viewModel.onTractionDelete(mockDeleteTransaction)
+
+        viewModel.uiDataState.test {
+            val originalHomeUiData = awaitItem()
+            //verify
+            Assertions.assertEquals(HomeUiData().type, originalHomeUiData.type)
+            Assertions.assertEquals(HomeUiData().totalIncome, originalHomeUiData.totalIncome)
+            Assertions.assertEquals(HomeUiData().totalExpenses, originalHomeUiData.totalExpenses)
+            Assertions.assertEquals(
+                HomeUiData().latestTransaction.size,
+                originalHomeUiData.latestTransaction.size
+            )
+
+            //init{}
+            val totalTypeHomeUiData = awaitItem()
+            //verify
+            Assertions.assertEquals(AccountBalanceDataType.TOTAL, totalTypeHomeUiData.type)
+            Assertions.assertEquals(
+                TransactionsDataTestTubs.transactionSummary.income,
+                totalTypeHomeUiData.totalIncome
+            )
+            Assertions.assertEquals(
+                TransactionsDataTestTubs.transactionSummary.expenses,
+                totalTypeHomeUiData.totalExpenses
+            )
+            Assertions.assertEquals(transactionList, totalTypeHomeUiData.latestTransaction)
+        }
     }
 }
 
