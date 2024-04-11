@@ -32,8 +32,8 @@ import java.util.Calendar
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsList(
-    setting: Setting = Setting(),
     modifier:Modifier = Modifier,
+    setting: Setting = Setting(),
     transactionData: List<TransactionGroup> = listOf()
 ) {
     Box(
@@ -56,7 +56,6 @@ fun TransactionsList(
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                     }
-
                 }
 
                 items(

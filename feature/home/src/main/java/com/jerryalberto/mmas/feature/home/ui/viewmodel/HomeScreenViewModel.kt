@@ -3,18 +3,18 @@ package com.jerryalberto.mmas.feature.home.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.asResult
-import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
-import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.jerryalberto.mmas.core.common.result.Result
-import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
-import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
+import com.jerryalberto.mmas.core.model.data.Transaction
+import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,44 +22,34 @@ class HomeScreenViewModel @Inject constructor(
     private val transactionUseCase: TransactionUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUIDataState())
+    private val _uiState = MutableStateFlow<HomeUIState>(HomeUIState.Initial)
     val uiState = _uiState.asStateFlow()
 
+    private val _uiDataState = MutableStateFlow<HomeUiData>(HomeUiData())
+    val uiDataState = _uiDataState.asStateFlow()
+
+
     init {
+        getDataFromDB()
+    }
+
+    private fun getDataFromDB(){
         viewModelScope.launch {
-
-            transactionUseCase.deleteAllTransaction()
-
-            insertTestDate()
-
             transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL)) { transactions, summaries ->
                 Pair(transactions, summaries)
-            }.asResult().collect {
-                when (it){
-                    is Result.Loading -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = true
-                            )
-                        )
-                    }
+            }.asResult().collectLatest { result->
+                Timber.d("result:${result}")
+                _uiState.value = when (result) {
+                    is Result.Loading -> HomeUIState.Loading
+                    is Result.Error -> HomeUIState.Error(exception = result.exception)
                     is Result.Success -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                                latestTransaction = it.data.first,
-                                totalIncome = it.data.second.income,
-                                totalExpenses = it.data.second.expenses,
-                            )
+                        _uiDataState.value = HomeUiData(
+                            type = AccountBalanceDataType.TOTAL,
+                            latestTransaction = result.data.first,
+                            totalIncome = result.data.second.income,
+                            totalExpenses = result.data.second.expenses,
                         )
-                    }
-                    else -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                            )
-                        )
-                        //TODO
+                        HomeUIState.Success
                     }
                 }
             }
@@ -68,114 +58,49 @@ class HomeScreenViewModel @Inject constructor(
 
     fun getAmountByType(type: AccountBalanceDataType = AccountBalanceDataType.TOTAL) {
         viewModelScope.launch {
-            transactionUseCase.getSumAmountGroupedByType(type).asResult().collect{
-                when (it){
-                    is Result.Loading -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = true
-                            )
-                        )
-                    }
+            transactionUseCase.getSumAmountGroupedByType(type).asResult().collectLatest{ result ->
+                _uiState.value = when (result) {
+                    is Result.Loading -> HomeUIState.Loading
+                    is Result.Error -> HomeUIState.Error(exception = result.exception)
                     is Result.Success -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                type = type,
-                                loading = false,
-                                totalIncome = it.data.income,
-                                totalExpenses = it.data.expenses,
-                            )
+                        _uiDataState.value = HomeUiData(
+                            type = type,
+                            totalIncome = result.data.income,
+                            totalExpenses = result.data.expenses,
                         )
-                    }
-                    else -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                            )
-                        )
-                        //TODO
+                        HomeUIState.Success
                     }
                 }
             }
         }
-//        viewModelScope.launch {
-//            transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(uiState.value.type)) { transactions, summaries ->
-//                Pair(transactions, summaries)
-//            }.asResult().collect {
-//                when (it){
-//                    is Result.Loading -> {
-//                        updateUI (
-//                            uiState = uiState.value.copy(
-//                                loading = true
-//                            )
-//                        )
-//                    }
-//                    is Result.Success -> {
-//                        updateUI (
-//                            uiState = uiState.value.copy(
-//                                loading = false,
-//                                latestTransaction = it.data.first,
-//                                totalIncome = uiHelper.formatAmount(it.data.second.income),
-//                                totalExpenses = uiHelper.formatAmount(it.data.second.expenses),
-//                                totalAmount = uiHelper.formatAmount(it.data.second.income - it.data.second.expenses)
-//                            )
-//                        )
-//                    }
-//                    else -> {
-//                        updateUI (
-//                            uiState = uiState.value.copy(
-//                                loading = false,
-//                            )
-//                        )
-//                        //TODO
-//                    }
-//                }
-//            }
-//        }
+
     }
 
-    fun getLastFourTransaction(){
+    fun onTractionDelete(transaction: Transaction){
+        Timber.d("HomeSceenViewModel::onTransactionDelete::${transaction.id}")
         viewModelScope.launch {
-            transactionUseCase.getLatestTransaction().asResult().collect {
-                when (it){
+            Timber.d("HomeSceenViewModel::onTransactionDelete2::${transaction.id}")
+            transactionUseCase.deleteTransactionById(id = transaction.id).asResult().collectLatest{ result ->
+                when (result) {
                     is Result.Loading -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = true
-                            )
-                        )
+                        _uiState.value = HomeUIState.Loading
+                    }
+                    is Result.Error -> {
+                        _uiState.value = HomeUIState.Error(exception = result.exception)
                     }
                     is Result.Success -> {
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                                latestTransaction = it.data
-                            )
-                        )
-                    }
-                    else -> {
-                        //show some error
+                        getDataFromDB()
                     }
                 }
             }
         }
     }
 
-    private fun updateUI(uiState: HomeUIDataState){
-        _uiState.value = uiState
-    }
+}
 
-    private suspend fun insertTestDate(){
-        TransactionsDataTestTubs.mockTodayTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-
-        TransactionsDataTestTubs.lastWeekTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-
-        TransactionsDataTestTubs.lastMonthTransactions.forEach {
-            transactionUseCase.insertTransaction(it.toTransaction())
-        }
-    }
+sealed interface HomeUIState {
+    data object Initial : HomeUIState
+    data object Loading : HomeUIState
+    data object Success : HomeUIState
+    data class Error(val exception: Throwable) : HomeUIState
 }

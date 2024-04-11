@@ -32,6 +32,10 @@ class TransactionRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteTransactionById(id: Long) {
+        dao.deleteTransactionById(id = id)
+    }
+
     override suspend fun getTransactionByDate(date: Long): Flow<List<Transaction>> {
         return withContext(ioDispatcher) {
             val triple = date.convertMillisToYearMonthDay()

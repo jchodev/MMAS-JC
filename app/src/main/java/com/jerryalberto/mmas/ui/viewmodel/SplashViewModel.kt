@@ -33,18 +33,18 @@ class SplashViewModel @Inject constructor(
                        // showLoading(true)
                     }
                     is Result.Success -> {
-                        transactionUseCase.deleteAllTransaction()
-                        TransactionsDataTestTubs.mockTodayTransactions.forEach {
-                            transactionUseCase.insertTransaction(it.toTransaction())
-                        }
-
-                        TransactionsDataTestTubs.lastWeekTransactions.forEach {
-                            transactionUseCase.insertTransaction(it.toTransaction())
-                        }
-
-                        TransactionsDataTestTubs.lastMonthTransactions.forEach {
-                            transactionUseCase.insertTransaction(it.toTransaction())
-                        }
+//                        transactionUseCase.deleteAllTransaction()
+//                        TransactionsDataTestTubs.mockTodayTransactions.forEach {
+//                            transactionUseCase.insertTransaction(it.toTransaction())
+//                        }
+//
+//                        TransactionsDataTestTubs.lastWeekTransactions.forEach {
+//                            transactionUseCase.insertTransaction(it.toTransaction())
+//                        }
+//
+//                        TransactionsDataTestTubs.lastMonthTransactions.forEach {
+//                            transactionUseCase.insertTransaction(it.toTransaction())
+//                        }
 
                         _readyStatue.value = true
                     }

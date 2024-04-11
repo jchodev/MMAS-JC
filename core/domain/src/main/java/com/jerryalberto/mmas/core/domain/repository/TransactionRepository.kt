@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface TransactionRepository {
 
     suspend fun deleteAllTransaction()
+    suspend fun deleteTransactionById(id: Long)
     suspend fun getTransactionByDate(date: Long): Flow<List<Transaction>>
 
     suspend fun getAllTransaction(): Flow<List<Transaction>>

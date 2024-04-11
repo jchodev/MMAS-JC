@@ -7,9 +7,11 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionSummary
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -22,6 +24,22 @@ class TransactionUseCase @Inject constructor(
 
     suspend fun insertTransaction(transaction: Transaction):  Flow<Long> = flow {
         emit(transactionRepository.insertTransaction(transaction = transaction))
+    }
+
+    suspend fun deleteTransactionById(id: Long): Flow<Unit> = flow {
+        System.out.println("delete id:: ${id}")
+        transactionRepository.deleteTransactionById(id = id)
+
+        val list = transactionRepository.getAllTransaction().first()
+
+        System.out.println("after delete:: ${list.size}")
+
+        emit(Unit) // Emit an empty Unit after deletion
+    }
+
+    suspend fun deleteTransactionById2(id: Long){
+        System.out.println("delete id:: ${id}")
+        transactionRepository.deleteTransactionById(id = id)
     }
 
     suspend fun deleteAllTransaction(): Flow<Unit> = flow {

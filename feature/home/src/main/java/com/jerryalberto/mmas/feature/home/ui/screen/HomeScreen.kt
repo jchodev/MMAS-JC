@@ -43,7 +43,9 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.LoadingCompose
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.FabItem
@@ -52,14 +54,13 @@ import com.jerryalberto.mmas.feature.home.ui.component.PieChart
 import com.jerryalberto.mmas.core.ui.component.TransactionBox
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
-import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
+import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
 
-
-import com.jerryalberto.mmas.feature.home.ui.uistate.HomeUIDataState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeUIState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -68,7 +69,9 @@ fun HomeScreen(
     setting: Setting,
     mainNavController: NavHostController,
 ) {
+
     val uiState = homeScreenViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiDataState = homeScreenViewModel.uiDataState.collectAsStateWithLifecycle().value
 
     var selectedTransactionType by remember { mutableStateOf(TransactionType.INCOME) }
 
@@ -110,22 +113,30 @@ fun HomeScreen(
             )
         )
     }
+
+
     Box(modifier = Modifier.fillMaxSize()){
-        Scaffold (
-            floatingActionButton = floatingActionButton
-        ) { paddingValues ->
-            HomeScreenContent(
-                uiState = uiState,
-                setting = setting,
-                onTypeClicked = {
-                    homeScreenViewModel.getAmountByType(
-                        it
+        when (uiState) {
+            is HomeUIState.Loading -> LoadingCompose()
+            else -> {
+                Scaffold (
+                    floatingActionButton = floatingActionButton
+                ) { paddingValues ->
+                    HomeScreenContent(
+                        uiDataState = uiDataState,
+                        setting = setting,
+                        onTypeClicked = {
+                            homeScreenViewModel.getAmountByType(
+                                it
+                            )
+                        },
+                        onSeeAllClick = {
+                            mainNavController.navigate(MainRoute.TransactionScreen.route)
+                        },
+                        onDelete = homeScreenViewModel::onTractionDelete
                     )
-                },
-                onSeeAllClick = {
-                    mainNavController.navigate(MainRoute.TransactionScreen.route)
                 }
-            )
+            }
         }
     }
 
@@ -135,11 +146,12 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     setting: Setting = Setting(),
-    uiState : HomeUIDataState,
+    uiDataState : HomeUiData,
     onTypeClicked: (AccountBalanceDataType) -> Unit = {},
     onSeeAllClick: () -> Unit = {},
+    onDelete: (Transaction) -> Unit = {},
 ) {
-    val accountBalanceDataTypeDesc = when (uiState.type) {
+    val accountBalanceDataTypeDesc = when (uiDataState.type) {
         AccountBalanceDataType.TOTAL -> stringResource(id = R.string.feature_home_total)
         AccountBalanceDataType.TODAY -> stringResource(id = R.string.feature_home_today)
         AccountBalanceDataType.MONTH -> stringResource(id = R.string.feature_home_month)
@@ -165,7 +177,7 @@ private fun HomeScreenContent(
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                 Text(
-                    text = uiState.getTotalAmount().formatAmount(setting = setting),
+                    text = uiDataState.getTotalAmount().formatAmount(setting = setting),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.displayMedium,
                 )
@@ -183,7 +195,7 @@ private fun HomeScreenContent(
                     textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_income),
                     title = stringResource(id = R.string.feature_home_income),
-                    content = uiState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
+                    content = uiDataState.totalIncome.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
                 IncomeExpenseBox(
                     modifier = Modifier.weight(1f),
@@ -191,7 +203,7 @@ private fun HomeScreenContent(
                     textColor = Color.White,
                     icon = ImageVector.vectorResource(R.drawable.ic_expenses),
                     title = stringResource(id = R.string.feature_home_expenses),
-                    content = uiState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
+                    content = uiDataState.totalExpenses.formatAmount(setting = setting, withCurrencySymbol = true)
                 )
             }
         }
@@ -201,8 +213,8 @@ private fun HomeScreenContent(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
             PieChart(
                 data = listOf(
-                    Pair(ColorConstant.ExpensesRed, uiState.totalExpenses),
-                    Pair(ColorConstant.IncomeGreen, uiState.totalIncome),
+                    Pair(ColorConstant.ExpensesRed, uiDataState.totalExpenses),
+                    Pair(ColorConstant.IncomeGreen, uiDataState.totalIncome),
                 )
             )
 //            PieChartWithText(
@@ -238,7 +250,7 @@ private fun HomeScreenContent(
                     SpendFrequencyButton(
                         modifier = Modifier.wrapContentSize(),
                         text = stringResource(id = R.string.feature_home_total),
-                        selected = uiState.type == AccountBalanceDataType.TOTAL,
+                        selected = uiDataState.type == AccountBalanceDataType.TOTAL,
                         onClick = {
                             onTypeClicked.invoke(AccountBalanceDataType.TOTAL)
                         }
@@ -249,7 +261,7 @@ private fun HomeScreenContent(
                     SpendFrequencyButton(
                         modifier = Modifier.wrapContentSize(),
                         text = stringResource(id = R.string.feature_home_today),
-                        selected = uiState.type == AccountBalanceDataType.TODAY,
+                        selected = uiDataState.type == AccountBalanceDataType.TODAY,
                         onClick = {
                             onTypeClicked.invoke(AccountBalanceDataType.TODAY)
                         }
@@ -260,7 +272,7 @@ private fun HomeScreenContent(
                     SpendFrequencyButton(
                         modifier = Modifier.wrapContentSize(),
                         text = stringResource(id = R.string.feature_home_week),
-                        selected = uiState.type == AccountBalanceDataType.WEEK,
+                        selected = uiDataState.type == AccountBalanceDataType.WEEK,
                         onClick = {
                             onTypeClicked.invoke(AccountBalanceDataType.WEEK)
                         }
@@ -271,7 +283,7 @@ private fun HomeScreenContent(
                     SpendFrequencyButton(
                         modifier = Modifier.wrapContentSize(),
                         text = stringResource(id = R.string.feature_home_month),
-                        selected = uiState.type == AccountBalanceDataType.MONTH,
+                        selected = uiDataState.type == AccountBalanceDataType.MONTH,
                         onClick = {
                             onTypeClicked.invoke(AccountBalanceDataType.MONTH)
                         }
@@ -289,11 +301,12 @@ private fun HomeScreenContent(
                 rightTextOnClick = onSeeAllClick
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
-            if (uiState.latestTransaction.isNotEmpty()) {
+            if (uiDataState.latestTransaction.isNotEmpty()) {
                 TransactionBox(
                     showTimeOnly = false,
                     setting = setting,
-                    transactions = uiState.latestTransaction
+                    transactions = uiDataState.latestTransaction,
+                    onDelete = onDelete
                 )
             }
             else {
@@ -345,7 +358,7 @@ private fun HomeScreenContentPreview() {
                 floatingActionButton = floatingActionButton
             ) {
                 HomeScreenContent(
-                    uiState = HomeUIDataState()
+                    uiDataState = HomeUiData()
                 )
             }
         }
