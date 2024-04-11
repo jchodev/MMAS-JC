@@ -1,8 +1,10 @@
 package com.jerryalberto.mmas.feature.transaction.ui.screen
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -34,14 +36,18 @@ import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.LoadingCompose
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
+import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingUIState
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.dialog.TransactionSearchDialog
 import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
+import com.jerryalberto.mmas.feature.transaction.model.TransactionUIData
 import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
 import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
+import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionUIState
 import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import java.util.Calendar
 
@@ -52,6 +58,7 @@ fun TransactionScreen(
     setting: Setting
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val uiDataState = viewModel.uiDataState.collectAsStateWithLifecycle().value
 
     var transactionGroupList by remember { mutableStateOf(emptyList<TransactionGroup>()) }
 
@@ -65,33 +72,37 @@ fun TransactionScreen(
         )
     }
 
-
-    TransactionScreenContent(
-        uiState = uiState,
-        setting = setting,
-        onYearMonthItemClick = {
-            viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
-        },
-        onSearchClick = {
-            transactionGroupList = uiState.transactionList
-            openSearchDialog = true
-//            val bundle = Bundle()
-//            bundle.putParcelableArrayList(BundleParamKey.PARAM_LIST, ArrayList(uiState.transactionList))
-//            appNavController.navigate(
-//                route = AppRoute.SearchScreen.route,
-//                args = bundle
-//            )
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        when (uiState) {
+            is TransactionUIState.Loading -> LoadingCompose()
+            else -> {
+                TransactionScreenContent(
+                    uiDataState = uiDataState,
+                    setting = setting,
+                    onYearMonthItemClick = {
+                        viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
+                    },
+                    onSearchClick = {
+                        transactionGroupList = uiDataState.transactionList
+                        openSearchDialog = true
+                    },
+                    onDelete = viewModel::onTractionDelete
+                )
+            }
         }
-    )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionScreenContent(
-    uiState: TransactionUIDataState = TransactionUIDataState(),
+    uiDataState: TransactionUIData = TransactionUIData(),
     setting: Setting = Setting(),
     onYearMonthItemClick : (YearMonthItem) -> Unit = {},
-    onSearchClick: () -> Unit = {}
+    onSearchClick: () -> Unit = {},
+    onDelete: (Transaction) -> Unit = {},
 ){
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
@@ -115,7 +126,7 @@ private fun TransactionScreenContent(
             .padding(MaterialTheme.dimens.dimen16))
         {
             LazyRow {
-                uiState.listOfYearMonth.forEach {
+                uiDataState.listOfYearMonth.forEach {
                     item {
                         SpendFrequencyButton(
                             modifier = Modifier.wrapContentSize(),
@@ -133,7 +144,8 @@ private fun TransactionScreenContent(
 
             TransactionsList(
                 setting = setting,
-                transactionData = uiState.transactionList
+                transactionData = uiDataState.transactionList,
+                onDelete = onDelete
             )
         }
 
@@ -147,7 +159,7 @@ private fun TransactionScreenContentPreview() {
     val bundle = Bundle()
     MmasTheme {
         TransactionScreenContent(
-            uiState = TransactionUIDataState(
+            uiDataState = TransactionUIData(
                 listOfYearMonth = listOf(
                     YearMonthItem(
                         year = 2024,

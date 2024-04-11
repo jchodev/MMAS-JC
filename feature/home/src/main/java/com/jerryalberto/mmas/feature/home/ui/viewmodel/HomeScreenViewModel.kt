@@ -63,7 +63,7 @@ class HomeScreenViewModel @Inject constructor(
                     is Result.Loading -> HomeUIState.Loading
                     is Result.Error -> HomeUIState.Error(exception = result.exception)
                     is Result.Success -> {
-                        _uiDataState.value = HomeUiData(
+                        _uiDataState.value = uiDataState.value.copy(
                             type = type,
                             totalIncome = result.data.income,
                             totalExpenses = result.data.expenses,
@@ -77,9 +77,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onTractionDelete(transaction: Transaction){
-        Timber.d("HomeSceenViewModel::onTransactionDelete::${transaction.id}")
         viewModelScope.launch {
-            Timber.d("HomeSceenViewModel::onTransactionDelete2::${transaction.id}")
             transactionUseCase.deleteTransactionById(id = transaction.id).asResult().collectLatest{ result ->
                 when (result) {
                     is Result.Loading -> {

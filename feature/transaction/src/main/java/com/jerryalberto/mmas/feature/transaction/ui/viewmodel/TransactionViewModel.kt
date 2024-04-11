@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
+import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
+import com.jerryalberto.mmas.feature.transaction.model.TransactionUIData
 import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
 import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,22 +23,31 @@ class TransactionViewModel @Inject constructor(
     private val transactionUseCase: TransactionUseCase
 ): ViewModel(){
 
-    private val _uiState = MutableStateFlow<TransactionUIDataState>(TransactionUIDataState())
+    private val _uiState = MutableStateFlow<TransactionUIState>(TransactionUIState.Initial)
     val uiState = _uiState.asStateFlow()
 
+    private val _uiDataState = MutableStateFlow<TransactionUIData>(TransactionUIData())
+    val uiDataState = _uiDataState.asStateFlow()
+
     init {
+        getDataFromDB()
+    }
+
+    private fun getDataFromDB(){
         viewModelScope.launch {
             var latestYear = 0
             var latestMonth = 0
-            transactionUseCase.getListOfYearMonth().asResult().collectLatest{
-                when (it) {
+            transactionUseCase.getListOfYearMonth().asResult().collectLatest{ result ->
+                when (result) {
                     is Result.Loading -> {
-                        showLoading(true)
+                        _uiState.value = TransactionUIState.Loading
+                    }
+                    is Result.Error -> {
+                        _uiState.value = TransactionUIState.Error(exception = result.exception)
                     }
                     is Result.Success -> {
-                        Timber.d("TransactionViewModel:init:"+ it.data)
-                        val listOfYearMonth =  it.data.mapIndexed  {index, yearMonth ->
-                            val selected = (index == it.data.lastIndex)
+                        val listOfYearMonth =  result.data.mapIndexed  {index, yearMonth ->
+                            val selected = (index == result.data.lastIndex)
                             if (selected) {
                                 latestYear = yearMonth.year
                                 latestMonth = yearMonth.month
@@ -47,22 +58,13 @@ class TransactionViewModel @Inject constructor(
                                 selected = selected
                             )
                         }
-
-                        updateUI (
-                            uiState = uiState.value.copy(
-                                loading = false,
-                                listOfYearMonth = listOfYearMonth
-                            )
+                        _uiDataState.value = uiDataState.value.copy(
+                            listOfYearMonth = listOfYearMonth
                         )
 
-                        // get transaction by year and month
                         if (latestYear > 0){
                             getTransactionsByYearMonth(year = latestYear, month = latestMonth)
                         }
-                    }
-                    else -> {
-                        //TODO
-                        showLoading(false)
                     }
                 }
             }
@@ -72,50 +74,55 @@ class TransactionViewModel @Inject constructor(
     fun getTransactionsByYearMonth(year: Int, month: Int) {
         viewModelScope.launch {
             transactionUseCase.getAllTransactionByYearMonth(year = year, month = month).asResult()
-                .collectLatest {
-                    when (it) {
-                        is Result.Loading -> {
-                            showLoading(true)
-                        }
+                .collectLatest { result->
+                    _uiState.value = when (result) {
+                        is Result.Loading -> TransactionUIState.Loading
+                        is Result.Error -> TransactionUIState.Error(exception = result.exception)
                         is Result.Success -> {
-                            val transactionList = it.data.map { (date, transactions) ->
+                            val transactionList = result.data.map { (date, transactions) ->
                                 val totalAmount = transactions.sumOf { it.amount }
                                 TransactionGroup(date, totalAmount, transactions)
                             }
-                            updateUI (
-                                uiState = uiState.value.copy(
-                                    transactionList = transactionList,
-                                    listOfYearMonth = uiState.value.listOfYearMonth.map { item->
-                                        if (item.year == year && item.month == month) {
-                                            item.copy(selected = true) // Create a new item with selected set to true
-                                        } else {
-                                            item.copy(selected = false) // Create a new item with selected set to false (optional)
-                                        }
+                            _uiDataState.value = uiDataState.value.copy(
+                                transactionList = transactionList,
+                                listOfYearMonth = uiDataState.value.listOfYearMonth.map { item->
+                                    if (item.year == year && item.month == month) {
+                                        item.copy(selected = true) // Create a new item with selected set to true
+                                    } else {
+                                        item.copy(selected = false) // Create a new item with selected set to false (optional)
                                     }
-                                )
+                                }
                             )
-                            showLoading(false)
-                        }
-                        else -> {
-                            //TODO
-                            showLoading(false)
+                            TransactionUIState.Success
                         }
                     }
+
                 }
         }
     }
 
-    private fun showLoading(show: Boolean){
-        updateUI (
-            uiState = uiState.value.copy(
-                loading = show
-            )
-        )
+    fun onTractionDelete(transaction: Transaction){
+        viewModelScope.launch {
+            transactionUseCase.deleteTransactionById(id = transaction.id).asResult().collectLatest{ result ->
+                when (result) {
+                    is Result.Loading -> {
+                        _uiState.value = TransactionUIState.Loading
+                    }
+                    is Result.Error -> {
+                        _uiState.value = TransactionUIState.Error(exception = result.exception)
+                    }
+                    is Result.Success -> {
+                        getDataFromDB()
+                    }
+                }
+            }
+        }
     }
+}
 
-    private fun updateUI(uiState: TransactionUIDataState){
-        _uiState.value = uiState
-    }
-
-
+sealed interface TransactionUIState {
+    data object Initial : TransactionUIState
+    data object Loading : TransactionUIState
+    data object Success: TransactionUIState
+    data class Error(val exception: Throwable) : TransactionUIState
 }

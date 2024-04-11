@@ -23,6 +23,7 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.component.TransactionItem
+import com.jerryalberto.mmas.core.ui.component.TransactionItemWithRemove
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
@@ -34,7 +35,8 @@ import java.util.Calendar
 fun TransactionsList(
     modifier:Modifier = Modifier,
     setting: Setting = Setting(),
-    transactionData: List<TransactionGroup> = listOf()
+    transactionData: List<TransactionGroup> = listOf(),
+    onDelete: (Transaction) -> Unit = {}
 ) {
     Box(
       modifier = modifier.fillMaxSize()
@@ -44,7 +46,9 @@ fun TransactionsList(
             .fillMaxSize()) {
             transactionData.forEachIndexed { index, group->
                 stickyHeader {
-                    Column(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.background)) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)) {
                         if (index > 0) {
                             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                         }
@@ -61,9 +65,10 @@ fun TransactionsList(
                 items(
                     items = group.transactions
                 ) {
-                    TransactionItem(
+                    TransactionItemWithRemove(
                         setting = setting,
-                        transaction = it
+                        transaction = it,
+                        onDelete = onDelete
                     )
                 }
             }
