@@ -1,6 +1,7 @@
 package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
@@ -10,7 +11,6 @@ import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
 import io.mockk.clearAllMocks
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
@@ -34,7 +34,7 @@ class InputDialogViewModelTest {
     private lateinit var categoriesUseCase: CategoriesUseCase
     private lateinit var transactionUseCase: TransactionUseCase
     private lateinit var context: Context
-    private lateinit var viewModel: InputScreenViewModel
+    private lateinit var viewModel: InputDialogViewModel
 
     @BeforeEach
     fun setUp() {
@@ -45,7 +45,7 @@ class InputDialogViewModelTest {
         savedStateHandle = SavedStateHandle()
         mockkStatic(Timber::class)
 
-        viewModel = InputScreenViewModel(
+        viewModel = InputDialogViewModel(
             savedStateHandle = savedStateHandle,
             categoriesUseCase = categoriesUseCase,
             transactionUseCase = transactionUseCase,

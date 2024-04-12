@@ -32,6 +32,7 @@ class SettingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SettingUIState>(SettingUIState.Initial)
     val uiState = _uiState.asStateFlow()
 
+    //
     private val _fetchSettingState = MutableStateFlow<FetchSettingDataState>(FetchSettingDataState.Loading)
     val fetchSettingState = _fetchSettingState.asStateFlow()
 
@@ -43,6 +44,7 @@ class SettingViewModel @Inject constructor(
         //fetchSetting()
     }
 
+    //from main activity or somewhere
     fun fetchSetting(){
         Timber.d("SettingViewModel::fetchSetting")
         viewModelScope.launch {

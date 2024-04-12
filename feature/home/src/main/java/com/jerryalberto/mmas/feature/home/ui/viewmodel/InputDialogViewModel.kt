@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class InputScreenViewModel @Inject constructor(
+class InputDialogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,
