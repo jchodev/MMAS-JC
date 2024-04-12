@@ -28,9 +28,6 @@ class TransactionUseCase @Inject constructor(
 
     suspend fun deleteTransactionById(id: Long): Flow<Unit> = flow {
         transactionRepository.deleteTransactionById(id = id)
-
-        val list = transactionRepository.getAllTransaction().first()
-
         emit(Unit) // Emit an empty Unit after deletion
     }
 

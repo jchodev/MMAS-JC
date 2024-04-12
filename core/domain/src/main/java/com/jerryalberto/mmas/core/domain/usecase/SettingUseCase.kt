@@ -20,7 +20,7 @@ class SettingUseCase @Inject constructor(
 
     suspend fun saveSetting(setting: Setting){
         Timber.d("SettingUseCase::saveSetting!!${setting}")
-        return settingPreferenceRepository.saveSetting(setting = setting)
+        settingPreferenceRepository.saveSetting(setting = setting)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

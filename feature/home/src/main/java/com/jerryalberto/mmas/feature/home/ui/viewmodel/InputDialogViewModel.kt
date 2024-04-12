@@ -20,12 +20,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @HiltViewModel
-class InputScreenViewModel @Inject constructor(
+class InputDialogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val categoriesUseCase: CategoriesUseCase,
     private val transactionUseCase: TransactionUseCase,

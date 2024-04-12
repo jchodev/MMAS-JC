@@ -29,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,7 +65,7 @@ import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
 import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputScreenViewModel
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputDialogViewModel
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputUiIState
 import java.util.Calendar
 
@@ -74,7 +73,7 @@ import java.util.Calendar
 @Composable
 fun InputTransactionDialog(
     modifier: Modifier = Modifier,
-    viewModel: InputScreenViewModel = hiltViewModel(),
+    viewModel: InputDialogViewModel = hiltViewModel(),
     setting: Setting,
     onDismissRequest: () -> Unit = {},
     transactionType: TransactionType = TransactionType.INCOME,
