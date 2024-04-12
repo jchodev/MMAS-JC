@@ -123,6 +123,6 @@ class TransactionViewModel @Inject constructor(
 sealed interface TransactionUIState {
     data object Initial : TransactionUIState
     data object Loading : TransactionUIState
-    data object Success: TransactionUIState
+    data object Success : TransactionUIState
     data class Error(val exception: Throwable) : TransactionUIState
 }

@@ -34,7 +34,9 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun getDataFromDB(){
         viewModelScope.launch {
-            transactionUseCase.getLatestTransaction().combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL)) { transactions, summaries ->
+            transactionUseCase.getLatestTransaction()
+                    .combine(transactionUseCase.getSumAmountGroupedByType(AccountBalanceDataType.TOTAL))
+            { transactions, summaries ->
                 Pair(transactions, summaries)
             }.asResult().collectLatest { result->
                 Timber.d("result:${result}")
@@ -77,6 +79,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onTractionDelete(transaction: Transaction){
         viewModelScope.launch {
+
             transactionUseCase.deleteTransactionById(id = transaction.id).asResult().collectLatest{ result ->
                 when (result) {
                     is Result.Loading -> {
