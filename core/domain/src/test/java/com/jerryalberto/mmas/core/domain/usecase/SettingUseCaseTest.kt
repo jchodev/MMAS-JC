@@ -20,10 +20,9 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.Locale
 import com.jerryalberto.mmas.core.common.result.Result
+import io.mockk.coVerify
 
 class SettingUseCaseTest {
 
@@ -45,26 +44,17 @@ class SettingUseCaseTest {
     }
 
     @Test
-    fun getCountryListTest() {
-        val result = settingUseCase.getCountryList()
+    fun `get SettingUseCase saveSetting success`() = runTest {
+        coJustRun { settingPreferenceRepository.saveSetting(any()) }
 
-        result.forEach {
-            System.out.println(it)
+        //action
+        settingUseCase.saveSetting(Setting())
 
-            val format: NumberFormat = NumberFormat.getCurrencyInstance(Locale("",it ))
-            format.setMinimumFractionDigits(2)
-            format.setMaximumFractionDigits(2)
-            System.out.println(format.format(1000000))
-
-            System.out.println(format.format(-1000000))
-        }
-        System.out.println(DecimalFormat().decimalFormatSymbols.groupingSeparator)
-        System.out.println(DecimalFormat().decimalFormatSymbols.decimalSeparator)
-        System.out.println(DecimalFormat().decimalFormatSymbols.zeroDigit)
+        coVerify(exactly = 1) { settingPreferenceRepository.saveSetting(any()) }
     }
 
     @Test
-    fun `get setting with empty country`() = runTest {
+    fun `get SettingUseCase getSetting success`() = runTest {
 
         coJustRun { settingUseCase.saveSetting(any()) }
 
@@ -81,8 +71,7 @@ class SettingUseCaseTest {
     }
 
     @Test
-    fun `get setting with empty country with flow`() = runTest {
-
+    fun `get SettingUseCase getSetting success(asResult)`() = runTest {
         coJustRun { settingUseCase.saveSetting(any()) }
 
         //assign
@@ -94,14 +83,27 @@ class SettingUseCaseTest {
         settingUseCase.getSetting().asResult()
             .test {
                 assertEquals(Result.Loading, awaitItem())
-
                 assertEquals(true, awaitItem() is Result.Success )
-
                 awaitComplete()
             }
+    }
 
+    @Test
+    fun `get SettingUseCase getCountryList success`() {
+        val expectedResult = Locale.getISOCountries().toList()
 
+        //action
+        val actualResult = settingUseCase.getCountryList()
+        //verify
+        Assertions.assertEquals(expectedResult, actualResult)
+    }
 
+    @Test
+    fun `get SettingUseCase getTimeFormatList success`() {
+        //action
+        val actualResult = settingUseCase.getThemeList()
+        //verify
+        Assertions.assertEquals(3, actualResult.size)
     }
 
 }

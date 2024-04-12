@@ -170,22 +170,13 @@ class TransactionRepositoryImplTest {
     @Test
     fun `test TransactionRepositoryImpl getListOfYearMonth return expected result`() = runTest {
         //assign
-        coEvery { dao.getListOfYearMonth() } returns flowOf( listOf(
-            TransactionYearMonthQueryResult(
-                year = 1,
-                month = 1
-            ),
-            TransactionYearMonthQueryResult(
-                year = 1,
-                month = 2
-            ),
-        ))
+        coEvery { dao.getListOfYearMonth() } returns flowOf( TransactionsDataTestTubs.transactionYearMonthQueryResultList )
 
         //action
         val actualResult = transactionRepositoryImpl.getListOfYearMonth().first()
 
         //verify
-        Assertions.assertEquals(2, actualResult.size)
+        Assertions.assertEquals(TransactionsDataTestTubs.transactionYearMonthQueryResultList.size, actualResult.size)
     }
 
     @Test

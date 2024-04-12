@@ -1,8 +1,11 @@
 package com.jerryalberto.mmas.core.testing.data
 
 import com.jerryalberto.mmas.core.database.model.TransactionEntity
+import com.jerryalberto.mmas.core.database.model.TransactionSummaryQueryResult
+import com.jerryalberto.mmas.core.database.model.TransactionYearMonthQueryResult
 import com.jerryalberto.mmas.core.ext.convertMillisToYearMonthDay
 import com.jerryalberto.mmas.core.model.data.TransactionSummary
+import com.jerryalberto.mmas.core.model.data.TransactionType
 import java.util.Calendar
 
 class TransactionsDataTestTubs {
@@ -13,11 +16,15 @@ class TransactionsDataTestTubs {
             getCurrentDateCalendarInstance()
         }
 
+        val transactionIncomeAmount = 100.0
+        val transactionExpenseAmount = 200.0
+
+
         //today transaction
         val mockTodayTransactions = listOf(
             TransactionEntity(
-                type = "INCOME",
-                amount = 100.0,
+                type = TransactionType.INCOME.value,
+                amount = transactionIncomeAmount,
                 category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -28,8 +35,8 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                type = "EXPENSES",
-                amount = 200.0,
+                type = TransactionType.EXPENSES.value,
+                amount = transactionExpenseAmount,
                 category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -40,8 +47,8 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                type = "INCOME",
-                amount = 100.0,
+                type = TransactionType.INCOME.value,
+                amount = transactionIncomeAmount,
                 category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -52,8 +59,8 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                type = "EXPENSES",
-                amount = 200.0,
+                type = TransactionType.EXPENSES.value,
+                amount = transactionExpenseAmount,
                 category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -64,8 +71,8 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                type = "INCOME",
-                amount = 100.0,
+                type = TransactionType.INCOME.value,
+                amount = transactionIncomeAmount,
                 category = "SALARY",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -76,8 +83,8 @@ class TransactionsDataTestTubs {
                 uri = "",
             ),
             TransactionEntity(
-                type = "EXPENSES",
-                amount = 200.0,
+                type = TransactionType.EXPENSES.value,
+                amount = transactionExpenseAmount,
                 category = "FOOD",
                 description = "",
                 year = currentDateCalendar.timeInMillis.convertMillisToYearMonthDay().first,
@@ -128,11 +135,30 @@ class TransactionsDataTestTubs {
             return calendar
         }
 
-        val transactionSummary = TransactionSummary(
-                income = 100.0,
-                expenses = 200.0
+        val transactionSummaryQueryIncome = TransactionSummaryQueryResult(
+            type = TransactionType.INCOME.value,
+            totalAmount = transactionIncomeAmount,
+        )
+        val transactionSummaryQueryExpenses = TransactionSummaryQueryResult(
+            type = TransactionType.EXPENSES.value,
+            totalAmount = transactionExpenseAmount,
         )
 
+        val transactionSummary = TransactionSummary(
+            income = transactionIncomeAmount,
+            expenses = transactionExpenseAmount
+        )
+
+        val transactionYearMonthQueryResultList = listOf(
+            TransactionYearMonthQueryResult(
+                year = 1,
+                month = 1
+            ),
+            TransactionYearMonthQueryResult(
+                year = 1,
+                month = 2
+            ),
+        )
     }
 
 
