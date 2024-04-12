@@ -90,4 +90,26 @@ class TransactionDaoTest {
         //verify
         assertEquals(TransactionsDataTestTubs.mockTodayTransactions.size, result.size)
     }
+
+    @Test
+    fun deleteTransactionByIdTest() = runBlocking {
+        transactionDao.deleteAllTransaction()
+
+        //assign
+        val transaction = TransactionsDataTestTubs.mockTodayTransactions[0]
+        val id = transactionDao.insertTransaction(transaction)
+        val beforeDeleteResult = transactionDao.getAllTransaction().first()
+
+        //verify
+        assertEquals(1, beforeDeleteResult.size)
+
+        //action
+        transactionDao.deleteTransactionById(id)
+        val afterDeleteResult = transactionDao.getAllTransaction().first()
+
+        //verify
+        assertEquals(true, afterDeleteResult.isEmpty())
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.core.domain.usecase
 
+import app.cash.turbine.test
 import com.jerryalberto.mmas.core.common.result.asResult
 import com.jerryalberto.mmas.core.domain.repository.TransactionRepository
 import com.jerryalberto.mmas.core.model.data.Transaction
@@ -18,10 +19,14 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import com.jerryalberto.mmas.core.common.result.Result
+import com.jerryalberto.mmas.core.database.model.toTransaction
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.testing.data.ExceptionTestTubs
+import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
+import kotlinx.coroutines.flow.flow
 
 @ExperimentalCoroutinesApi
 @MockKExtension.ConfirmVerification
@@ -31,6 +36,12 @@ class TransactionUseCaseTest {
     private lateinit var transactionRepository: TransactionRepository
 
     private lateinit var transactionUseCase: TransactionUseCase
+
+    private val transactionList = TransactionsDataTestTubs.mockTodayTransactions.map {
+        it.toTransaction()
+    }
+
+    private val fourTransaction = transactionList.take(4)
 
     @BeforeEach
     fun setUp() {
@@ -46,79 +57,83 @@ class TransactionUseCaseTest {
     }
 
     @Test
-    fun getLatestTransactionTest() = runTest {
-        val transactions = listOf(
-            Transaction(
-                id = 1,
-                type = TransactionType.EXPENSES,
-                amount = 0.0,
-                category = Category(type = CategoryType.ACCESSORIES),
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            Transaction(
-                id = 2,
-                type =  TransactionType.EXPENSES,
-                amount = 1.0,
-                category = Category(type = CategoryType.ACCESSORIES),
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            )
-        )
+    fun `test TransactionUseCase getLatestTransaction success case`() = runTest {
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(fourTransaction)
 
-        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(transactions)
 
-        val actualTranactions = transactionUseCase.getLatestTransaction().first()
+        transactionUseCase.getLatestTransaction().test {
+            //Assertions.assertEquals(ExceptionTestTubs.exceptionStr, awaitError().message)
 
-        Assertions.assertEquals(transactions.size, actualTranactions.size)
-        Assertions.assertTrue(actualTranactions.isNotEmpty())
+            val actualTransactions = awaitItem()
 
-        Assertions.assertEquals(transactions[0], actualTranactions[0])
+            Assertions.assertEquals(fourTransaction.size, actualTransactions.size)
+            Assertions.assertTrue(actualTransactions.isNotEmpty())
+            Assertions.assertEquals(fourTransaction[0], actualTransactions[0])
+
+            awaitComplete()
+        }
 
     }
 
     @Test
-    fun getLatestTransactionWithLoading() = runTest {
-        val transactions = listOf(
-            Transaction(
-                id = 1,
-                type = TransactionType.EXPENSES,
-                amount = 0.0,
-                category = Category(type = CategoryType.ACCESSORIES),
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            ),
-            Transaction(
-                id = 2,
-                type =  TransactionType.EXPENSES,
-                amount = 1.0,
-                category = Category(type = CategoryType.ACCESSORIES),
-                description = "",
-                date = Long.MAX_VALUE,
-                hour = 1,
-                minute = 1,
-                uri = "",
-            )
-        )
+    fun `test TransactionUseCase getLatestTransaction fail case`() = runTest {
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flow {
+            throw ExceptionTestTubs.NormalException
+        }
 
-        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(transactions)
-
-        val actualResult = transactionUseCase.getLatestTransaction().asResult().toList()
-
-        Assertions.assertEquals(2, actualResult.size)
-
-        Assertions.assertEquals(Result.Loading, actualResult[0])
-        Assertions.assertEquals(transactions.size, (actualResult[1] as Result.Success<List<Transaction>>).data.size)
-        Assertions.assertEquals(transactions, (actualResult[1] as Result.Success<List<Transaction>>).data)
+        transactionUseCase.getLatestTransaction().test {
+            Assertions.assertEquals(ExceptionTestTubs.exceptionStr, awaitError().message)
+        }
     }
 
+    @Test
+    fun `test TransactionUseCase getLatestTransaction asResult success case`() = runTest {
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flowOf(fourTransaction)
+
+        transactionUseCase.getLatestTransaction().asResult().test {
+
+            Assertions.assertEquals(Result.Loading, awaitItem())
+            val successItem = awaitItem()
+
+            Assertions.assertEquals(fourTransaction.size, (successItem as Result.Success<List<Transaction>>).data.size)
+            Assertions.assertEquals(fourTransaction, (successItem as Result.Success<List<Transaction>>).data)
+
+            awaitComplete()
+        }
+
+    }
+
+    @Test
+    fun `test TransactionUseCase getLatestTransaction asResult fail case`() = runTest {
+        coEvery { transactionRepository.getLatestTransaction(latest = 4) } returns flow {
+            throw ExceptionTestTubs.NormalException
+        }
+
+        /*
+        //TODO: Fix later
+        transactionUseCase.getLatestTransaction().asResult().test {
+
+            Assertions.assertEquals(Result.Loading, awaitItem())
+            when (val errorResult = awaitItem()) {
+                is Result.Error -> {
+                    Assertions.assertEquals(ExceptionTestTubs.exceptionStr, errorResult.exception.message)
+                }
+                else -> {
+
+                }
+            }
+        }
+         */
+
+        val actualResult = transactionUseCase.getLatestTransaction().asResult().toList()
+        Assertions.assertEquals(Result.Loading, actualResult[0])
+        when (val errorResult = actualResult[1]) {
+            is Result.Error -> {
+                Assertions.assertEquals(ExceptionTestTubs.exceptionStr, errorResult.exception.message)
+            }
+            else -> {
+
+            }
+        }
+    }
 }

@@ -21,6 +21,7 @@ fun TransactionBox(
     setting: Setting = Setting(),
     showTimeOnly: Boolean = true,
     transactions: List<Transaction> = listOf(),
+    onDelete: (Transaction) -> Unit = {},
 ) {
     Column (
         modifier = modifier
@@ -32,10 +33,11 @@ fun TransactionBox(
     ) {
         //items
         transactions.forEach {
-            TransactionItem(
+            TransactionItemWithRemove(
                 setting = setting,
                 showTimeOnly = showTimeOnly,
-                transaction = it
+                transaction = it,
+                onDelete = onDelete
             )
         }
     }

@@ -44,16 +44,10 @@ dependencies {
     //timber
     implementation(libs.timber)
 
-    val vico_chart_version = "1.14.0"
-
-    // For Jetpack Compose.
-    implementation("com.patrykandpatrick.vico:compose:$vico_chart_version")
-    // For `compose`. Creates a `ChartStyle` based on an M2 Material Theme.
-    implementation("com.patrykandpatrick.vico:compose-m2:$vico_chart_version")
-    // For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
-    implementation("com.patrykandpatrick.vico:compose-m3:$vico_chart_version")
-    // Houses the core logic for charts and other elements. Included in all other modules.
-    implementation("com.patrykandpatrick.vico:core:$vico_chart_version")
-    // For the view system.
-    implementation("com.patrykandpatrick.vico:views:$vico_chart_version")
+    //junit5
+    testImplementation(libs.bundles.junit5.test.implementation)
+    testRuntimeOnly(libs.bundles.junit5.test.runtime.only)
+    //turbine
+    testImplementation(libs.turbine)
+    testImplementation(project(":core:testing"))
 }

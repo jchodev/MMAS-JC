@@ -80,7 +80,7 @@ interface TransactionDao {
             WHERE id = :id
         """,
     )
-    suspend fun deleteTransactionById(id: Int)
+    suspend fun deleteTransactionById(id: Long)
 
     @Query(
         value = """

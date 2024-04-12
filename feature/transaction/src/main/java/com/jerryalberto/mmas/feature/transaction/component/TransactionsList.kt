@@ -23,6 +23,7 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.component.TransactionItem
+import com.jerryalberto.mmas.core.ui.component.TransactionItemWithRemove
 import com.jerryalberto.mmas.core.ui.constants.ColorConstant
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
@@ -32,19 +33,22 @@ import java.util.Calendar
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionsList(
-    setting: Setting = Setting(),
     modifier:Modifier = Modifier,
-    transactionData: List<TransactionGroup> = listOf()
+    setting: Setting = Setting(),
+    transactionData: List<TransactionGroup> = listOf(),
+    onDelete: (Transaction) -> Unit = {},
+    supportDelete: Boolean = true
 ) {
     Box(
       modifier = modifier.fillMaxSize()
     ) {
         LazyColumn(modifier = Modifier
-            //.background(Color.White)
             .fillMaxSize()) {
             transactionData.forEachIndexed { index, group->
                 stickyHeader {
-                    Column(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.background)) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)) {
                         if (index > 0) {
                             Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                         }
@@ -56,16 +60,24 @@ fun TransactionsList(
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen8))
                     }
-
                 }
 
                 items(
                     items = group.transactions
                 ) {
-                    TransactionItem(
-                        setting = setting,
-                        transaction = it
-                    )
+                    if (supportDelete) {
+                        TransactionItemWithRemove(
+                            setting = setting,
+                            transaction = it,
+                            onDelete = onDelete
+                        )
+                    }
+                    else {
+                        TransactionItem(
+                            setting = setting,
+                            transaction = it,
+                        )
+                    }
                 }
             }
 
