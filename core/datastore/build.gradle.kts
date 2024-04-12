@@ -33,4 +33,8 @@ dependencies {
     implementation (libs.androidx.datastore)
 
     implementation( libs.kotlinx.serialization.json)
+
+    //junit5
+    testImplementation(libs.bundles.junit5.test.implementation)
+    testRuntimeOnly(libs.bundles.junit5.test.runtime.only)
 }
