@@ -11,42 +11,37 @@ import org.junit.jupiter.api.Test
 class HomeScreenViewModelInitSuccessTest : BaseHomeScreenViewModelTest()  {
 
     @Test
-    fun `test HomeScreenViewModel HomeUIState when init(getDataFromDB) collect expected success`() = runTest {
+    fun `test HomeScreenViewModel UIState when init(getDataFromDB) collect expected success`() = runTest {
         viewModel.uiState.test {
             //verify
-            Assertions.assertEquals(HomeUIState.Initial, awaitItem())
-            Assertions.assertEquals(HomeUIState.Loading, awaitItem())
-            Assertions.assertEquals(HomeUIState.Success, awaitItem())
-        }
-    }
-
-    @Test
-    fun `test HomeScreenViewModel HomeUIDataState when init(getDataFromDB) collect expected success`() = runTest {
-        viewModel.uiDataState.test {
-
-            val originalHomeUiData = awaitItem()
-            //verify
-            Assertions.assertEquals(HomeUiData().type, originalHomeUiData.type)
-            Assertions.assertEquals(HomeUiData().totalIncome, originalHomeUiData.totalIncome)
-            Assertions.assertEquals(HomeUiData().totalExpenses, originalHomeUiData.totalExpenses)
+            val originItem = awaitItem()
+            Assertions.assertEquals(false,originItem.loading)
+            Assertions.assertEquals(HomeUiData().type, originItem.data.type)
+            Assertions.assertEquals(HomeUiData().totalIncome, originItem.data.totalIncome)
+            Assertions.assertEquals(HomeUiData().totalExpenses, originItem.data.totalExpenses)
             Assertions.assertEquals(
                 HomeUiData().latestTransaction.size,
-                originalHomeUiData.latestTransaction.size
+                originItem.data.latestTransaction.size
             )
 
-            val actualHomeUiData = awaitItem()
-            //verify
-            Assertions.assertEquals(AccountBalanceDataType.TOTAL, actualHomeUiData.type)
+            val loadingItem = awaitItem()
+            Assertions.assertEquals(true, loadingItem.loading)
+
+            val successItem = awaitItem()
+            Assertions.assertEquals(false,successItem.loading)
+            Assertions.assertEquals(AccountBalanceDataType.TOTAL, successItem.data.type)
             Assertions.assertEquals(
                 TransactionsDataTestTubs.transactionSummary.income,
-                actualHomeUiData.totalIncome
+                successItem.data.totalIncome
             )
             Assertions.assertEquals(
                 TransactionsDataTestTubs.transactionSummary.expenses,
-                actualHomeUiData.totalExpenses
+                successItem.data.totalExpenses
             )
-            Assertions.assertEquals(transactionList, actualHomeUiData.latestTransaction)
+            Assertions.assertEquals(transactionList, successItem.data.latestTransaction)
+
         }
     }
+
 
 }

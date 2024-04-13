@@ -34,7 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jerryalberto.mmas.R
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.screen.HomeScreen
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel2
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
 
 import com.jerryalberto.mmas.feature.setting.ui.screen.SettingScreen
 import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingViewModel
@@ -52,7 +52,7 @@ fun MainNavHost(
 
     val currentSelectedScreen by mainNavController.currentScreenAsState()
     val setting = settingViewModel.settingState.collectAsStateWithLifecycle().value
-    val homeScreenViewModel: HomeScreenViewModel2 = hiltViewModel()
+    val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
     val snackbarHostState = remember { SnackbarHostState() }
 

@@ -60,14 +60,12 @@ import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
 
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel2
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeUIState
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputDialogViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel2 = hiltViewModel(),
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     inputViewModel: InputDialogViewModel = hiltViewModel(),
     setting: Setting,
     mainNavController: NavHostController,
