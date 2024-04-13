@@ -41,7 +41,7 @@ class HomeScreenViewModelInitErrorTest : BaseHomeScreenViewModelTest()  {
             Assertions.assertEquals(true, loadingItem.loading)
 
             val errorItem = awaitItem()
-            Assertions.assertEquals(false,errorItem.loading)
+            Assertions.assertEquals(false, errorItem.loading)
             Assertions.assertEquals(ExceptionTestTubs.exceptionStr,errorItem.exception?.message)
         }
     }
