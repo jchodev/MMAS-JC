@@ -47,4 +47,10 @@ dependencies {
     //timber
     implementation(libs.timber)
 
+    //junit5
+    testImplementation(libs.bundles.junit5.test.implementation)
+    testRuntimeOnly(libs.bundles.junit5.test.runtime.only)
+    //turbine
+    testImplementation(libs.turbine)
+    testImplementation(project(":core:testing"))
 }

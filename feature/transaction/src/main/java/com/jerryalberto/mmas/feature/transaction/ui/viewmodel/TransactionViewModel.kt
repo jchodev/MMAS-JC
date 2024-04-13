@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.result.asResult
+import com.jerryalberto.mmas.core.common.uistate.UIState
 import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
+import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 import com.jerryalberto.mmas.feature.transaction.model.TransactionUIData
@@ -23,11 +25,9 @@ class TransactionViewModel @Inject constructor(
     private val transactionUseCase: TransactionUseCase
 ): ViewModel(){
 
-    private val _uiState = MutableStateFlow<TransactionUIState>(TransactionUIState.Initial)
-    val uiState = _uiState.asStateFlow()
 
-    private val _uiDataState = MutableStateFlow<TransactionUIData>(TransactionUIData())
-    val uiDataState = _uiDataState.asStateFlow()
+    private val _uiState = MutableStateFlow(UIState(data = TransactionUIData()))
+    val uiState = _uiState.asStateFlow()
 
     init {
         getDataFromDB()
@@ -40,10 +40,19 @@ class TransactionViewModel @Inject constructor(
             transactionUseCase.getListOfYearMonth().asResult().collectLatest{ result ->
                 when (result) {
                     is Result.Loading -> {
-                        _uiState.value = TransactionUIState.Loading
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = true
+                            )
+                        )
                     }
                     is Result.Error -> {
-                        _uiState.value = TransactionUIState.Error(exception = result.exception)
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = false,
+                                exception = result.exception
+                            )
+                        )
                     }
                     is Result.Success -> {
                         val listOfYearMonth =  result.data.mapIndexed  {index, yearMonth ->
@@ -58,10 +67,14 @@ class TransactionViewModel @Inject constructor(
                                 selected = selected
                             )
                         }
-                        _uiDataState.value = uiDataState.value.copy(
-                            listOfYearMonth = listOfYearMonth
-                        )
 
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                data = uiState.value.data.copy(
+                                    listOfYearMonth = listOfYearMonth
+                                )
+                            )
+                        )
                         if (latestYear > 0){
                             getTransactionsByYearMonth(year = latestYear, month = latestMonth)
                         }
@@ -75,25 +88,42 @@ class TransactionViewModel @Inject constructor(
         viewModelScope.launch {
             transactionUseCase.getAllTransactionByYearMonth(year = year, month = month).asResult()
                 .collectLatest { result->
-                    _uiState.value = when (result) {
-                        is Result.Loading -> TransactionUIState.Loading
-                        is Result.Error -> TransactionUIState.Error(exception = result.exception)
+                    when (result) {
+                        is Result.Loading -> {
+                            updateUI (
+                                uiState = uiState.value.copy(
+                                    loading = true
+                                )
+                            )
+                        }
+                        is Result.Error -> {
+                            updateUI (
+                                uiState = uiState.value.copy(
+                                    loading = false,
+                                    exception = result.exception
+                                )
+                            )
+                        }
                         is Result.Success -> {
                             val transactionList = result.data.map { (date, transactions) ->
                                 val totalAmount = transactions.sumOf { it.amount }
                                 TransactionGroup(date, totalAmount, transactions)
                             }
-                            _uiDataState.value = uiDataState.value.copy(
-                                transactionList = transactionList,
-                                listOfYearMonth = uiDataState.value.listOfYearMonth.map { item->
-                                    if (item.year == year && item.month == month) {
-                                        item.copy(selected = true) // Create a new item with selected set to true
-                                    } else {
-                                        item.copy(selected = false) // Create a new item with selected set to false (optional)
-                                    }
-                                }
+                            updateUI (
+                                uiState = uiState.value.copy(
+                                    loading = false,
+                                    data = uiState.value.data.copy(
+                                        transactionList = transactionList,
+                                        listOfYearMonth = uiState.value.data.listOfYearMonth.map { item->
+                                            if (item.year == year && item.month == month) {
+                                                item.copy(selected = true) // Create a new item with selected set to true
+                                            } else {
+                                                item.copy(selected = false) // Create a new item with selected set to false (optional)
+                                            }
+                                        }
+                                    )
+                                )
                             )
-                            TransactionUIState.Success
                         }
                     }
 
@@ -106,10 +136,19 @@ class TransactionViewModel @Inject constructor(
             transactionUseCase.deleteTransactionById(id = transaction.id).asResult().collectLatest{ result ->
                 when (result) {
                     is Result.Loading -> {
-                        _uiState.value = TransactionUIState.Loading
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = true
+                            )
+                        )
                     }
                     is Result.Error -> {
-                        _uiState.value = TransactionUIState.Error(exception = result.exception)
+                        updateUI (
+                            uiState = uiState.value.copy(
+                                loading = false,
+                                exception = result.exception
+                            )
+                        )
                     }
                     is Result.Success -> {
                         getDataFromDB()
@@ -118,11 +157,11 @@ class TransactionViewModel @Inject constructor(
             }
         }
     }
+
+    private fun updateUI(
+        uiState: UIState<TransactionUIData>
+    ){
+        _uiState.value = uiState
+    }
 }
 
-sealed interface TransactionUIState {
-    data object Initial : TransactionUIState
-    data object Loading : TransactionUIState
-    data object Success : TransactionUIState
-    data class Error(val exception: Throwable) : TransactionUIState
-}

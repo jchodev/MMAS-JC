@@ -24,38 +24,27 @@ class HomeScreenViewModelInitErrorTest : BaseHomeScreenViewModelTest()  {
     }
 
     @Test
-    fun `test HomeScreenViewModel HomeUIState when init(getDataFromDB) collect expected error`() = runTest {
+    fun `test HomeScreenViewModel UIState when init(getDataFromDB) collect error`() = runTest {
         viewModel.uiState.test {
             //verify
-            Assertions.assertEquals(HomeUIState.Initial, awaitItem())
-            Assertions.assertEquals(HomeUIState.Loading, awaitItem())
-            when (val errorResult = awaitItem()) {
-                is HomeUIState.Error -> {
-                    Assertions.assertEquals(
-                        ExceptionTestTubs.exceptionStr,
-                        errorResult.exception.message,
-                    )
-                }
-                else -> {}
-            }
-        }
-    }
-
-    @Test
-    fun `test HomeScreenViewModel HomeUIDataState when init(getDataFromDB) collect expected error`() = runTest {
-        viewModel.uiDataState.test {
-
-            val originalHomeUiData = awaitItem()
-            //verify
-            Assertions.assertEquals(HomeUiData().type, originalHomeUiData.type)
-            Assertions.assertEquals(HomeUiData().totalIncome, originalHomeUiData.totalIncome)
-            Assertions.assertEquals(HomeUiData().totalExpenses, originalHomeUiData.totalExpenses)
+            val originItem = awaitItem()
+            Assertions.assertEquals(false,originItem.loading)
+            Assertions.assertEquals(HomeUiData().type, originItem.data.type)
+            Assertions.assertEquals(HomeUiData().totalIncome, originItem.data.totalIncome)
+            Assertions.assertEquals(HomeUiData().totalExpenses, originItem.data.totalExpenses)
             Assertions.assertEquals(
                 HomeUiData().latestTransaction.size,
-                originalHomeUiData.latestTransaction.size
+                originItem.data.latestTransaction.size
             )
 
+            val loadingItem = awaitItem()
+            Assertions.assertEquals(true, loadingItem.loading)
+
+            val errorItem = awaitItem()
+            Assertions.assertEquals(false, errorItem.loading)
+            Assertions.assertEquals(ExceptionTestTubs.exceptionStr,errorItem.exception?.message)
         }
     }
+
 
 }

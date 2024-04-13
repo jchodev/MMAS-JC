@@ -2,6 +2,7 @@ package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
 import android.content.Context
 import android.net.Uri
+
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.jerryalberto.mmas.core.domain.usecase.CategoriesUseCase
@@ -9,7 +10,7 @@ import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.CategoryType
 import com.jerryalberto.mmas.core.model.data.TransactionType
-import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
+import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionData
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockkClass
@@ -61,22 +62,22 @@ class InputDialogViewModelTest {
 
     @Test
     fun `test InputScreenViewModel init with success`() = runTest {
-        viewModel.init()
+        //viewModel.init()
 
         viewModel.uiState.test {
-            Assertions.assertEquals(InputUiIState.Initial, awaitItem())
+            val actualItem = awaitItem()
+            Assertions.assertEquals(false, actualItem.loading)
+            val actualTransactionData = actualItem.data
+            Assertions.assertEquals(InputTransactionData().descriptionError, actualTransactionData.descriptionError)
+            Assertions.assertEquals(InputTransactionData().amountString, actualTransactionData.amountString)
+            Assertions.assertEquals(InputTransactionData().amountError, actualTransactionData.amountError)
+            Assertions.assertEquals(InputTransactionData().dateError, actualTransactionData.dateError)
+            Assertions.assertEquals(InputTransactionData().timeError, actualTransactionData.timeError)
+            Assertions.assertEquals(InputTransactionData().categoryError, actualTransactionData.categoryError)
         }
 
-        viewModel.dataState.test {
-            val actual = awaitItem()
-            Assertions.assertEquals(InputTransactionDataState().descriptionError, actual.descriptionError)
-            Assertions.assertEquals(InputTransactionDataState().amountString, actual.amountString)
-            Assertions.assertEquals(InputTransactionDataState().amountError, actual.amountError)
-            Assertions.assertEquals(InputTransactionDataState().dateError, actual.dateError)
-            Assertions.assertEquals(InputTransactionDataState().timeError, actual.timeError)
-            Assertions.assertEquals(InputTransactionDataState().categoryError, actual.categoryError)
-        }
     }
+
 
     @Test
     fun `test InputScreenViewModel getExpenseCategories with success`() {
@@ -110,9 +111,9 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel onDescriptionChange`() = runTest {
         val newValue = "newDesc"
         viewModel.onDescriptionChange(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue, actual.transaction.description)
+            Assertions.assertEquals(newValue, actual.data.transaction.description)
         }
     }
 
@@ -120,9 +121,9 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel onDateSelected`() = runTest {
         val newValue = 1L
         viewModel.onDateSelected(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue, actual.transaction.date)
+            Assertions.assertEquals(newValue, actual.data.transaction.date)
         }
     }
 
@@ -130,11 +131,11 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel onTimeSelected`() = runTest {
         val newValue = 1
         viewModel.onTimeSelected(newValue, newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
 
-            Assertions.assertEquals(newValue, actual.transaction.hour)
-            Assertions.assertEquals(newValue, actual.transaction.minute)
+            Assertions.assertEquals(newValue, actual.data.transaction.hour)
+            Assertions.assertEquals(newValue, actual.data.transaction.minute)
         }
     }
 
@@ -144,9 +145,9 @@ class InputDialogViewModelTest {
             CategoryType.SALARY
         )
         viewModel.onCategorySelected(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue, actual.transaction.category)
+            Assertions.assertEquals(newValue, actual.data.transaction.category)
         }
     }
 
@@ -154,10 +155,10 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel onAmountChange`() = runTest {
         val newValue = "100.00"
         viewModel.onAmountChange(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue, actual.amountString)
-            Assertions.assertEquals(newValue.toDouble(), actual.transaction.amount)
+            Assertions.assertEquals(newValue, actual.data.amountString)
+            Assertions.assertEquals(newValue.toDouble(), actual.data.transaction.amount)
         }
     }
 
@@ -166,9 +167,9 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel onSelectedUri`() = runTest {
         val newValue = mockkClass(Uri::class)
         viewModel.onSelectedUri(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue.toString(), actual.transaction.uri)
+            Assertions.assertEquals(newValue.toString(), actual.data.transaction.uri)
         }
     }
 
@@ -176,9 +177,10 @@ class InputDialogViewModelTest {
     fun `test InputScreenViewModel setTransactionType`() = runTest {
         val newValue = TransactionType.INCOME
         viewModel.setTransactionType(newValue)
-        viewModel.dataState.test {
+        viewModel.uiState.test {
             val actual = awaitItem()
-            Assertions.assertEquals(newValue, actual.transaction.type)
+            Assertions.assertEquals(newValue, actual.data.transaction.type)
         }
     }
+
 }

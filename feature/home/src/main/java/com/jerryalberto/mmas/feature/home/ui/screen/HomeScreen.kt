@@ -60,24 +60,27 @@ import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
 
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeUIState
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputDialogViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    inputViewModel: InputDialogViewModel = hiltViewModel(),
     setting: Setting,
     mainNavController: NavHostController,
 ) {
 
     val uiState = homeScreenViewModel.uiState.collectAsStateWithLifecycle().value
-    val uiDataState = homeScreenViewModel.uiDataState.collectAsStateWithLifecycle().value
 
     var selectedTransactionType by remember { mutableStateOf(TransactionType.INCOME) }
 
     //inputDialog
     var openInputDialog by remember { mutableStateOf(false) }
     if (openInputDialog){
+        inputViewModel.init()
+        inputViewModel.setTransactionType(selectedTransactionType)
+
         InputTransactionDialog(
             setting = setting,
             onDismissRequest = { openInputDialog = false },
@@ -114,32 +117,29 @@ fun HomeScreen(
         )
     }
 
-
-    Box(modifier = Modifier.fillMaxSize()){
-        when (uiState) {
-            is HomeUIState.Loading -> LoadingCompose()
-            else -> {
-                Scaffold (
-                    floatingActionButton = floatingActionButton
-                ) { paddingValues ->
-                    HomeScreenContent(
-                        uiDataState = uiDataState,
-                        setting = setting,
-                        onTypeClicked = {
-                            homeScreenViewModel.getAmountByType(
-                                it
-                            )
-                        },
-                        onSeeAllClick = {
-                            mainNavController.navigate(MainRoute.TransactionScreen.route)
-                        },
-                        onDelete = homeScreenViewModel::onTractionDelete
+    Scaffold (
+        floatingActionButton = floatingActionButton
+    ) {
+        Box(modifier = Modifier.fillMaxSize().padding(it)){
+            HomeScreenContent(
+                uiDataState = uiState.data,
+                setting = setting,
+                onTypeClicked = {
+                    homeScreenViewModel.getAmountByType(
+                        it
                     )
-                }
+                },
+                onSeeAllClick = {
+                    mainNavController.navigate(MainRoute.TransactionScreen.route)
+                },
+                onDelete = homeScreenViewModel::onTractionDelete
+            )
+
+            if (uiState.loading){
+                LoadingCompose()
             }
         }
     }
-
 
 }
 

@@ -12,16 +12,15 @@ import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import org.junit.jupiter.api.BeforeEach
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
 open class BaseHomeScreenViewModelTest {
-
     lateinit var viewModel: HomeScreenViewModel
     lateinit var transactionUseCase: TransactionUseCase
 
@@ -79,5 +78,4 @@ open class BaseHomeScreenViewModelTest {
         Dispatchers.resetMain()
         clearAllMocks()
     }
-
 }

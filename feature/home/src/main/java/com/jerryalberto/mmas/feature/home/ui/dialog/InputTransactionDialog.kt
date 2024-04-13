@@ -64,9 +64,8 @@ import com.jerryalberto.mmas.core.ui.ext.getString
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
 import com.jerryalberto.mmas.feature.home.R
 import com.jerryalberto.mmas.feature.home.ui.component.CategorySelectDialog
-import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionDataState
+import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionData
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputDialogViewModel
-import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputUiIState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,8 +86,6 @@ fun InputTransactionDialog(
     },
 ) {
 
-    viewModel.init()
-    viewModel.setTransactionType(transactionType)
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
@@ -97,10 +94,9 @@ fun InputTransactionDialog(
         onDismissRequest = onDismissRequest,
         properties = properties
     ) {
-        when (uiState) {
-            is InputUiIState.Loading -> LoadingCompose()
-            else -> InputTransactionContent(
-                state = viewModel.dataState.collectAsStateWithLifecycle().value,
+        Box(modifier = Modifier.fillMaxSize()){
+            InputTransactionContent(
+                state = uiState.data,
                 setting = setting,
                 onTopBarLeftClick = onDismissRequest,
                 expensesCategories = viewModel.getExpenseCategories(),
@@ -113,11 +109,10 @@ fun InputTransactionDialog(
                 onSaveClick = viewModel::saveTransaction,
                 onSelectedUri = viewModel::onSelectedUri,
             )
-        }
-
-        if (uiState is InputUiIState.Success) {
-            Toast.makeText(LocalContext.current, stringResource(id = R.string.feature_home_transaction_saved), Toast.LENGTH_SHORT).show()
-            onDismissRequest.invoke()
+            if (uiState.data.isSuccess){
+                Toast.makeText(LocalContext.current, stringResource(id = R.string.feature_home_transaction_saved), Toast.LENGTH_SHORT).show()
+                onDismissRequest.invoke()
+            }
         }
     }
 }
@@ -125,7 +120,7 @@ fun InputTransactionDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputTransactionContent(
-    state: InputTransactionDataState = InputTransactionDataState(),
+    state: InputTransactionData = InputTransactionData(),
     setting: Setting = Setting(),
     onTopBarLeftClick: () -> Unit = {},
     incomeCategories: List<Category> = listOf(),

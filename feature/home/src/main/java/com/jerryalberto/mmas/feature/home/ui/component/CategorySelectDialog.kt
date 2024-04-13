@@ -100,7 +100,7 @@ private fun CategorySelectDialogPreview(){
                         )
                     )
                 ),
-                Category(CategoryType.OTHER)
+                Category(CategoryType.OTHERS)
             )
 
         )

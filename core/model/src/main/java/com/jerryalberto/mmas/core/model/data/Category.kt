@@ -32,7 +32,7 @@ enum class CategoryType(val value: String){
     ACCESSORIES("ACCESSORIES"),
     ELECTRONIC_DEVICE("ELECTRONIC_DEVICE"),
 
-    OTHER("OTHERS"),
+    OTHERS("OTHERS"),
 
     //income
     SALARY("SALARY"),

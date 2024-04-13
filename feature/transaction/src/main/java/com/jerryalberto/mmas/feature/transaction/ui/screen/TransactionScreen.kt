@@ -39,15 +39,14 @@ import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.core.ui.component.LoadingCompose
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.core.ui.preview.DevicePreviews
-import com.jerryalberto.mmas.feature.setting.ui.viewmodel.SettingUIState
+
 import com.jerryalberto.mmas.feature.transaction.R
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.dialog.TransactionSearchDialog
 import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 import com.jerryalberto.mmas.feature.transaction.model.TransactionUIData
 import com.jerryalberto.mmas.feature.transaction.ui.model.YearMonthItem
-import com.jerryalberto.mmas.feature.transaction.ui.uistate.TransactionUIDataState
-import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionUIState
+
 import com.jerryalberto.mmas.feature.transaction.ui.viewmodel.TransactionViewModel
 import java.util.Calendar
 
@@ -58,7 +57,7 @@ fun TransactionScreen(
     setting: Setting
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-    val uiDataState = viewModel.uiDataState.collectAsStateWithLifecycle().value
+    val uiDataState = uiState.data
 
     var transactionGroupList by remember { mutableStateOf(emptyList<TransactionGroup>()) }
 
@@ -75,22 +74,20 @@ fun TransactionScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        when (uiState) {
-            is TransactionUIState.Loading -> LoadingCompose()
-            else -> {
-                TransactionScreenContent(
-                    uiDataState = uiDataState,
-                    setting = setting,
-                    onYearMonthItemClick = {
-                        viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
-                    },
-                    onSearchClick = {
-                        transactionGroupList = uiDataState.transactionList
-                        openSearchDialog = true
-                    },
-                    onDelete = viewModel::onTractionDelete
-                )
-            }
+        TransactionScreenContent(
+            uiDataState = uiDataState,
+            setting = setting,
+            onYearMonthItemClick = {
+                viewModel.getTransactionsByYearMonth(year = it.year, month = it.month)
+            },
+            onSearchClick = {
+                transactionGroupList = uiDataState.transactionList
+                openSearchDialog = true
+            },
+            onDelete = viewModel::onTractionDelete
+        )
+        if (uiState.loading){
+            LoadingCompose()
         }
     }
 }

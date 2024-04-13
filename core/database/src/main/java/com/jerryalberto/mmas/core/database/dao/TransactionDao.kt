@@ -43,7 +43,7 @@ interface TransactionDao {
     @Query(
         value = """
         SELECT * FROM transaction_tbl
-        ORDER BY year DESC, month DESC, day DESC, hour DESC, minute DESC
+        ORDER BY id DESC
         LIMIT :latest
     """,
     )
