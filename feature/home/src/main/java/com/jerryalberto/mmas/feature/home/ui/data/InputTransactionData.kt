@@ -5,9 +5,11 @@ import com.jerryalberto.mmas.core.model.data.Transaction
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class InputTransactionDataState(
+data class InputTransactionData(
 
     val transaction: Transaction = Transaction(),
+
+    val isSuccess: Boolean = false,
 
     val descriptionError: String? = null,
     val amountString: String = "",
