@@ -72,7 +72,7 @@ class CategoriesUseCase {
                 )
             ),
             Category(
-                type = CategoryType.OTHER,
+                type = CategoryType.OTHERS,
             ),
         )
     }
@@ -95,7 +95,7 @@ class CategoriesUseCase {
                 type = CategoryType.GIFTS,
             ),
             Category(
-                type = CategoryType.OTHER,
+                type = CategoryType.OTHERS,
             ),
         )
     }

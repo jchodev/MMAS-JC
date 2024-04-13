@@ -44,7 +44,7 @@ private fun getImageResId(categoryType: CategoryType): Int {
         CategoryType.ACCESSORIES -> R.drawable.ic_accessories
         CategoryType.ELECTRONIC_DEVICE -> R.drawable.ic_electronics
 
-        CategoryType.OTHER -> R.drawable.ic_other
+        CategoryType.OTHERS -> R.drawable.ic_other
         CategoryType.SALARY -> R.drawable.ic_salary
         CategoryType.BONUS -> R.drawable.ic_bonus
         CategoryType.SIDE_JOB -> R.drawable.ic_side_job
@@ -77,7 +77,7 @@ private fun getStringResId(categoryType: CategoryType): Int {
         CategoryType.ELECTRONIC_DEVICE -> R.string.core_ui_electronics
 
 
-        CategoryType.OTHER -> R.string.core_ui_others
+        CategoryType.OTHERS -> R.string.core_ui_others
         CategoryType.SALARY -> R.string.core_ui_salary
         CategoryType.BONUS -> R.string.core_ui_bonus
         CategoryType.SIDE_JOB -> R.string.core_ui_side_job

@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +57,7 @@ import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -94,6 +97,7 @@ fun TransactionItemWithRemove(
             )
         }
     }
+    val scope = rememberCoroutineScope()
     DraggableItem(
         height =  MaterialTheme.dimens.dimen80,
         state = state,
@@ -111,6 +115,9 @@ fun TransactionItemWithRemove(
                         .background(color = MaterialTheme.colorScheme.error)
                         .fillMaxSize()
                         .clickable {
+                            scope.launch {
+                                state.animateTo(DragAnchors.Start)
+                            }
                             onDelete.invoke(transaction)
                         }
                     ,
