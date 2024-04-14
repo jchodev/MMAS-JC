@@ -18,6 +18,6 @@ fun SettingPreference.toSetting(): Setting {
         countryCode = countryCode,
         themeType = ThemeType.fromValue(theme) ?: ThemeType.DEVICE_THEME,
         dateFormat = dateFormat,
-        timeFormatType = TimeFormatType.entries.first { use24HourFormat }
+        timeFormatType = TimeFormatType.fromValue(use24HourFormat) ?: TimeFormatType.HOUR_24
     )
 }

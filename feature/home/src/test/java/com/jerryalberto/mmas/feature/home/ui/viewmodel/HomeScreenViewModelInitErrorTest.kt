@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.testing.data.ExceptionTestTubs
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
-import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import io.mockk.coEvery
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf

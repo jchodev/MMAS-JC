@@ -3,7 +3,7 @@ package com.jerryalberto.mmas.feature.home.ui.viewmodel
 import app.cash.turbine.test
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.testing.data.TransactionsDataTestTubs
-import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
+
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

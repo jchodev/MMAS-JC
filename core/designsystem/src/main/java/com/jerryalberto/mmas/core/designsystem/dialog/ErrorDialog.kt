@@ -1,4 +1,4 @@
-package com.jerryalberto.mmas.core.designsystem.dialog
+ package com.jerryalberto.mmas.core.designsystem.dialog
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,34 +20,33 @@ import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 
 @Composable
-fun ConfirmDialog(
-    title: String? = "this is title",
+fun ErrorDialog(
     text: String = "this is text",
-    onConfirmRequest: () -> Unit = {},
+    onRetryRequest: () -> Unit = {},
     onDismissRequest: () -> Unit = {},
 ) {
     CustomAlertDialog(
         icon = {
             Icon(
                 modifier = Modifier.size(MaterialTheme.dimens.dimen160).padding(top = MaterialTheme.dimens.dimen32),
-                tint = MaterialTheme.colorScheme.primary,
-                imageVector = ImageVector.vectorResource(R.drawable.question),
+                tint = MaterialTheme.colorScheme.error,
+                imageVector = Icons.Outlined.Error,
                 contentDescription = null
             )
         },
-        title = title,
+        title = null,
         message = text,
-        leftBtnStr= stringResource(R.string.core_designsystem_cancel),
+        leftBtnStr= stringResource(R.string.core_designsystem_close),
         onLeftClick = onDismissRequest,
-        rightBtnStr = stringResource(R.string.core_designsystem_confirm),
-        onRightClick = onConfirmRequest
+        rightBtnStr = stringResource(R.string.core_designsystem_retry),
+        onRightClick = onRetryRequest
     )
 }
 
 @Preview
 @Composable
-fun ConfirmDialogPreview(){
+fun ErrorDialogPreview(){
     MmasTheme {
-        ConfirmDialog()
+        ErrorDialog()
     }
 }

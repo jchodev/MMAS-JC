@@ -45,6 +45,7 @@ import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Setting
 import com.jerryalberto.mmas.core.model.data.Transaction
 import com.jerryalberto.mmas.core.model.data.TransactionType
+import com.jerryalberto.mmas.core.ui.component.ExceptionErrorDialog
 import com.jerryalberto.mmas.core.ui.component.LoadingCompose
 import com.jerryalberto.mmas.core.ui.component.SpendFrequencyButton
 import com.jerryalberto.mmas.feature.home.R
@@ -56,10 +57,10 @@ import com.jerryalberto.mmas.core.ui.component.TransactionHeader
 import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.core.ui.navigation.MainRoute
 import com.jerryalberto.mmas.feature.home.ui.component.IncomeExpenseBox
-import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.dialog.InputTransactionDialog
 
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeScreenViewModel
+import com.jerryalberto.mmas.feature.home.ui.viewmodel.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.viewmodel.InputDialogViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -137,6 +138,14 @@ fun HomeScreen(
 
             if (uiState.loading){
                 LoadingCompose()
+            }
+
+            uiState.exception?.let {
+                ExceptionErrorDialog(
+                    exception = it,
+                    onDismissRequest = homeScreenViewModel::clearErrorMessage,
+                    onRetryRequest = homeScreenViewModel::retry
+                )
             }
         }
     }
