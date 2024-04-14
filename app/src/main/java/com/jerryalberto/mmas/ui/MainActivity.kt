@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jerryalberto.mmas.core.designsystem.theme.MmasTheme
 import com.jerryalberto.mmas.core.model.data.ThemeType
@@ -29,16 +30,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //test get currency
-        val isoCountryCodes: Array<String> = Locale.getISOCountries()
-        for (countryCode in isoCountryCodes) {
-            val locale = Locale("", countryCode)
-            val countryName = locale.getDisplayCountry(Locale.getDefault())
-            val numberFormat = NumberFormat.getCurrencyInstance(locale)
-            val currency = numberFormat.currency
-            val symbol = currency?.symbol
-            Timber.d("numberFormat.currency${numberFormat.currency} symbol: ${symbol} : countryName is ${countryName}")
-        }
+        installSplashScreen()
+
 
         setContent {
             var dynamicColor = true
