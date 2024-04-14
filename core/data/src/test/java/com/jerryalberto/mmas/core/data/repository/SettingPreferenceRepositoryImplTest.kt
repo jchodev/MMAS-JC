@@ -61,7 +61,7 @@ class SettingPreferenceRepositoryImplTest {
 
     @Test
     fun `test SettingPreferenceRepositoryImpl getSetting success`() = runTest {
-        val mockSettingPreference = SettingPreference()
+        val mockSettingPreference = SettingPreference().copy(use24HourFormat = false)
         //assign
         coEvery { settingPreferenceDataSource.getSettingPreference() } returns flowOf(mockSettingPreference)
 

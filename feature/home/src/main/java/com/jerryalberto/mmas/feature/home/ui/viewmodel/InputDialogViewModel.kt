@@ -15,7 +15,6 @@ import com.jerryalberto.mmas.core.domain.usecase.TransactionUseCase
 import com.jerryalberto.mmas.core.model.data.Category
 import com.jerryalberto.mmas.core.model.data.TransactionType
 import com.jerryalberto.mmas.feature.home.R
-import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
 import com.jerryalberto.mmas.feature.home.ui.data.InputTransactionData
 
 import dagger.hilt.android.qualifiers.ApplicationContext

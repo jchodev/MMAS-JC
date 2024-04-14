@@ -1,5 +1,6 @@
 package com.jerryalberto.mmas.feature.home.ui.viewmodel
 
+import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jerryalberto.mmas.core.common.result.asResult
@@ -11,10 +12,12 @@ import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.uistate.UIState
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Transaction
-import com.jerryalberto.mmas.feature.home.ui.data.HomeUiData
+import com.jerryalberto.mmas.core.testing.data.ExceptionTestTubs
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,7 +25,6 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val transactionUseCase: TransactionUseCase,
 ) : ViewModel() {
-
 
     private val _uiState = MutableStateFlow(UIState(data = HomeUiData()))
     val uiState = _uiState.asStateFlow()
@@ -51,7 +53,10 @@ class HomeScreenViewModel @Inject constructor(
                         updateUI (
                             uiState = uiState.value.copy(
                                 loading = false,
-                                exception = result.exception
+                                exception = result.exception,
+                                data = HomeUiData(
+                                    retryState = RetryState.GetDataFromDB
+                                )
                             )
                         )
                     }
@@ -81,7 +86,7 @@ class HomeScreenViewModel @Inject constructor(
                     is Result.Loading -> {
                         updateUI (
                             uiState = uiState.value.copy(
-                                loading = true
+                                loading = true,
                             )
                         )
                     }
@@ -89,7 +94,10 @@ class HomeScreenViewModel @Inject constructor(
                         updateUI (
                             uiState = uiState.value.copy(
                                 loading = false,
-                                exception = result.exception
+                                exception = result.exception,
+                                data = uiState.value.data.copy(
+                                    retryState = RetryState.GetAmountByType(type = type)
+                                )
                             )
                         )
                     }
@@ -126,7 +134,10 @@ class HomeScreenViewModel @Inject constructor(
                         updateUI (
                             uiState = uiState.value.copy(
                                 loading = false,
-                                exception = result.exception
+                                exception = result.exception,
+                                data = uiState.value.data.copy(
+                                    retryState = RetryState.TractionDelete(transaction = transaction)
+                                )
                             )
                         )
                     }
@@ -138,6 +149,30 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun clearErrorMessage(){
+        updateUI (
+            uiState = uiState.value.copy(
+                exception = null
+            )
+        )
+    }
+
+    fun retry(){
+        updateUI (
+            uiState = uiState.value.copy(
+                exception = null
+            )
+        )
+        when (val retry = uiState.value.data.retryState){
+            is RetryState.GetDataFromDB -> getDataFromDB()
+            is RetryState.TractionDelete -> onTractionDelete(transaction = retry.transaction)
+            is RetryState.GetAmountByType -> getAmountByType(type = retry.type)
+            else -> {
+
+            }
+        }
+    }
+
     private fun updateUI(
         uiState: UIState<HomeUiData>
     ){
@@ -145,3 +180,22 @@ class HomeScreenViewModel @Inject constructor(
     }
 }
 
+@Parcelize
+data class HomeUiData(
+    val type: AccountBalanceDataType = AccountBalanceDataType.TOTAL,
+    val totalIncome: Double = 0.0,
+    val totalExpenses: Double = 0.0,
+    val latestTransaction: List<Transaction> = listOf(),
+    val retryState: @RawValue RetryState = RetryState.Initial
+) : Parcelable {
+    fun getTotalAmount () : Double {
+        return totalIncome - totalExpenses
+    }
+}
+
+sealed interface RetryState {
+    data object Initial : RetryState
+    data object GetDataFromDB : RetryState
+    data class TractionDelete(val transaction: Transaction) : RetryState
+    data class GetAmountByType(val type: AccountBalanceDataType) : RetryState
+}

@@ -28,4 +28,5 @@
     <string name="core_ui_side_job">Side Job</string>
     <string name="core_ui_gifts">Gifts</string>
 
+    <string name="core_ui_common_error">There have some error, please try again</string>
 </resources>
