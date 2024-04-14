@@ -11,10 +11,10 @@ data class InputTransactionData(
 
     val isSuccess: Boolean = false,
 
-    val descriptionError: String? = null,
+    val descriptionError: Int? = null,
     val amountString: String = "",
-    val amountError: String? = null,
-    val dateError: String? = null,
-    val timeError: String? = null,
-    val categoryError: String? = null,
+    val amountError: Int? = null,
+    val dateError: Int? = null,
+    val timeError: Int? = null,
+    val categoryError: Int? = null,
 ): Parcelable

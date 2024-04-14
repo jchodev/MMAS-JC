@@ -248,7 +248,7 @@ private fun InputTransactionContent(
                     } else {
                         ""
                     },
-                    error = state.categoryError,
+                    error = state.categoryError?.let { stringResource(id = it) },
                     placeHolder = stringResource(id = R.string.feature_home_category),
                     readOnly = true,
                     leadingIcon = {
@@ -292,7 +292,7 @@ private fun InputTransactionContent(
                         )
                     },
                     value = state.transaction.description,
-                    error = state.descriptionError,
+                    error = state.descriptionError?.let { stringResource(id = it) },
                     placeHolder = stringResource(id = R.string.feature_home_description),
                     onValueChange = onDescriptionChange
                 )
@@ -304,7 +304,7 @@ private fun InputTransactionContent(
                             .weight(1f)
                             .padding(end = MaterialTheme.dimens.dimen8),
                         value = state.transaction.date?.convertMillisToDate(setting.dateFormat) ?: "",
-                        error = state.dateError,
+                        error = state.dateError?.let { stringResource(id = it) },
                         placeHolder = stringResource(id = R.string.feature_home_date),
                         readOnly = true,
                         leadingIcon = {
@@ -320,7 +320,7 @@ private fun InputTransactionContent(
                     )
                     MmasTextEdit(
                         value = state.transaction.displayHourMinute(setting = setting),
-                        error = state.timeError,
+                        error = state.timeError?.let { stringResource(id = it) } ,
                         modifier = Modifier.weight(1f),
                         placeHolder = stringResource(id = R.string.feature_home_time),
                         readOnly = true,
@@ -339,7 +339,7 @@ private fun InputTransactionContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.dimen16))
                 MmasTextEdit(
                     value = state.amountString,
-                    error = state.amountError,
+                    error = state.amountError?.let { stringResource(id = it) },
                     placeHolder = stringResource(id = R.string.feature_home_amount),
                     leadingIcon = {
                         Icon(
