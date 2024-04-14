@@ -28,6 +28,7 @@ import com.jerryalberto.mmas.core.designsystem.R
 import com.jerryalberto.mmas.core.designsystem.textfield.TopBarSearchTextField
 import com.jerryalberto.mmas.core.designsystem.theme.dimens
 import com.jerryalberto.mmas.core.model.data.Setting
+import com.jerryalberto.mmas.core.ui.ext.formatAmount
 import com.jerryalberto.mmas.feature.transaction.component.TransactionsList
 import com.jerryalberto.mmas.feature.transaction.model.TransactionGroup
 
@@ -88,7 +89,10 @@ private fun TransactionSearchContent(
                         searchValue = searchValue,
                         onValueChange = { searchStr ->
                             searchValue = searchStr
-                            filteredItems = transactionGroupList.searchForAnItem(searchStr)
+                            filteredItems = transactionGroupList
+                                .searchForAnItem(setting = setting,
+                                    searchStr = searchStr
+                                )
                         },
                     )
                 },
@@ -104,7 +108,7 @@ private fun TransactionSearchContent(
                     IconButton(onClick = {
                         isSearch = false
                         searchValue = ""
-                        filteredItems = transactionGroupList.searchForAnItem(searchValue)
+                        filteredItems = transactionGroupList.searchForAnItem(setting, searchValue)
                     }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
@@ -117,7 +121,8 @@ private fun TransactionSearchContent(
     ) { paddingValues ->
         Column (modifier = Modifier
             .padding(paddingValues)
-            .padding(MaterialTheme.dimens.dimen16)){
+            .padding(MaterialTheme.dimens.dimen16)
+        ){
             TransactionsList(
                 transactionData = if (searchValue.isEmpty()) {
                     transactionGroupList
@@ -132,12 +137,14 @@ private fun TransactionSearchContent(
 }
 
 private fun List<TransactionGroup>.searchForAnItem(
+    setting: Setting,
     searchStr: String,
 ): List<TransactionGroup> {
     val output: MutableList<TransactionGroup> = mutableListOf()
     forEach {
         val filtered = it.transactions.filter { transaction ->
             transaction.description.contains(searchStr, ignoreCase = true) ||
+                    transaction.formatAmount(setting = setting, withPlus = false).contains(searchStr, ignoreCase = true) ||
                     transaction.category?.type?.value?.contains(searchStr, ignoreCase = true) == true
         }
         if (filtered.isNotEmpty()){
