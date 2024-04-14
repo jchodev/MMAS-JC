@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 class InputDialogViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val categoriesUseCase: CategoriesUseCase,
-    private val transactionUseCase: TransactionUseCase,
-    @ApplicationContext private val context: Context
+    private val transactionUseCase: TransactionUseCase
 ) : ViewModel() {
 
     private val INPUT_DATA_STATE_KEY = "INPUT_DATA_STATE_KEY"
@@ -166,7 +165,7 @@ class InputDialogViewModel @Inject constructor(
             saveData(
                 uiState = uiState.value.copy(
                     data = uiState.value.data.copy(
-                        categoryError = context.getString(R.string.feature_home_error_field_require),
+                        categoryError = R.string.feature_home_error_field_require,
                     )
                 )
             )
@@ -176,7 +175,7 @@ class InputDialogViewModel @Inject constructor(
             saveData(
                 uiState = uiState.value.copy(
                     data = uiState.value.data.copy(
-                        dateError = context.getString(R.string.feature_home_error_field_require),
+                        dateError = R.string.feature_home_error_field_require,
                     )
                 )
             )
@@ -186,7 +185,7 @@ class InputDialogViewModel @Inject constructor(
             saveData(
                 uiState = uiState.value.copy(
                     data = uiState.value.data.copy(
-                        timeError = context.getString(R.string.feature_home_error_field_require),
+                        timeError = R.string.feature_home_error_field_require,
                     )
                 )
             )
@@ -196,7 +195,7 @@ class InputDialogViewModel @Inject constructor(
             saveData(
                 uiState = uiState.value.copy(
                     data = uiState.value.data.copy(
-                        amountError = context.getString(R.string.feature_home_error_field_require),
+                        amountError = R.string.feature_home_error_field_require,
                     )
                 )
             )
