@@ -12,8 +12,7 @@ import com.jerryalberto.mmas.core.common.result.Result
 import com.jerryalberto.mmas.core.common.uistate.UIState
 import com.jerryalberto.mmas.core.model.data.AccountBalanceDataType
 import com.jerryalberto.mmas.core.model.data.Transaction
-import com.jerryalberto.mmas.core.testing.data.ExceptionTestTubs
-import kotlinx.coroutines.flow.collectLatest
+ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
