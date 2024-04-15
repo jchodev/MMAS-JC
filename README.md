@@ -12,3 +12,5 @@ https://www.appicon.co/
 
 https://github.com/jchodev/MMAS-JC/assets/100594737/02ce26de-c8a4-4e58-aa24-8e54737c8e00
 
+## APK download 
+https://www.upload-apk.com/en/Cj1nGOvYn07sEGj
